@@ -19,6 +19,9 @@ public class AnswerDto
     public String tags;
     public String username;
     public Long questionId;
+    public Long paintingId;
+    public Long musicPieceId;
+
     @CreationTimestamp
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
     public ZonedDateTime dateTimePosted;
@@ -75,6 +78,22 @@ public class AnswerDto
         this.questionId = questionId;
     }
 
+    public Long getPaintingId() {
+        return paintingId;
+    }
+
+    public void setPaintingId(Long paintingId) {
+        this.paintingId = paintingId;
+    }
+
+    public Long getMusicPieceId() {
+        return musicPieceId;
+    }
+
+    public void setMusicPieceId(Long musicPieceId) {
+        this.musicPieceId = musicPieceId;
+    }
+
     public ZonedDateTime getDateTimePosted() {
         return dateTimePosted;
     }
@@ -117,7 +136,13 @@ public class AnswerDto
         dto.dateTimePosted = answer.getDateTimePosted();
         dto.lastUpdate = answer.getLastUpdate();
         dto.username = answer.getUser().getUsername();
-        dto.questionId = answer.getQuestion().getQuestionId();
+        try{dto.questionId = answer.getQuestion().getQuestionId();}
+        catch (Exception exception) {dto.questionId =null;}
+        try{dto.paintingId= answer.getPainting().getPaintingId();}
+        catch (Exception exception) {dto.paintingId =null;}
+        try{dto.musicPieceId= answer.getMusicPiece().getMusicPieceId();}
+        catch (Exception exception) {dto.musicPieceId =null;}
+
         //How to filter a map, example 1 by converting a list into stream and apply the stream filter method
         //see https://mkyong.com/java8/java-8-streams-filter-examples/
         //List<FileStoredInDataBase> filteredFiles_example1=filesStoredInDataBase.stream()

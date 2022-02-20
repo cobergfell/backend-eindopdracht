@@ -15,9 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 //@CrossOrigin("http://localhost:8080")
@@ -168,16 +166,30 @@ public class AnswerController {
 
 
     @GetMapping("api/user/answers-by-paintingId/{paintingId}")
-    public List<AnswerDto>  getAnswersByPaintingId(@PathVariable("paintingId") Long paintingId) {
-        var dtos = new ArrayList<AnswerDto>();
-        var painting = paintingService.getPaintingById(paintingId);
-        var answers= painting.getAnswers();
-        for (Answer answer : answers) {
-            //answerService.getFiles(answer);
-            dtos.add(AnswerDto.fromAnswerToDto(answer));
+    //public ResponseEntity<HttpStatus> getAnswersByPaintingId(@PathVariable("paintingId") Long paintingId) {
+    public ResponseEntity<Object> getAnswersByPaintingId(@PathVariable("paintingId") Long paintingId) {
+
+        try {
+            var dtos = new ArrayList<AnswerDto>();
+            var painting = new Painting();
+            painting = paintingService.getPaintingById(paintingId);
+            //var painting = paintingService.getPaintingById(paintingId);
+            Set<com.novi.fassignment.models.Answer> answers = new HashSet<>();
+            answers= painting.getAnswers();
+            //System.out.println("Answers: " + answers);
+            if (answers.size()>0) {
+                for (Answer answer : answers) {
+                    //answerService.getFiles(answer);
+                    dtos.add(AnswerDto.fromAnswerToDto(answer));
+                }
+            }
+            //return dtos;
+            return ResponseEntity.ok().body(dtos);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return dtos;
     }
+
 
     @DeleteMapping("api/user/answers-with-files-in-database/{answerId}")
     public ResponseEntity<HttpStatus> deleteAnswer(@PathVariable("answerId") Long answerId) {
