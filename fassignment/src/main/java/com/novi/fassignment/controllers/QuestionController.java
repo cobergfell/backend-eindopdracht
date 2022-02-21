@@ -50,8 +50,56 @@ public class QuestionController {
     private QuestionGetDto questionGetDto;//Dto are usually static methods but in this case it had to be instantiated to instantiate services
 */
 
-    @PostMapping("api/user/questions-upload-without-files/{id}")
-    public ResponseEntity<Object> sendQuestionWithoutAttachment(
+/*//@PostMapping("api/user/questions-unrelated-to-items-without-files/{id}")
+@PostMapping("api/user/questions-unrelated-to-items-without-files")
+public ResponseEntity<Object> sendQuestionUnrelatedToItemsWithoutAttachment(
+        //@PathVariable("id") Long id,
+        @RequestParam("username") String username,
+        @RequestParam("title")  String title,
+        @RequestParam("content") String content,
+        //@RequestParam("questionRelatedTo")  String questionRelatedTo,
+        @RequestParam("tags")  String tags) {
+    String questionRelatedTo="";
+    String message = "";
+    try {
+        //LocalDate dateTimePosted = LocalDate.now(ZoneId.of("GMT+00:00"));
+        LocalDateTime dateTimePosted = LocalDateTime.now(ZoneId.of("GMT+00:00"));
+        ZonedDateTime zonedDateTimePosted = dateTimePosted.atZone(ZoneId.of("GMT+00:00"));
+        Question question = new Question();
+//        Painting painting = new Painting();
+//        MusicPiece musicPiece = new MusicPiece();
+//        if(questionRelatedTo.equals("painting")){painting = paintingService.getPaintingById(id);}
+//        else {musicPiece = musicPieceService.getMusicPieceById(id);}
+        Optional<User> user=userService.getUser(username);
+        String password = user.get().getPassword();
+        String email = user.get().getEmail();
+        User userFromCustomUser = new User();
+        userFromCustomUser.setUsername(username);
+        userFromCustomUser.setPassword(password);
+        userFromCustomUser.setEmail(email);
+        question.setUser(userFromCustomUser);
+        question.setTitle(title);
+        question.setDateTimePosted(zonedDateTimePosted);
+        question.setLastUpdate(zonedDateTimePosted);
+        question.setContent(content);
+        question.setTags(tags);
+//        if(questionRelatedTo.equals("painting")){question.setPainting(painting);}
+//        else{question.setMusicPiece(musicPiece);}
+        question.setPainting(null);
+        question.setMusicPiece(null);
+        questionService.createQuestionWithoutAttachment(question);
+        message = "Question submitted!";
+        return ResponseEntity.noContent().build();
+
+    } catch (Exception exception) {
+        message = "Question could not be submitted/uploaded!";
+        return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+    }
+}*/
+
+
+/*    @PostMapping("api/user/questions-related-to-items-without-files/{id}")
+    public ResponseEntity<Object> sendQuestionRelatedToItemsWithoutAttachment(
             @PathVariable("id") Long id,
             @RequestParam("username") String username,
             @RequestParam("title")  String title,
@@ -91,28 +139,29 @@ public class QuestionController {
             message = "Question could not be submitted/uploaded!";
             return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
         }
-    }
+    }*/
 
 
-
-    @PostMapping("api/user/questions-upload-with-files-in-database/{id}")
-    public ResponseEntity<Object> sendQuestionImprovedMethod(
-            @PathVariable("id") Long id,
+/*    //@PostMapping("api/user/questions-related-to-items-with-files-in-database/{id}")
+    @PostMapping("api/user/questions-unrelated-to-items-with-files-in-database")
+    public ResponseEntity<Object> sendQuestionUnrelatedToItemsWithAttachment(
+            //@PathVariable("id") Long id,
             @RequestParam("username") String username,
             @RequestParam("title")  String title,
             @RequestParam("content") String content,
             @RequestParam("tags")  String tags,
-            @RequestParam("questionRelatedTo")  String questionRelatedTo,
+            //@RequestParam("questionRelatedTo")  String questionRelatedTo,
             @RequestParam(value="files",required=false) MultipartFile[] files) {
+        String questionRelatedTo="";
         String message = "";
         try {
             LocalDateTime dateTimePosted = LocalDateTime.now(ZoneId.of("GMT+00:00"));
             ZonedDateTime zonedDateTimePosted = dateTimePosted.atZone(ZoneId.of("GMT+00:00"));
             Question question = new Question();
-            Painting painting = new Painting();
-            MusicPiece musicPiece = new MusicPiece();
-            if(questionRelatedTo.equals("painting")){painting = paintingService.getPaintingById(id);}
-            else {musicPiece = musicPieceService.getMusicPieceById(id);}
+            //Painting painting = new Painting();
+            //MusicPiece musicPiece = new MusicPiece();
+            //if(questionRelatedTo.equals("painting")){painting = paintingService.getPaintingById(id);}
+            //else {musicPiece = musicPieceService.getMusicPieceById(id);}
             QuestionInputDto inputDto= new QuestionInputDto();
             inputDto.username=username;
             inputDto.title=title;
@@ -121,9 +170,10 @@ public class QuestionController {
             inputDto.dateTimePosted=zonedDateTimePosted;
             inputDto.lastUpdate=zonedDateTimePosted;
             inputDto.questionRelatedTo=questionRelatedTo;
-            inputDto.idRelatedItem=id;
+            inputDto.idRelatedItem=Long.valueOf(-1);
             inputDto.files=files;
-
+            question.setPainting(null);
+            question.setMusicPiece(null);
             questionService.createQuestion(inputDto);
 
             message = "Question submitted!";
@@ -134,10 +184,70 @@ public class QuestionController {
             return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
         }
 
+    }*/
+
+/*
+    @PostMapping("api/user/post-question/{id}")
+    public ResponseEntity<Object> sendQuestionRelatedToItemsWithAttachment(
+            @PathVariable("id") Long id,
+            @RequestParam("username") String username,
+            @RequestParam("title")  String title,
+            @RequestParam("content") String content,
+            @RequestParam("tags")  String tags,
+            @RequestParam("questionRelatedTo")  String questionRelatedTo,
+            @RequestParam(value="files",required=false) MultipartFile[] files) {
+        String message = "";
+        LocalDateTime dateTimePosted = LocalDateTime.now(ZoneId.of("GMT+00:00"));
+        ZonedDateTime zonedDateTimePosted = dateTimePosted.atZone(ZoneId.of("GMT+00:00"));
+        Question question = new Question();
+        Painting painting = new Painting();
+        MusicPiece musicPiece = new MusicPiece();
+        if (questionRelatedTo.equals("painting")) {
+            try {
+                painting = paintingService.getPaintingById(id);
+            } catch (Exception exception) {
+                message = "Painting Id not found";
+                id = Long.valueOf(-1);
+            }
+        } else if (questionRelatedTo.equals("musicPiece")) {
+            try {
+                musicPiece = musicPieceService.getMusicPieceById(id);
+            } catch (Exception exception) {
+                message = "Music piece Id not found";
+                id = Long.valueOf(-1);
+            }
+        } else {
+            id = Long.valueOf(-1);
+        }
+        try {
+            QuestionInputDto inputDto = new QuestionInputDto();
+            inputDto.username = username;
+            inputDto.title = title;
+            inputDto.content = content;
+            inputDto.tags = tags;
+            inputDto.dateTimePosted = zonedDateTimePosted;
+            inputDto.lastUpdate = zonedDateTimePosted;
+            inputDto.questionRelatedTo = questionRelatedTo;
+            inputDto.idRelatedItem = id;
+            inputDto.files = files;
+
+            questionService.createQuestion(inputDto);
+
+            message = "Question submitted!";
+            return ResponseEntity.noContent().build();
+        } catch (Exception exception) {
+            message = "Question could not be submitted";
+            return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+        }
+
+
+
     }
+*/
 
 
-    @PostMapping("api/user/questions-upload-without-files")
+
+/*    @PostMapping("api/user/questions-upload-without-files")
     public ResponseEntity<Object> sendQuestionWithoutAttachment(
             @RequestParam("username") String username,
             @RequestParam("title")  String title,
@@ -174,9 +284,9 @@ public class QuestionController {
             return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
         }
 
-    }
+    }*/
 
-    @PostMapping("api/user/questions-upload-with-files-in-database")
+/*    @PostMapping("api/user/questions-upload-with-files-in-database")
     public ResponseEntity<Object> sendQuestionImprovedMethod(
             @RequestParam("username") String username,
             @RequestParam("title")  String title,
@@ -206,7 +316,7 @@ public class QuestionController {
             message = "Question could not be submitted/uploaded!";
             return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
         }
-    }
+    }*/
 
 
     @GetMapping("api/user/questions")
@@ -265,59 +375,83 @@ public class QuestionController {
 
     }
 
-    @PostMapping("api/user/questions-edit-with-files/{questionId}")
-    public ResponseEntity<Object> updateQuestionWithFiles(@PathVariable("questionId") long questionId,
+
+
+    @PostMapping("api/user/create-or-update-question/{id}")
+    public ResponseEntity<Object> editQuestionRelatedToItemsWithAttachment(
+            @PathVariable("id") Long id,
             @RequestParam("username") String username,
             @RequestParam("title")  String title,
             @RequestParam("content") String content,
             @RequestParam("tags")  String tags,
-            //@RequestParam("video") MultipartFile video,
-            @RequestParam("files") MultipartFile[] files) {
-        String message_question = "";
-
-        Optional<Question> currentQuestion = questionRepository.findById(questionId);
-
-        if (currentQuestion.isPresent()) {
-            //questionService.deleteQuestionById(id);
-            Question updatedQuestion = currentQuestion.get();
-            ///questionService.createQuestion(updatedQuestion);
+            @RequestParam("questionRelatedTo")  String questionRelatedTo,
+            @RequestParam(value="files",required=false) MultipartFile[] files) {
+        String message = "";
+        LocalDateTime dateTimePosted = LocalDateTime.now(ZoneId.of("GMT+00:00"));
+        ZonedDateTime zonedDateTimePosted = dateTimePosted.atZone(ZoneId.of("GMT+00:00"));
+        Question question = new Question();
+        Painting painting = new Painting();
+        MusicPiece musicPiece = new MusicPiece();
+        if (questionRelatedTo.equals("painting")) {
             try {
-                //LocalDate datePosted = LocalDate.now(ZoneId.of("GMT+00:00"));
-                String message = "";
+                painting = paintingService.getPaintingById(id);
+            } catch (Exception exception) {
+                message = "Painting Id not found";
+                id = Long.valueOf(-1);
+            }
+        } else if (questionRelatedTo.equals("musicPiece")) {
+            try {
+                musicPiece = musicPieceService.getMusicPieceById(id);
+            } catch (Exception exception) {
+                message = "Music piece Id not found";
+                id = Long.valueOf(-1);
+            }
+        } else if (questionRelatedTo.equals("question")) {   //in that case we edit question
                 try {
-                    //LocalDate datePosted = LocalDate.now(ZoneId.of("GMT+00:00"));
-                    QuestionInputDto inputDto= new QuestionInputDto();
-                    inputDto.username=username;
-                    inputDto.title=title;
-                    inputDto.content=content;
-                    inputDto.tags=tags;
-                    inputDto.files=files;
-                    inputDto.questionId=questionId;
-
-                    questionService.updateQuestion(inputDto,updatedQuestion);
-
-
-                    message = "Question submitted!";
-                    return ResponseEntity.noContent().build();
+                    question =questionService.getQuestionById(id);
 
                 } catch (Exception exception) {
-                    message = "Question could not be submitted/uploaded!";
-                    return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+                    message = "question Id not found";
+                    id = Long.valueOf(-1);
                 }
 
-
-            } catch (Exception exception) {
-                message_question = "Question could not be submitted/uploaded!";
-                return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
-            }
-
-
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            id = Long.valueOf(-1);
         }
+        try {
+            QuestionInputDto inputDto = new QuestionInputDto();
+            inputDto.username = username;
+            inputDto.title = title;
+            inputDto.content = content;
+            inputDto.tags = tags;
+            inputDto.dateTimePosted = zonedDateTimePosted;
+            inputDto.lastUpdate = zonedDateTimePosted;
+            inputDto.questionRelatedTo = questionRelatedTo;
+            inputDto.idRelatedItem = id;
+            inputDto.files = files;
+
+            if (questionRelatedTo.equals("question")){//in that case we edit question
+                inputDto.questionId = id;
+                questionService.updateQuestion(inputDto,question);
+            }
+            else{questionService.createQuestion(inputDto);}
+
+
+            message = "Question submitted!";
+            return ResponseEntity.noContent().build();
+        } catch (Exception exception) {
+            message = "Question could not be submitted";
+            return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+        }
+
     }
 
-    @PostMapping("api/user/questions-edit-without-files/{questionId}")
+
+
+
+
+}
+/*    @PostMapping("api/user/questions-edit-without-files/{questionId}")
     public ResponseEntity<Object> updateQuestionWithoutFiles(@PathVariable("questionId") long questionId,
        @RequestParam("username") String username,
        @RequestParam("title")  String title,
@@ -364,8 +498,8 @@ public class QuestionController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-    }
-}
+    }*/
+
 
 
 /*    @PostMapping("/questions-upload-with-files-in-database")

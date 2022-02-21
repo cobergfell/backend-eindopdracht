@@ -45,7 +45,7 @@ public class AnswerController {
 */
 
 
-    @PostMapping("api/user/answers-upload-without-files/{id}")
+    @PostMapping("api/user/answers-related-to-items-without-files/{id}")
     public ResponseEntity<Object> sendAnswerWithoutAttachment(
             @PathVariable("id") Long id,
             @RequestParam("username") String username,
@@ -89,7 +89,7 @@ public class AnswerController {
     }
 
 
-    @PostMapping("api/user/answers-upload-with-files-in-database/{id}")
+    @PostMapping("api/user/answers-related-to-items-with-files-in-database/{id}")
     public ResponseEntity<Object> sendAnswerImprovedMethod(
             @PathVariable("id") Long id,
             @RequestParam("username") String username,
