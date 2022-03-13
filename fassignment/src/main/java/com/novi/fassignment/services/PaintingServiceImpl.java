@@ -3,13 +3,13 @@ package com.novi.fassignment.services;
 import com.novi.fassignment.controllers.dto.FileStoredInDataBaseInputDto;
 import com.novi.fassignment.controllers.dto.PaintingInputDto;
 import com.novi.fassignment.exceptions.RecordNotFoundException;
-import com.novi.fassignment.models.FileStoredInDataBase;
-import com.novi.fassignment.models.Painting;
-import com.novi.fassignment.models.User;
+import com.novi.fassignment.models.*;
+import com.novi.fassignment.repositories.FileStorageInDataBaseRepository;
 import com.novi.fassignment.repositories.PaintingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -27,6 +27,9 @@ public class PaintingServiceImpl implements PaintingService {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    private FileStorageInDataBaseRepository fileStorageInDataBaseRepository;
 
     private FileStorageInDataBaseService fileStorageInDataBaseService;
     //private List<Painting> paintings = new ArrayList<>();
@@ -49,6 +52,10 @@ public class PaintingServiceImpl implements PaintingService {
 
     public List<Painting> getAllPaintings() {
         return paintingRepository.findAll();
+    }
+
+    public List<Painting> getAllPaintingsByAscId() {
+        return paintingRepository.findAll(Sort.by("paintingId").ascending());
     }
 
     public List<Painting> getAllPaintingsByDescId() {
@@ -74,6 +81,8 @@ public class PaintingServiceImpl implements PaintingService {
         paintingRepository.deleteAll();
     }
 
+    @Override
+    public Painting createPaintingWithoutAttachment(Painting painting) { return paintingRepository.save(painting); }
 
     @Override
     public void createPainting(PaintingInputDto dto) {
@@ -95,44 +104,73 @@ public class PaintingServiceImpl implements PaintingService {
 
 
 
-        paintingRepository.save(painting);
+//        paintingRepository.save(painting);
+//
+//        List<Painting> sortedPaintings = paintingService.getAllPaintingsByDescId();
+//        //Painting[] sortedPaintingsArray= (Painting[]) sortedPaintings.toArray();//cast array of objects into array of paintings
+//        Painting mostRecentPainting = sortedPaintings.get(0);
+//        //Painting mostRecentPainting=sortedPaintingsArray[0];
+//        Long mostRecentPaintingId = mostRecentPainting.getPaintingId();
 
-        List<Painting> sortedPaintings = paintingService.getAllPaintingsByDescId();
-        //Painting[] sortedPaintingsArray= (Painting[]) sortedPaintings.toArray();//cast array of objects into array of paintings
-        Painting mostRecentPainting = sortedPaintings.get(0);
-        //Painting mostRecentPainting=sortedPaintingsArray[0];
-        Long mostRecentPaintingId = mostRecentPainting.getPaintingId();
 
-        //storageService.store(file);
+        Painting paintingToBuildUp = paintingService.createPaintingWithoutAttachment(painting);
 
         List<String> fileNames = new ArrayList<>();
+        Set<FileStoredInDataBase> attachedFiles = new HashSet<>();
+        List<MultipartFile> multipartFiles = new ArrayList<MultipartFile>();
+        Arrays.asList(dto.files).stream().forEach(theFile -> multipartFiles.add(theFile));
+        //MultipartFile extra=multipartFiles.get(multipartFiles.size()-1);
+        //multipartFiles.add(extra);//this is a trick because of a bug part 1: you have to repeat the last element and remove it later in order to have setPainting work, I still don't get why
+        // solution of the bug was:    in FileStorageInDataBaseService.java, public FileStoredInDataBase storeAttachedFile I returnred return fileStoredInDataBase;
+        // instead of  return fileStorageInDataBaseRepository.save(fileStoredInDataBase);
 
-        Arrays.asList(dto.files).stream().forEach(file -> {
-            String message2 = "";
+
+        //Arrays.asList(dto.files).stream().forEach(file -> {
+        multipartFiles.stream().forEach(file -> {
+            String message3 = "";
             try {
-                //storageService.store(file);
-                //storageService.storeQuestionFile(file, question);
                 FileStoredInDataBaseInputDto fileStoredInDataBaseInputDto = new FileStoredInDataBaseInputDto();
                 fileStoredInDataBaseInputDto.setFile(file);
-                fileStoredInDataBaseInputDto.setPainting(painting);
+                fileStoredInDataBaseInputDto.setPainting(paintingToBuildUp);// when is the database commit triggered following a setPainting command?
                 FileStoredInDataBase fileStoredInDataBase=storageService.storeAttachedFile(fileStoredInDataBaseInputDto);
+                //long fileId=fileStoredInDataBase.getFileId();
+                //if (fileId==multipartFiles.size()){storageService.deleteFileStoredInDataBaseById(fileId);}// trick part 2: remove extra file
+                // it took me hours ti find out that this trick to add the last file of the list and remove it
+                // later is the way to associate the last multipart file to the painting
+                // I do not now why it does not work without this trick, think about it later and fix it
 
-                fileNames.add(file.getOriginalFilename());
-                message2 = "Uploaded the files successfully: " + fileNames;
+                attachedFiles.add(fileStoredInDataBase);
+                message3 = "Files successfully added to painting object: " + fileNames;
             } catch (Exception e) {
-                message2 = "Fail to upload files!";
+                message3 = "Fail to attach files to painting object!";
             }
         });
 
-        Set<FileStoredInDataBase> attachedFiles = new HashSet<>();
+        //painting.setFiles(attachedFiles);
+
+/*
         List<FileStoredInDataBase> sortedFiles = storageService.getAllFilesByDescId();
         //FileStoredInDataBase[] sortedFilesArray= (FileStoredInDataBase[]) sortedPaintings.toArray();//cast array of objects into array of paintings
-        for (int i = 0; i < fileNames.size(); i++) {
-            FileStoredInDataBase mostRecentFile = sortedFiles.get(i);
-            attachedFiles.add(mostRecentFile);
+        for (int i = 0; i < attachedFiles.size(); i++) {
+            FileStoredInDataBase fileStoredInDataBase = sortedFiles.get(i);
+            //System.out.println("124 Painting ServiceImplfileStoredInDataBaseInputDto.getFile "+fileStoredInDataBaseInputDto.getFile().getName());
+            fileStoredInDataBase.setPainting(painting);
+            fileStorageInDataBaseRepository.save(fileStoredInDataBase);
         }
+*/
 
-        mostRecentPainting.setFiles(attachedFiles);
+
+
+
+
+//        Set<FileStoredInDataBase> attachedFiles = new HashSet<>();
+//        List<FileStoredInDataBase> sortedFiles = storageService.getAllFilesByDescId();
+//        //FileStoredInDataBase[] sortedFilesArray= (FileStoredInDataBase[]) sortedPaintings.toArray();//cast array of objects into array of paintings
+//        for (int i = 0; i < fileNames.size(); i++) {
+//            FileStoredInDataBase mostRecentFile = sortedFiles.get(i);
+//            attachedFiles.add(mostRecentFile);
+//        }
+
     }
 
 

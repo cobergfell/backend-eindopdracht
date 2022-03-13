@@ -88,7 +88,8 @@ public Long paintingId;//paintingId will only be specified when updating
     @GetMapping("api/user/paintings")
     public List<PaintingDto> getPaintings() {
         var dtos = new ArrayList<PaintingDto>();
-        var paintings = paintingService.getAllPaintings();
+        //var paintings = paintingService.getAllPaintings();
+        var paintings = paintingService.getAllPaintingsByAscId();
         List<FileStoredInDataBase> filesStoredInDataBase = storageService.getAllFilesAsList();
 
         for (Painting painting : paintings) {
@@ -150,9 +151,8 @@ public Long paintingId;//paintingId will only be specified when updating
         }
 
     }
-
-    @PostMapping("api/user/paintings/{paintingId}")
-    public ResponseEntity<Object> updatePaintingWithFiles(@PathVariable("paintingId") long paintingId,
+    @PostMapping("api/user/paintings-upload/{paintingId}")
+    public ResponseEntity<Object> updatePaintingWithFiles(@PathVariable("paintingId") Long paintingId,
                                                           @RequestParam("username") String username,
                                                           @RequestParam("title")  String title,
                                                           @RequestParam("artist") String artist,

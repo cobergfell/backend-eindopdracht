@@ -378,7 +378,7 @@ public ResponseEntity<Object> sendQuestionUnrelatedToItemsWithoutAttachment(
 
 
     @PostMapping("api/user/create-or-update-question/{id}")
-    public ResponseEntity<Object> editQuestionRelatedToItemsWithAttachment(
+    public ResponseEntity<Object> createOrUpdateQuestion(
             @PathVariable("id") Long id,
             @RequestParam("username") String username,
             @RequestParam("title")  String title,
@@ -445,10 +445,6 @@ public ResponseEntity<Object> sendQuestionUnrelatedToItemsWithoutAttachment(
         }
 
     }
-
-
-
-
 
 }
 /*    @PostMapping("api/user/questions-edit-without-files/{questionId}")

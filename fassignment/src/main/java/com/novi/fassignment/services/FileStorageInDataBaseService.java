@@ -5,11 +5,8 @@ package com.novi.fassignment.services;
 
 
 import com.novi.fassignment.controllers.dto.FileStoredInDataBaseInputDto;
-import com.novi.fassignment.models.Question;
-import com.novi.fassignment.models.Answer;
-import com.novi.fassignment.models.FileStoredInDataBase;
-import com.novi.fassignment.models.Painting;
-import com.novi.fassignment.models.MusicPiece;
+import com.novi.fassignment.exceptions.UsernameNotFoundException;
+import com.novi.fassignment.models.*;
 import com.novi.fassignment.repositories.FileStorageInDataBaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -104,6 +101,7 @@ public class FileStorageInDataBaseService {
     }*/
 
     public FileStoredInDataBase store(MultipartFile file) throws IOException {
+
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         //FileStoredInDataBase fileStoredInDataBase = new FileStoredInDataBase(fileName, file.getContentType(), file.getBytes());
         FileStoredInDataBase fileStoredInDataBase = new FileStoredInDataBase();
@@ -114,8 +112,7 @@ public class FileStorageInDataBaseService {
         fileStoredInDataBase.setAnswer(null);
         fileStoredInDataBase.setPainting(null);
         fileStoredInDataBase.setMusicPiece(null);
-
-
+        //fileStoredInDataBase.setFileId(Long.valueOf(999));//test
         return fileStorageInDataBaseRepository.save(fileStoredInDataBase);
     }
 
@@ -146,7 +143,9 @@ public class FileStorageInDataBaseService {
             MultipartFile fileWithNewName=changeName(multipartFile,newFileName);
         }*/
 
-        return fileStoredInDataBase;
+        //return fileStoredInDataBase;
+        return fileStorageInDataBaseRepository.save(fileStoredInDataBase);
+
     }
 
 /*    public FileStoredInDataBase storeMusicPieceFile(MultipartFile file, MusicPiece musicPiece) throws IOException {

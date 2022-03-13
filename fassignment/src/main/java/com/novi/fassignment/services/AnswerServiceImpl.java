@@ -2,6 +2,7 @@ package com.novi.fassignment.services;
 
 import com.novi.fassignment.controllers.dto.AnswerInputDto;
 import com.novi.fassignment.controllers.dto.FileStoredInDataBaseInputDto;
+import com.novi.fassignment.controllers.dto.AnswerInputDto;
 import com.novi.fassignment.exceptions.RecordNotFoundException;
 import com.novi.fassignment.models.*;
 import com.novi.fassignment.repositories.AnswerRepository;
@@ -44,8 +45,8 @@ public class AnswerServiceImpl implements AnswerService {
     //private List<Answer> answers = new ArrayList<>();
 
 /*    @Autowired
-    public AnswerServiceImpl(AnswerRepository answerRepository) {
-        this.answerRepository = answerRepository;
+    public QuestionServiceImpl(QuestionRepository questionRepository) {
+        this.questionRepository = questionRepository;
     }*/
 
     @Override
@@ -68,15 +69,13 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
-    public Answer createAnswerWithoutAttachment(Answer answer) {
-        return answerRepository.save(answer);
-    }
+    public Answer createAnswerWithoutAttachment(Answer answer) { return answerRepository.save(answer); }
 
 
     @Override
     public void deleteAnswerById(Long id) {
-        var optionalQuestion = answerRepository.findById(id);
-        if (optionalQuestion.isPresent()) {
+        var optionalAnswer = answerRepository.findById(id);
+        if (optionalAnswer.isPresent()) {
             answerRepository.deleteById(id);
         } else {
             throw new RecordNotFoundException("id does not exist");
@@ -87,6 +86,7 @@ public class AnswerServiceImpl implements AnswerService {
     public void deleteAllAnswers() {
         answerRepository.deleteAll();
     }
+
 
     @Override
     public void createAnswer(AnswerInputDto dto) {
@@ -105,119 +105,82 @@ public class AnswerServiceImpl implements AnswerService {
         answer.setContent(dto.content);
         answer.setTags(dto.tags);
         Long idRelatedItem=dto.idRelatedItem;
-        if(dto.answerRelatedTo.equals("painting")){
-            Painting painting = paintingService.getPaintingById(Long.valueOf(idRelatedItem));
-            answer.setPainting(painting);
+
+        if(idRelatedItem>=0){
+            if(dto.answerRelatedTo.equals("question")){
+                Question question= questionService.getQuestionById(Long.valueOf(idRelatedItem));
+                answer.setQuestion(question);
+                answer.setPainting(null);
+                answer.setMusicPiece(null);
+
+            }
+//            else if (dto.answerRelatedTo.equals("musicPiece")){
+//                MusicPiece musicPiece = musicPieceService.getMusicPieceById(Long.valueOf(idRelatedItem));
+//                answer.setMusicPiece(musicPiece);
+//                answer.setPainting(null);
+//            }
+
         }
+
+
         else{
-            MusicPiece musicPiece = musicPieceService.getMusicPieceById(Long.valueOf(idRelatedItem));
-            answer.setMusicPiece(musicPiece);
+            answer.setQuestion(null);
+            answer.setPainting(null);
+            answer.setMusicPiece(null);
         }
 
         // test, remove line below
         //Painting painting = paintingService.getPaintingById(Long.valueOf(1));
         //answer.setPainting(painting);
 
-        answerRepository.save(answer);
-
-        List<Answer> sortedAnswers = answerService.getAllAnswersByDescId();
-        //Answer[] sortedAnswersArray= (Answer[]) sortedAnswers.toArray();//cast array of objects into array of answers
-        Answer mostRecentAnswer = sortedAnswers.get(0);
-        //Answer mostRecentAnswer=sortedAnswersArray[0];
-        //Long mostRecentAnswerId = mostRecentAnswer.getAnswerId();
-
-        //storageService.store(file);
-
-        List<String> fileNames = new ArrayList<>();
-
-        Arrays.asList(dto.files).stream().forEach(file -> {
-            String message2 = "";
-            try {
-                //storageService.store(file);
-                //storageService.storeQuestionFile(file, question);
-                FileStoredInDataBaseInputDto fileStoredInDataBaseInputDto = new FileStoredInDataBaseInputDto();
-                fileStoredInDataBaseInputDto.setFile(file);
-                fileStoredInDataBaseInputDto.setAnswer(answer);
-                FileStoredInDataBase fileStoredInDataBase=storageService.storeAttachedFile(fileStoredInDataBaseInputDto);
+        //answerRepository.save(answer);
+        Answer mostRecentAnswer = answerService.createAnswerWithoutAttachment(answer);
 
 
 
-                fileNames.add(file.getOriginalFilename());
-                message2 = "Uploaded the files successfully: " + fileNames;
-            } catch (Exception e) {
-                message2 = "Fail to upload files!";
+        if(dto.files!=null){
+/*           List<Answer> sortedAnswers = answerService.getAllAnswersByDescId();
+            //Answer[] sortedAnswersArray= (Answer[]) sortedAnswers.toArray();//cast array of objects into array of answers
+            Answer mostRecentAnswer = sortedAnswers.get(0);
+            //Answer mostRecentAnswer=sortedAnswersArray[0];
+            Long mostRecentAnswerId = mostRecentAnswer.getAnswerId();*/
+
+            //storageService.store(file);
+
+            List<String> fileNames = new ArrayList<>();
+
+            Arrays.asList(dto.files).stream().forEach(file -> {
+                String message2 = "";
+                try {
+                    //storageService.store(file);
+                    //storageService.storeAnswerFile(file, answer);
+                    FileStoredInDataBaseInputDto fileStoredInDataBaseInputDto = new FileStoredInDataBaseInputDto();
+                    fileStoredInDataBaseInputDto.setFile(file);
+                    fileStoredInDataBaseInputDto.setAnswer(answer);
+                    FileStoredInDataBase fileStoredInDataBase=storageService.storeAttachedFile(fileStoredInDataBaseInputDto);
+
+
+                    fileNames.add(file.getOriginalFilename());
+                    message2 = "Uploaded the files successfully: " + fileNames;
+                } catch (Exception e) {
+                    message2 = "Fail to upload files!";
+                }
+            });
+
+            Set<FileStoredInDataBase> attachedFiles = new HashSet<>();
+            List<FileStoredInDataBase> sortedFiles = storageService.getAllFilesByDescId();
+            //FileStoredInDataBase[] sortedFilesArray= (FileStoredInDataBase[]) sortedAnswers.toArray();//cast array of objects into array of answers
+            for (int i = 0; i < fileNames.size(); i++) {
+                FileStoredInDataBase mostRecentFile = sortedFiles.get(i);
+                attachedFiles.add(mostRecentFile);
             }
-        });
 
-        Set<FileStoredInDataBase> attachedFiles = new HashSet<>();
-        List<FileStoredInDataBase> sortedFiles = storageService.getAllFilesByDescId();
-        //FileStoredInDataBase[] sortedFilesArray= (FileStoredInDataBase[]) sortedAnswers.toArray();//cast array of objects into array of answers
-        for (int i = 0; i < fileNames.size(); i++) {
-            FileStoredInDataBase mostRecentFile = sortedFiles.get(i);
-            attachedFiles.add(mostRecentFile);
+            mostRecentAnswer.setFiles(attachedFiles);
+
+
         }
 
-        mostRecentAnswer.setFiles(attachedFiles);
 
-    }
-
-
-    //@Override
-    public void createAnswerOld(AnswerInputDto dto) {
-
-        Answer answer = new Answer();
-        Optional<User> user = userService.getUser(dto.username);
-        String password = user.get().getPassword();
-        String email = user.get().getEmail();
-        User userFromCustomUser = new User();
-        userFromCustomUser.setUsername(dto.username);
-        userFromCustomUser.setPassword(password);
-        userFromCustomUser.setEmail(email);
-        answer.setUser(userFromCustomUser);
-        answer.setQuestion(dto.question);
-        answer.setTitle(dto.title);
-        // answer.setDatePosted(datePosted.toString());
-        answer.setContent(dto.content);
-        answer.setTags(dto.tags);
-
-        answerRepository.save(answer);
-
-        List<Answer> sortedAnswers = answerService.getAllAnswersByDescId();
-        //Answer[] sortedAnswersArray= (Answer[]) sortedAnswers.toArray();//cast array of objects into array of answers
-        Answer mostRecentAnswer = sortedAnswers.get(0);
-        //Answer mostRecentAnswer=sortedAnswersArray[0];
-        Long mostRecentAnswerId = mostRecentAnswer.getAnswerId();
-
-        //storageService.store(file);
-
-        List<String> fileNames = new ArrayList<>();
-
-        Arrays.asList(dto.files).stream().forEach(file -> {
-            String message2 = "";
-            try {
-                //storageService.store(file);
-                //storageService.storeQuestionFile(file, question);
-                FileStoredInDataBaseInputDto fileStoredInDataBaseInputDto = new FileStoredInDataBaseInputDto();
-                fileStoredInDataBaseInputDto.setFile(file);
-                fileStoredInDataBaseInputDto.setAnswer(answer);
-                FileStoredInDataBase fileStoredInDataBase=storageService.storeAttachedFile(fileStoredInDataBaseInputDto);
-
-                fileNames.add(file.getOriginalFilename());
-                message2 = "Uploaded the files successfully: " + fileNames;
-            } catch (Exception e) {
-                message2 = "Fail to upload files!";
-            }
-        });
-
-        Set<FileStoredInDataBase> attachedFiles = new HashSet<>();
-        List<FileStoredInDataBase> sortedFiles = storageService.getAllFilesByDescId();
-        //FileStoredInDataBase[] sortedFilesArray= (FileStoredInDataBase[]) sortedAnswers.toArray();//cast array of objects into array of Answers
-        for (int i = 0; i < fileNames.size(); i++) {
-            FileStoredInDataBase mostRecentFile = sortedFiles.get(i);
-            attachedFiles.add(mostRecentFile);
-        }
-
-        mostRecentAnswer.setFiles(attachedFiles);
     }
 
 
@@ -246,11 +209,13 @@ public class AnswerServiceImpl implements AnswerService {
             String message = "";
             try {
                 //storageService.store(file);
-                //storageService.storeQuestionFile(file, question);
+                //storageService.storeAnswerFile(file, answer);
                 FileStoredInDataBaseInputDto fileStoredInDataBaseInputDto = new FileStoredInDataBaseInputDto();
                 fileStoredInDataBaseInputDto.setFile(file);
                 fileStoredInDataBaseInputDto.setAnswer(answer);
                 FileStoredInDataBase fileStoredInDataBase=storageService.storeAttachedFile(fileStoredInDataBaseInputDto);
+
+
 
                 fileNames.add(file.getOriginalFilename());
                 message = "Uploaded the files successfully: " + fileNames;
@@ -270,7 +235,6 @@ public class AnswerServiceImpl implements AnswerService {
         answer.setFiles(attachedFiles);
 
     }
-
 
 }
 

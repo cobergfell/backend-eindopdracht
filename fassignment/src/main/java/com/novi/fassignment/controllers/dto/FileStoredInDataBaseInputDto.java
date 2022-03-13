@@ -18,11 +18,20 @@ import java.time.ZonedDateTime;
 public class FileStoredInDataBaseInputDto {
 
     //public MultipartFile[] file;
+    private Long id;//only for update purpose to check if a file is already existing
     public MultipartFile file;
     public Question question;
     public Answer answer;
     public Painting painting;
     public MusicPiece musicPiece;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public MultipartFile getFile() {
         return file;

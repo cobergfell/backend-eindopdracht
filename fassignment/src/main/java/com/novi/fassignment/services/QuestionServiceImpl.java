@@ -2,6 +2,7 @@ package com.novi.fassignment.services;
 
 import com.novi.fassignment.controllers.dto.FileStoredInDataBaseInputDto;
 import com.novi.fassignment.controllers.dto.QuestionInputDto;
+import com.novi.fassignment.exceptions.FileStorageException;
 import com.novi.fassignment.exceptions.RecordNotFoundException;
 import com.novi.fassignment.models.*;
 import com.novi.fassignment.repositories.QuestionRepository;
@@ -145,14 +146,17 @@ public class QuestionServiceImpl implements QuestionService {
                     //storageService.storeQuestionFile(file, question);
                     FileStoredInDataBaseInputDto fileStoredInDataBaseInputDto = new FileStoredInDataBaseInputDto();
                     fileStoredInDataBaseInputDto.setFile(file);
-                    fileStoredInDataBaseInputDto.setQuestion(question);
+                    fileStoredInDataBaseInputDto.setQuestion(mostRecentQuestion);
                     FileStoredInDataBase fileStoredInDataBase=storageService.storeAttachedFile(fileStoredInDataBaseInputDto);
 
 
                     fileNames.add(file.getOriginalFilename());
                     message2 = "Uploaded the files successfully: " + fileNames;
                 } catch (Exception e) {
-                    message2 = "Fail to upload files!";
+                    //message2 = "Fail to upload files!";
+                    throw new FileStorageException("Fail to upload files!");
+
+
                 }
             });
 
