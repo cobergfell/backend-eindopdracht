@@ -2,10 +2,12 @@ package com.novi.fassignment.controllers.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.novi.fassignment.models.FileStoredInDataBase;
+import com.novi.fassignment.models.MusicFileStoredInDataBase;
 import com.novi.fassignment.models.Painting;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,17 +20,26 @@ public class PaintingDto
     public String title;
     public String artist;
     public String description;
-    public Long creationYear;
     public byte[] image;
 
 
+//    @CreationTimestamp
+//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:01")
+//    public ZonedDateTime dateTimePosted;
+//    @UpdateTimestamp
+//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:01")
+//    public ZonedDateTime lastUpdate;
+
     @CreationTimestamp
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
-    public ZonedDateTime dateTimePosted;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    public LocalDateTime dateTimePosted;
     @UpdateTimestamp
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
-    public ZonedDateTime lastUpdate;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    public LocalDateTime lastUpdate;
+
     public Set<FileStoredInDataBaseDto> attachedFiles = new HashSet<FileStoredInDataBaseDto>();
+    public Set<MusicFileStoredInDataBaseDto> attachedMusicFiles = new HashSet<MusicFileStoredInDataBaseDto>();
+
 
     public Long getPaintingId() {
         return paintingId;
@@ -70,27 +81,27 @@ public class PaintingDto
         this.description = description;
     }
 
-    public Long getCreationYear() {
-        return creationYear;
+    public byte[] getImage() {
+        return image;
     }
 
-    public void setCreationYear(Long creationYear) {
-        this.creationYear = creationYear;
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
-    public ZonedDateTime getDateTimePosted() {
+    public LocalDateTime getDateTimePosted() {
         return dateTimePosted;
     }
 
-    public void setDateTimePosted(ZonedDateTime dateTimePosted) {
+    public void setDateTimePosted(LocalDateTime dateTimePosted) {
         this.dateTimePosted = dateTimePosted;
     }
 
-    public ZonedDateTime getLastUpdate() {
+    public LocalDateTime getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(ZonedDateTime lastUpdate) {
+    public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 
@@ -102,12 +113,12 @@ public class PaintingDto
         this.attachedFiles = attachedFiles;
     }
 
-    public byte[] getImage() {
-        return image;
+    public Set<MusicFileStoredInDataBaseDto> getAttachedMusicFiles() {
+        return attachedMusicFiles;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
+    public void setAttachedMusicFiles(Set<MusicFileStoredInDataBaseDto> attachedMusicFiles) {
+        this.attachedMusicFiles = attachedMusicFiles;
     }
 
     public  static PaintingDto fromPaintingToDto(Painting painting) {
@@ -124,44 +135,26 @@ public class PaintingDto
                 .toUriString();*/
 
         dto.paintingId = painting.getPaintingId();
+        dto.username = painting.getUser().getUsername();
         dto.title = painting.getTitle();
         dto.artist = painting.getArtist();
         dto.description = painting.getDescription();
-        dto.creationYear = painting.getCreationYear();
+        dto.image = painting.getImage();
         dto.dateTimePosted = painting.getDateTimePosted();
         dto.lastUpdate = painting.getLastUpdate();
-        dto.username = painting.getUser().getUsername();
-
-        //How to filter a map, example 1 by converting a list into stream and apply the stream filter method
-        //see https://mkyong.com/java8/java-8-streams-filter-examples/
-        //List<FileStoredInDataBase> filteredFiles_example1=filesStoredInDataBase.stream()
-        //.filter(dbFile -> dbFile.getPainting().getPaintingId().equals(painting.getPaintingId()))
-        //.collect(Collectors.toList());
-
-        //How to filter a map, example 2, older method before java 8,  using the list only
-        //see https://mkyong.com/java8/java-8-streams-filter-examples/
-        //List<FileStoredInDataBase> filteredFiles_example2 = new ArrayList<>();
-        //for (FileStoredInDataBase fileStoredInDataBase : filteredFiles_example2) {
-        //if (fileStoredInDataBase.getPainting().getPaintingId().equals(painting.getPaintingId())) {
-        //filteredFiles_example2.add(fileStoredInDataBase);
-        //}
-        //}
-
-        //Finally, we do it this way (here, we also directly map the filtered files into the files Dto's
-        //List<ResponseFileDto> filteredFiles = filesStoredInDataBase.stream()
-        //.filter(dbFile -> dbFile.getPainting().getPaintingId().equals(painting.getPaintingId()))
-        //.map(dbFile -> ResponseFileDto.fromFileStoredInDataBase(dbFile))
-        //.collect(Collectors.toList());
-/*        for (FileStoredInDataBase fileStoredInDataBase : painting.getFiles()) {
-            dto.responseFileDtos.add(ResponseFileDto.fromFileStoredInDataBase(fileStoredInDataBase));
-        }*/
 
         for (FileStoredInDataBase fileStoredInDataBase : painting.getFiles()) {
             FileStoredInDataBaseDto responseFileDto=FileStoredInDataBaseDto.fromFileStoredInDataBase(fileStoredInDataBase);
             dto.attachedFiles.add(responseFileDto);
-            String type=responseFileDto.getType();
-            boolean test=(type.equals("image/png"));
-            if (test){dto.image=responseFileDto.getData();}
+        }
+
+
+        for (MusicFileStoredInDataBase musicFileStoredInDataBase : painting.getMusicFiles()) {
+            MusicFileStoredInDataBaseDto responseFileDto=MusicFileStoredInDataBaseDto.fromFileStoredInDataBase(musicFileStoredInDataBase);
+            dto.attachedMusicFiles.add(responseFileDto);
+//            String type=responseFileDto.getType();
+//            boolean test=(type.equals("image/png"));
+//            if (test){dto.image=responseFileDto.getData();}
         }
 
         return dto;

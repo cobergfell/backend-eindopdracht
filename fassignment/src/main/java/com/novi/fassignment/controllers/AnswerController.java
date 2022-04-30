@@ -36,8 +36,6 @@ public class AnswerController {
     @Autowired
     private PaintingServiceImpl paintingService;
 
-    @Autowired
-    private MusicPieceServiceImpl musicPieceService;
 
     @Autowired
     private AnswerRepository answerRepository;
@@ -132,7 +130,8 @@ public class AnswerController {
             @RequestParam(value="files",required=false) MultipartFile[] files) {
         String message = "";
         LocalDateTime dateTimePosted = LocalDateTime.now(ZoneId.of("GMT+00:00"));
-        ZonedDateTime zonedDateTimePosted = dateTimePosted.atZone(ZoneId.of("GMT+00:00"));
+        //ZonedDateTime zonedDateTimePosted = dateTimePosted.atZone(ZoneId.of("GMT+00:00"));
+
         Answer answer = new Answer();
         Question question = new Question();
 //        Painting painting = new Painting();
@@ -169,8 +168,8 @@ public class AnswerController {
             inputDto.title = title;
             inputDto.content = content;
             inputDto.tags = tags;
-            inputDto.dateTimePosted = zonedDateTimePosted;
-            inputDto.lastUpdate = zonedDateTimePosted;
+            inputDto.dateTimePosted = dateTimePosted;
+            inputDto.lastUpdate = dateTimePosted;
             inputDto.answerRelatedTo = answerRelatedTo;
             inputDto.idRelatedItem = id;
             inputDto.files = files;

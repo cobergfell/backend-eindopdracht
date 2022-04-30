@@ -1,15 +1,12 @@
 package com.novi.fassignment.controllers.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.novi.fassignment.models.MusicPiece;
 import com.novi.fassignment.models.Painting;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.Date;
 
 public class QuestionInputDto {
 
@@ -21,14 +18,22 @@ public class QuestionInputDto {
         public String questionRelatedTo;
         public Long idRelatedItem;
         public Painting painting;
-        public MusicPiece musicPiece;
         public MultipartFile[] files;
+
+//        @CreationTimestamp
+//        @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:01")
+//        public ZonedDateTime dateTimePosted;
+//        @UpdateTimestamp
+//        @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:01")
+//        public ZonedDateTime lastUpdate;
+
         @CreationTimestamp
-        @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
-        public ZonedDateTime dateTimePosted;
+        @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+        public LocalDateTime dateTimePosted;
         @UpdateTimestamp
-        @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
-        public ZonedDateTime lastUpdate;
+        @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+        public LocalDateTime lastUpdate;
+
 
         public Long getQuestionId() {
                 return questionId;
@@ -94,14 +99,6 @@ public class QuestionInputDto {
                 this.painting = painting;
         }
 
-        public MusicPiece getMusicPiece() {
-                return musicPiece;
-        }
-
-        public void setMusicPiece(MusicPiece musicPiece) {
-                this.musicPiece = musicPiece;
-        }
-
         public MultipartFile[] getFiles() {
                 return files;
         }
@@ -110,19 +107,19 @@ public class QuestionInputDto {
                 this.files = files;
         }
 
-        public ZonedDateTime getDateTimePosted() {
+        public LocalDateTime getDateTimePosted() {
                 return dateTimePosted;
         }
 
-        public void setDateTimePosted(ZonedDateTime dateTimePosted) {
+        public void setDateTimePosted(LocalDateTime dateTimePosted) {
                 this.dateTimePosted = dateTimePosted;
         }
 
-        public ZonedDateTime getLastUpdate() {
+        public LocalDateTime getLastUpdate() {
                 return lastUpdate;
         }
 
-        public void setLastUpdate(ZonedDateTime lastUpdate) {
+        public void setLastUpdate(LocalDateTime lastUpdate) {
                 this.lastUpdate = lastUpdate;
         }
 }

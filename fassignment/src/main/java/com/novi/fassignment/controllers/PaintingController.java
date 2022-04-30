@@ -1,6 +1,8 @@
 package com.novi.fassignment.controllers;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.novi.fassignment.controllers.dto.FileStoredInDataBaseDto;
+import com.novi.fassignment.controllers.dto.FileStoredInDataBaseInputDto;
 import com.novi.fassignment.controllers.dto.PaintingDto;
 import com.novi.fassignment.controllers.dto.PaintingInputDto;
 import com.novi.fassignment.models.FileStoredInDataBase;
@@ -23,9 +25,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+
+import static com.novi.fassignment.utils.Parsers.myLocalDateTimeParserTypeYearMonthDayHourMinSec;
 
 @RestController
 //@CrossOrigin("http://localhost:8080")
@@ -55,24 +61,30 @@ public Long paintingId;//paintingId will only be specified when updating
             @RequestParam("username") String username,
             @RequestParam("title")  String title,
             @RequestParam("artist") String artist,
-            @RequestParam("creationYear") Long creationYear,
             @RequestParam("description")  String description,
-            @RequestParam(value="files",required=false) MultipartFile[] files) {
+            @RequestParam("image")  MultipartFile image,
+            @RequestParam(value="files",required=false) MultipartFile[] files,
+            @RequestParam(value="musicFiles",required=false) MultipartFile[] musicFiles) {
+
+
         String message = "";
         try {
-            LocalDateTime dateTimePosted = LocalDateTime.now(ZoneId.of("GMT+00:00"));
-            ZonedDateTime zonedDateTimePosted = dateTimePosted.atZone(ZoneId.of("GMT+00:00"));
+            LocalDateTime dateTimePosted = LocalDateTime.now(ZoneId.of("GMT+00:01"));
+//            ZonedDateTime zonedDateTimePosted = dateTimePosted.atZone(ZoneId.of("GMT+00:01"));
+//            DateTimeFormatter formatter = DateTimeFormatter.ISO_ZONED_DATE_TIME;
+//            formatter.format(zonedDateTimePosted);
+
 
             PaintingInputDto inputDto= new PaintingInputDto();
             inputDto.username=username;
             inputDto.title=title;
             inputDto.artist=artist;
-            inputDto.creationYear=creationYear;
             inputDto.description=description;
-            inputDto.dateTimePosted=zonedDateTimePosted;
-            inputDto.lastUpdate=zonedDateTimePosted;
-
+            inputDto.dateTimePosted=dateTimePosted;
+            inputDto.lastUpdate=dateTimePosted;
+            inputDto.image=image.getBytes();
             inputDto.files=files;
+            inputDto.musicFiles=musicFiles;
 
             paintingService.createPainting(inputDto);
             message = "Painting submitted!";
@@ -151,38 +163,99 @@ public Long paintingId;//paintingId will only be specified when updating
         }
 
     }
-    @PostMapping("api/user/paintings-upload/{paintingId}")
+    @PostMapping("api/user/paintings-update/{paintingId}")
     public ResponseEntity<Object> updatePaintingWithFiles(@PathVariable("paintingId") Long paintingId,
-                                                          @RequestParam("username") String username,
-                                                          @RequestParam("title")  String title,
-                                                          @RequestParam("artist") String artist,
-                                                          @RequestParam("creationYear") Long creationYear,
-                                                          @RequestParam("description")  String description,
-                                                          @RequestParam("files") MultipartFile[] files) {
+                                                          @RequestParam(value="username",required=false) String username,
+                                                          @RequestParam(value="dateTimePosted",required=false) String dateTimePosted,
+                                                          @RequestParam(value="title",required=false)  String title,
+                                                          @RequestParam(value="artist",required=false) String artist,
+                                                          @RequestParam(value="description",required=false)  String description,
+                                                          @RequestParam(value="image",required=false)  MultipartFile image,
+                                                          @RequestParam(value="files",required=false) MultipartFile[] multipartFiles,
+                                                          @RequestParam(value="musicFiles",required=false) MultipartFile[] musicFiles) {
         String message_painting = "";
-
         Optional<Painting> currentPainting = paintingRepository.findById(paintingId);
+        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss Z");
+        //DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        //DateTimeFormatter formatter = DateTimeFormatter.ISO_ZONED_DATE_TIME;
+        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+
+//        OffsetDateTime date = OffsetDateTime.now();
+//        System.out.println(date);
+//
+//        ZonedDateTime zdt = ZonedDateTime.from(date);
+//        System.out.println(zdt);
+//        System.out.println( formatter.format(zdt) );
 
         if (currentPainting.isPresent()) {
             //paintingService.deletePaintingById(id);
-            Painting updatedPainting = currentPainting.get();
+            Painting paintingToUpdate = currentPainting.get();
             ///paintingService.createPainting(updatedPainting);
             try {
                 //LocalDate datePosted = LocalDate.now(ZoneId.of("GMT+00:00"));
                 String message = "";
                 try {
                     //LocalDate datePosted = LocalDate.now(ZoneId.of("GMT+00:00"));
+
+//                    var dto = new PaintingDto();
+//                    var painting = paintingService.getPaintingById(paintingId);
+//                    dto=PaintingDto.fromPaintingToDto(painting);
+
+//                    ZonedDateTime dateTimePostedWithZoneOffset = ZonedDateTime
+//                            .parse("2011-12-03T10:15:30+01:00", formatter);
+                    //ZonedDateTime dateTimePostedWithZoneOffset = ZonedDateTime
+                    //        .parse(dateTimePosted, formatter);
+
+                    LocalDateTime localDateTimePosted =myLocalDateTimeParserTypeYearMonthDayHourMinSec(dateTimePosted);
+                    LocalDateTime lastUpdate = LocalDateTime.now(ZoneId.of("GMT+00:01"));
+                    ZonedDateTime zonedLastUpdate = lastUpdate.atZone(ZoneId.of("GMT+00:01"));
+                    //formatter.format(zonedLastUpdate);
+
+
+                    if (username != null){
+                        Optional<User> user = userService.getUser(username);
+                        String password = user.get().getPassword();
+                        String email = user.get().getEmail();
+                        User userFromCustomUser = new User();
+                        userFromCustomUser.setUsername(username);
+                        userFromCustomUser.setPassword(password);
+                        userFromCustomUser.setEmail(email);
+                        paintingToUpdate.setUser(userFromCustomUser);
+                    }
+
                     PaintingInputDto inputDto= new PaintingInputDto();
-                    inputDto.username=username;
-                    inputDto.title=title;
-                    inputDto.artist=artist;
-                    inputDto.creationYear=creationYear;
-                    inputDto.description=description;
-                    inputDto.files=files;
                     inputDto.paintingId=paintingId;
+                    inputDto.username=username;
+                    if (title != null){inputDto.title=title;}
+                    else{inputDto.title=null;}
+                    if (artist != null){inputDto.artist=artist;}
+                    else{inputDto.artist=null;}
+                    if (description != null){inputDto.description=description;}
+                    else{inputDto.description=null;}
+                    if (image != null){inputDto.image=image.getBytes();}
+                    else{inputDto.image=null;}
+                    if (multipartFiles != null){inputDto.files=multipartFiles;}
+                    else{inputDto.files=null;}
+                    if (musicFiles != null){inputDto.musicFiles=musicFiles;}
+                    else{inputDto.musicFiles=null;}
 
-                    paintingService.updatePainting(inputDto,updatedPainting);
 
+/*                    if (multipartFiles != null){
+                        List<String> fileNames = new ArrayList<>();
+                        //Set<FileStoredInDataBase> attachedFiles = new HashSet<>();
+                        List<MultipartFile> multipartFilesList = new ArrayList<MultipartFile>();
+                        Arrays.asList(multipartFiles).stream().forEach(theFile -> multipartFilesList.add(theFile));
+                    }
+                    if (musicFiles != null){
+                        List<String> fileNames = new ArrayList<>();
+                        //Set<FileStoredInDataBase> attachedFiles = new HashSet<>();
+                        List<MultipartFile> multipartFilesList = new ArrayList<MultipartFile>();
+                        Arrays.asList(musicFiles).stream().forEach(theFile -> multipartFilesList.add(theFile));
+                    }*/
+                    //paintingRepository.save(paintingToUpdate);
+
+                    paintingService.updatePainting(inputDto, paintingToUpdate);
 
                     message = "Painting submitted!";
                     return ResponseEntity.noContent().build();

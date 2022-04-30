@@ -84,7 +84,7 @@ public class FileStorageInDataBaseController {
     }*/
 
 
-    @GetMapping("api/user/files_database")
+    @GetMapping("api/user/files-database")
     public ResponseEntity<List<FileStoredInDataBaseDto>> getResponseFilesAsList() {
         var dtos = new ArrayList<FileStoredInDataBaseDto>();
         var filesStoredInDataBase = storageService.getAllFilesAsList();
@@ -96,7 +96,7 @@ public class FileStorageInDataBaseController {
         return ResponseEntity.status(HttpStatus.OK).body(dtos);
     }
 
-    @GetMapping("api/user/files_database/{id}")
+    @GetMapping("api/user/files-database/{id}")
     public ResponseEntity<byte[]> getFile(@PathVariable("id") Long id) {
         FileStoredInDataBase fileDB = storageService.getFile(id);
 
@@ -109,7 +109,7 @@ public class FileStorageInDataBaseController {
 
 
 
-    @GetMapping("api/user/question_files_from_database")
+    @GetMapping("api/user/question-files-from-database")
     public ResponseEntity<List<FileStoredInDataBaseDto>> getFileListById(@RequestBody List<Integer> list) {
         var dtos = new ArrayList<FileStoredInDataBaseDto>();
 
@@ -140,7 +140,7 @@ public class FileStorageInDataBaseController {
 
 
 
-    @DeleteMapping("api/user/files_database/{id}")
+    @DeleteMapping("api/user/files-database/{id}")
     public ResponseEntity<HttpStatus> deleteFile(@PathVariable("id") long id) {
         try {
             storageService.deleteFileStoredInDataBaseById(id);
@@ -150,7 +150,7 @@ public class FileStorageInDataBaseController {
         }
     }
 
-    @DeleteMapping("api/user/files_database")
+    @DeleteMapping("api/user/files-database")
     public ResponseEntity<HttpStatus> deleteAllFiles() {
         try {
             storageService. deleteAllFileStoredInDataBase();

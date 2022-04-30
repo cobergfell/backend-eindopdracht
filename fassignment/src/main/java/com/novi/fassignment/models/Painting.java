@@ -21,13 +21,23 @@ public class Painting  {
     private String title;
     private String artist;
     private String description;
-    private Long creationYear;
+    private byte[] image;
+
     @CreationTimestamp
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
-    private ZonedDateTime dateTimePosted;
+    //@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:01")
+    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone="GMT+00:01")
+    //private ZonedDateTime dateTimePosted;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime dateTimePosted;
+
+
     @UpdateTimestamp
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
-    private ZonedDateTime lastUpdate;
+    //@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:01")
+    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone="GMT+00:01")
+    //private ZonedDateTime lastUpdate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime lastUpdate;
 
 /*    @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
@@ -50,6 +60,16 @@ public class Painting  {
             orphanRemoval = true,
             fetch = FetchType.EAGER)
     private Set<FileStoredInDataBase> files = new HashSet<>();
+
+    @OneToMany(
+            targetEntity = com.novi.fassignment.models.MusicFileStoredInDataBase.class,
+            mappedBy = "painting",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER)
+    private Set<MusicFileStoredInDataBase> musicFiles = new HashSet<>();
+
+
 
     @OneToMany(
             targetEntity = com.novi.fassignment.models.Question.class,
@@ -75,7 +95,6 @@ public class Painting  {
             joinColumns = @JoinColumn(name = "paintingId"),
             inverseJoinColumns = @JoinColumn(name = "filesId"))
     private List<FileStoredInDataBase> files = new ArrayList<FileStoredInDataBase>();*/
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "username")
@@ -113,27 +132,27 @@ public class Painting  {
         this.description = description;
     }
 
-    public Long getCreationYear() {
-        return creationYear;
+    public byte[] getImage() {
+        return image;
     }
 
-    public void setCreationYear(Long creationYear) {
-        this.creationYear = creationYear;
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
-    public ZonedDateTime getDateTimePosted() {
+    public LocalDateTime getDateTimePosted() {
         return dateTimePosted;
     }
 
-    public void setDateTimePosted(ZonedDateTime dateTimePosted) {
+    public void setDateTimePosted(LocalDateTime dateTimePosted) {
         this.dateTimePosted = dateTimePosted;
     }
 
-    public ZonedDateTime getLastUpdate() {
+    public LocalDateTime getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(ZonedDateTime lastUpdate) {
+    public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 
@@ -145,9 +164,13 @@ public class Painting  {
         this.files = files;
     }
 
-    public Set<Question> getQuestions() { return questions; }
+    public Set<Question> getQuestions() {
+        return questions;
+    }
 
-    public void setQuestions(Set<Question> questions) {this.questions = questions;}
+    public void setQuestions(Set<Question> questions) {
+        this.questions = questions;
+    }
 
     public Set<Answer> getAnswers() {
         return answers;
@@ -165,4 +188,11 @@ public class Painting  {
         this.user = user;
     }
 
+    public Set<MusicFileStoredInDataBase> getMusicFiles() {
+        return musicFiles;
+    }
+
+    public void setMusicFiles(Set<MusicFileStoredInDataBase> musicFiles) {
+        this.musicFiles = musicFiles;
+    }
 }

@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 
 @Controller
 @CrossOrigin("http://localhost:8080")
-public class FilesController {
+public class FilesControllerNotUsedAnymoreInThisApp {
 
     @Autowired
     FilesStorageService storageService;
@@ -72,7 +72,7 @@ public class FilesController {
         List<FileInfo> fileInfos = storageService.loadAll().map(path -> {
             String filename = path.getFileName().toString();
             String url = MvcUriComponentsBuilder
-                    .fromMethodName(FilesController.class, "getFile", path.getFileName().toString()).build().toString();
+                    .fromMethodName(FilesControllerNotUsedAnymoreInThisApp.class, "getFile", path.getFileName().toString()).build().toString();
 
             return new FileInfo(filename, url);
         }).collect(Collectors.toList());

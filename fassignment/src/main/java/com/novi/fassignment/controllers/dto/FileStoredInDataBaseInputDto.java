@@ -1,18 +1,9 @@
 package com.novi.fassignment.controllers.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.novi.fassignment.models.Answer;
-import com.novi.fassignment.models.MusicPiece;
 import com.novi.fassignment.models.Painting;
 import com.novi.fassignment.models.Question;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.web.multipart.MultipartFile;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.Date;
-import java.time.ZonedDateTime;
-
 
 
 public class FileStoredInDataBaseInputDto {
@@ -23,7 +14,6 @@ public class FileStoredInDataBaseInputDto {
     public Question question;
     public Answer answer;
     public Painting painting;
-    public MusicPiece musicPiece;
 
     public Long getId() {
         return id;
@@ -65,11 +55,4 @@ public class FileStoredInDataBaseInputDto {
         this.painting = painting;
     }
 
-    public MusicPiece getMusicPiece() {
-        return musicPiece;
-    }
-
-    public void setMusicPiece(MusicPiece musicPiece) {
-        this.musicPiece = musicPiece;
-    }
 }

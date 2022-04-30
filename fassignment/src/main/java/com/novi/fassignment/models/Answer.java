@@ -21,12 +21,21 @@ public class Answer  {
     private String title;
     private String content;
     private String tags;
+
+//    @CreationTimestamp
+//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
+//    private ZonedDateTime dateTimePosted;
+//    @UpdateTimestamp
+//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
+//    private ZonedDateTime lastUpdate;
+
     @CreationTimestamp
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
-    private ZonedDateTime dateTimePosted;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    public LocalDateTime dateTimePosted;
     @UpdateTimestamp
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
-    private ZonedDateTime lastUpdate;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    public LocalDateTime lastUpdate;
+
 
 
 /*    @CreationTimestamp
@@ -72,9 +81,6 @@ public class Answer  {
     @JoinColumn(name = "paintingId")
     private Painting painting;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "musicPieceId")
-    private MusicPiece musicPiece;
 
     public Long getAnswerId() {
         return answerId;
@@ -108,19 +114,19 @@ public class Answer  {
         this.tags = tags;
     }
 
-    public ZonedDateTime getDateTimePosted() {
+    public LocalDateTime getDateTimePosted() {
         return dateTimePosted;
     }
 
-    public void setDateTimePosted(ZonedDateTime dateTimePosted) {
+    public void setDateTimePosted(LocalDateTime dateTimePosted) {
         this.dateTimePosted = dateTimePosted;
     }
 
-    public ZonedDateTime getLastUpdate() {
+    public LocalDateTime getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(ZonedDateTime lastUpdate) {
+    public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 
@@ -156,11 +162,4 @@ public class Answer  {
         this.painting = painting;
     }
 
-    public MusicPiece getMusicPiece() {
-        return musicPiece;
-    }
-
-    public void setMusicPiece(MusicPiece musicPiece) {
-        this.musicPiece = musicPiece;
-    }
 }

@@ -42,9 +42,6 @@ public class QuestionController {
     @Autowired
     private PaintingServiceImpl paintingService;
 
-
-    @Autowired
-    private MusicPieceServiceImpl musicPieceService;
 /*
     @Autowired
     private QuestionGetDto questionGetDto;//Dto are usually static methods but in this case it had to be instantiated to instantiate services
@@ -388,22 +385,15 @@ public ResponseEntity<Object> sendQuestionUnrelatedToItemsWithoutAttachment(
             @RequestParam(value="files",required=false) MultipartFile[] files) {
         String message = "";
         LocalDateTime dateTimePosted = LocalDateTime.now(ZoneId.of("GMT+00:00"));
-        ZonedDateTime zonedDateTimePosted = dateTimePosted.atZone(ZoneId.of("GMT+00:00"));
+        //ZonedDateTime zonedDateTimePosted = dateTimePosted.atZone(ZoneId.of("GMT+00:00"));
+
         Question question = new Question();
         Painting painting = new Painting();
-        MusicPiece musicPiece = new MusicPiece();
         if (questionRelatedTo.equals("painting")) {
             try {
                 painting = paintingService.getPaintingById(id);
             } catch (Exception exception) {
                 message = "Painting Id not found";
-                id = Long.valueOf(-1);
-            }
-        } else if (questionRelatedTo.equals("musicPiece")) {
-            try {
-                musicPiece = musicPieceService.getMusicPieceById(id);
-            } catch (Exception exception) {
-                message = "Music piece Id not found";
                 id = Long.valueOf(-1);
             }
         } else if (questionRelatedTo.equals("question")) {   //in that case we edit question
@@ -424,8 +414,8 @@ public ResponseEntity<Object> sendQuestionUnrelatedToItemsWithoutAttachment(
             inputDto.title = title;
             inputDto.content = content;
             inputDto.tags = tags;
-            inputDto.dateTimePosted = zonedDateTimePosted;
-            inputDto.lastUpdate = zonedDateTimePosted;
+            inputDto.dateTimePosted = dateTimePosted;
+            inputDto.lastUpdate = dateTimePosted;
             inputDto.questionRelatedTo = questionRelatedTo;
             inputDto.idRelatedItem = id;
             inputDto.files = files;

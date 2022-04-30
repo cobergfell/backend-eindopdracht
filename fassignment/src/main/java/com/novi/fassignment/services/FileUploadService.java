@@ -39,6 +39,7 @@ public class FileUploadService {
             String outputString = new String();
             Path copyLocation = Paths
                     .get(uploadDir + File.separator + StringUtils.cleanPath(file.getOriginalFilename()));
+                    //.get(uploadDir + '\\' + StringUtils.cleanPath(file.getOriginalFilename()));
             Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
             result = copyLocation.toAbsolutePath().toString();
         } catch (Exception e) {
@@ -48,6 +49,5 @@ public class FileUploadService {
         }
         return result;
     }
-
 
 }

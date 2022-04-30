@@ -38,8 +38,6 @@ public class AnswerServiceImpl implements AnswerService {
     @Autowired
     PaintingService paintingService;
 
-    @Autowired
-    MusicPieceService musicPieceService;
 
     private FileStorageInDataBaseService fileStorageInDataBaseService;
     //private List<Answer> answers = new ArrayList<>();
@@ -111,7 +109,6 @@ public class AnswerServiceImpl implements AnswerService {
                 Question question= questionService.getQuestionById(Long.valueOf(idRelatedItem));
                 answer.setQuestion(question);
                 answer.setPainting(null);
-                answer.setMusicPiece(null);
 
             }
 //            else if (dto.answerRelatedTo.equals("musicPiece")){
@@ -126,7 +123,6 @@ public class AnswerServiceImpl implements AnswerService {
         else{
             answer.setQuestion(null);
             answer.setPainting(null);
-            answer.setMusicPiece(null);
         }
 
         // test, remove line below

@@ -111,7 +111,6 @@ public class FileStorageInDataBaseService {
         fileStoredInDataBase.setQuestion(null);
         fileStoredInDataBase.setAnswer(null);
         fileStoredInDataBase.setPainting(null);
-        fileStoredInDataBase.setMusicPiece(null);
         //fileStoredInDataBase.setFileId(Long.valueOf(999));//test
         return fileStorageInDataBaseRepository.save(fileStoredInDataBase);
     }
@@ -124,7 +123,6 @@ public class FileStorageInDataBaseService {
         fileStoredInDataBase.setQuestion(fileStoredInDataBaseInputDto.getQuestion());
         fileStoredInDataBase.setAnswer(fileStoredInDataBaseInputDto.getAnswer());
         fileStoredInDataBase.setPainting(fileStoredInDataBaseInputDto.getPainting());
-        fileStoredInDataBase.setMusicPiece(fileStoredInDataBaseInputDto.getMusicPiece());
 
 
         /*

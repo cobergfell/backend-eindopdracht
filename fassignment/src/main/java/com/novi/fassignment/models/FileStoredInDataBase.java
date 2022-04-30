@@ -17,7 +17,12 @@ public class FileStoredInDataBase {
 
     private String name;
 
+    private String description;
+
     private String type;
+
+    private String url;
+
 
     @Lob
     private byte[] data;
@@ -33,10 +38,6 @@ public class FileStoredInDataBase {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "paintingId")
     private Painting painting;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "musicPieceId")
-    private MusicPiece musicPiece;
 
 
     //default constructor needs to be given otherwise Postman send a 500 error, the reason for that is still unclear
@@ -66,6 +67,14 @@ public class FileStoredInDataBase {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getType() {
@@ -108,12 +117,11 @@ public class FileStoredInDataBase {
         this.painting = painting;
     }
 
-    public MusicPiece getMusicPiece() {
-        return musicPiece;
+    public String getUrl() {
+        return url;
     }
 
-    public void setMusicPiece(MusicPiece musicPiece) {
-        this.musicPiece = musicPiece;
+    public void setUrl(String url) {
+        this.url = url;
     }
-
 }

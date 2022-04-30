@@ -6,6 +6,7 @@ import com.novi.fassignment.models.Question;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,13 +19,23 @@ public class QuestionDto
     public String content;
     public String tags;
     public String username;
+
+//    @CreationTimestamp
+//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:01")
+//    public ZonedDateTime dateTimePosted;
+//    @UpdateTimestamp
+//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:01")
+//    public ZonedDateTime lastUpdate;
+
     @CreationTimestamp
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
-    public ZonedDateTime dateTimePosted;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    public LocalDateTime dateTimePosted;
     @UpdateTimestamp
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
-    public ZonedDateTime lastUpdate;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    public LocalDateTime lastUpdate;
+
     public Set<FileStoredInDataBaseDto> attachedFiles = new HashSet<FileStoredInDataBaseDto>();
+
 
     public Long getQuestionId() {
         return questionId;
@@ -66,19 +77,19 @@ public class QuestionDto
         this.username = username;
     }
 
-    public ZonedDateTime getDateTimePosted() {
+    public LocalDateTime getDateTimePosted() {
         return dateTimePosted;
     }
 
-    public void setDateTimePosted(ZonedDateTime dateTimePosted) {
+    public void setDateTimePosted(LocalDateTime dateTimePosted) {
         this.dateTimePosted = dateTimePosted;
     }
 
-    public ZonedDateTime getLastUpdate() {
+    public LocalDateTime getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(ZonedDateTime lastUpdate) {
+    public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 

@@ -16,16 +16,23 @@ public class PaintingInputDto {
     public String title;
     public String artist;
     public String description;
-    public Long creationYear;
-
-
+    public byte[] image;
+    public MultipartFile[] musicFiles;
     public MultipartFile[] files;
+
+//    @CreationTimestamp
+//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:01")
+//    public ZonedDateTime dateTimePosted;
+//    @UpdateTimestamp
+//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:01")
+//    public ZonedDateTime lastUpdate;
+
     @CreationTimestamp
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
-    public ZonedDateTime dateTimePosted;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    public LocalDateTime dateTimePosted;
     @UpdateTimestamp
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
-    public ZonedDateTime lastUpdate;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    public LocalDateTime lastUpdate;
 
     public Long getPaintingId() {
         return paintingId;
@@ -67,12 +74,12 @@ public class PaintingInputDto {
         this.description = description;
     }
 
-    public Long getCreationYear() {
-        return creationYear;
+    public byte[] getImage() {
+        return image;
     }
 
-    public void setCreationYear(Long creationYear) {
-        this.creationYear = creationYear;
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
     public MultipartFile[] getFiles() {
@@ -83,20 +90,28 @@ public class PaintingInputDto {
         this.files = files;
     }
 
-    public ZonedDateTime getDateTimePosted() {
+    public LocalDateTime getDateTimePosted() {
         return dateTimePosted;
     }
 
-    public void setDateTimePosted(ZonedDateTime dateTimePosted) {
+    public void setDateTimePosted(LocalDateTime dateTimePosted) {
         this.dateTimePosted = dateTimePosted;
     }
 
-    public ZonedDateTime getLastUpdate() {
+    public LocalDateTime getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(ZonedDateTime lastUpdate) {
+    public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    public MultipartFile[] getMusicFiles() {
+        return musicFiles;
+    }
+
+    public void setMusicFiles(MultipartFile[] musicFiles) {
+        this.musicFiles = musicFiles;
     }
 }
 

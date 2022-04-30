@@ -6,6 +6,7 @@ import com.novi.fassignment.models.Answer;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,12 +23,21 @@ public class AnswerDto
     public Long paintingId;
     public Long musicPieceId;
 
+//    @CreationTimestamp
+//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:01")
+//    public ZonedDateTime dateTimePosted;
+//    @UpdateTimestamp
+//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:01")
+//    public ZonedDateTime lastUpdate;
+
     @CreationTimestamp
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
-    public ZonedDateTime dateTimePosted;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    public LocalDateTime dateTimePosted;
     @UpdateTimestamp
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
-    public ZonedDateTime lastUpdate;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    public LocalDateTime lastUpdate;
+
+
     public Set<FileStoredInDataBaseDto> attachedFiles = new HashSet<FileStoredInDataBaseDto>();
 
     public Long getAnswerId() {
@@ -94,19 +104,19 @@ public class AnswerDto
         this.musicPieceId = musicPieceId;
     }
 
-    public ZonedDateTime getDateTimePosted() {
+    public LocalDateTime getDateTimePosted() {
         return dateTimePosted;
     }
 
-    public void setDateTimePosted(ZonedDateTime dateTimePosted) {
+    public void setDateTimePosted(LocalDateTime dateTimePosted) {
         this.dateTimePosted = dateTimePosted;
     }
 
-    public ZonedDateTime getLastUpdate() {
+    public LocalDateTime getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(ZonedDateTime lastUpdate) {
+    public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 
@@ -119,7 +129,6 @@ public class AnswerDto
     }
 
     public  static AnswerDto fromAnswerToDto(Answer answer) {
-
         var dto = new AnswerDto();
 
 /*        String s=String.valueOf(dto.id);
@@ -140,8 +149,6 @@ public class AnswerDto
         catch (Exception exception) {dto.questionId =null;}
         try{dto.paintingId= answer.getPainting().getPaintingId();}
         catch (Exception exception) {dto.paintingId =null;}
-        try{dto.musicPieceId= answer.getMusicPiece().getMusicPieceId();}
-        catch (Exception exception) {dto.musicPieceId =null;}
 
         //How to filter a map, example 1 by converting a list into stream and apply the stream filter method
         //see https://mkyong.com/java8/java-8-streams-filter-examples/

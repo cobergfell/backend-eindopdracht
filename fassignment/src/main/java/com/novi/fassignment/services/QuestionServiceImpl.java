@@ -30,8 +30,6 @@ public class QuestionServiceImpl implements QuestionService {
     @Autowired
     PaintingService paintingService;
 
-    @Autowired
-    MusicPieceService musicPieceService;
 
 
     private FileStorageInDataBaseService fileStorageInDataBaseService;
@@ -103,20 +101,14 @@ public class QuestionServiceImpl implements QuestionService {
             if(dto.questionRelatedTo.equals("painting")){
                 Painting painting = paintingService.getPaintingById(Long.valueOf(idRelatedItem));
                 question.setPainting(painting);
-                question.setMusicPiece(null);
             }
-            else if (dto.questionRelatedTo.equals("musicPiece")){
-                MusicPiece musicPiece = musicPieceService.getMusicPieceById(Long.valueOf(idRelatedItem));
-                question.setMusicPiece(musicPiece);
-                question.setPainting(null);
-            }
+
 
         }
 
 
         else{
             question.setPainting(null);
-            question.setMusicPiece(null);
         }
 
         // test, remove line below
