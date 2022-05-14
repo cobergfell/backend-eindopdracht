@@ -39,7 +39,9 @@ public class NoviMethod1FileUploadServiceImpl implements NoviMethod1FileUploadSe
     @Value("${app.upload.dir:${user.home}}")
     private String uploadDirectory;  // relative to root
     //private final Path uploads = Paths.get("uploads");
-    private final Path uploads = Paths.get("C:\\Users\\Gebruiker\\Test\\uploads");
+    //private final Path uploads = Paths.get("C:\\Users\\Gebruiker\\Test\\uploads");
+    //private final Path uploads2 = Paths.get("C:\\Users\\Gebruiker\\Test\\uploads2");
+    private final Path uploads = Paths.get("D:\\Users\\Gebruiker\\Test\\uploads");
     //private final Path uploads = Paths.get("D:\\Data\\NOVI\\eindopdracht\\fassignment-frontend\\src\\assets");
 
     @Autowired
@@ -68,20 +70,18 @@ public class NoviMethod1FileUploadServiceImpl implements NoviMethod1FileUploadSe
 
         try {
             Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
+            NoviMethod1FileStoredOnDisk newFileToStore = new NoviMethod1FileStoredOnDisk();
+            newFileToStore.setFileName(originalFilename);
+            newFileToStore.setLocation(copyLocation.toString());
+            newFileToStore.setTitle(method1Dto.getTitle());
+            newFileToStore.setDescription(method1Dto.getDescription());
+            NoviMethod1FileStoredOnDisk saved = repository.save(newFileToStore);
+            return saved.getId();
         } catch (Exception e) {
             throw new FileStorageException("Could not store file " + originalFilename + ". Please try again!");
         }
-
-        NoviMethod1FileStoredOnDisk newFileToStore = new NoviMethod1FileStoredOnDisk();
-        newFileToStore.setFileName(originalFilename);
-        newFileToStore.setLocation(copyLocation.toString());
-        newFileToStore.setTitle(method1Dto.getTitle());
-        newFileToStore.setDescription(method1Dto.getDescription());
-
-        NoviMethod1FileStoredOnDisk saved = repository.save(newFileToStore);
-
-        return saved.getId();
     }
+
 
     @Override
     public void deleteFile(long id) {

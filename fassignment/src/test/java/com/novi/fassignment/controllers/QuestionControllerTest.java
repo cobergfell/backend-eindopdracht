@@ -180,7 +180,6 @@ public class QuestionControllerTest {
         question.setUser(user);
         question.setTitle("Shostakovich 7th symphony");
         question.setContent("Did Shostakovich really composed his 7th symphony in Leningrad?");
-        question.setTags("Shostakovich;7th symphony");
 
         String fileName = "sample-file-mock.txt";
         MockMultipartFile sampleFile1 = new MockMultipartFile(

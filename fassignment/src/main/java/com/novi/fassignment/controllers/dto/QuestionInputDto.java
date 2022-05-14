@@ -14,11 +14,12 @@ public class QuestionInputDto {
         public String username;
         public String title;
         public String content;
-        public String tags;
-        public String questionRelatedTo;
         public Long idRelatedItem;
         public Painting painting;
+        public byte[] image;
+        public MultipartFile[] musicFiles;
         public MultipartFile[] files;
+
 
 //        @CreationTimestamp
 //        @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:01")
@@ -33,7 +34,6 @@ public class QuestionInputDto {
         @UpdateTimestamp
         @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
         public LocalDateTime lastUpdate;
-
 
         public Long getQuestionId() {
                 return questionId;
@@ -67,22 +67,6 @@ public class QuestionInputDto {
                 this.content = content;
         }
 
-        public String getTags() {
-                return tags;
-        }
-
-        public void setTags(String tags) {
-                this.tags = tags;
-        }
-
-        public String getQuestionRelatedTo() {
-                return questionRelatedTo;
-        }
-
-        public void setQuestionRelatedTo(String questionRelatedTo) {
-                this.questionRelatedTo = questionRelatedTo;
-        }
-
         public Long getIdRelatedItem() {
                 return idRelatedItem;
         }
@@ -97,6 +81,22 @@ public class QuestionInputDto {
 
         public void setPainting(Painting painting) {
                 this.painting = painting;
+        }
+
+        public byte[] getImage() {
+                return image;
+        }
+
+        public void setImage(byte[] image) {
+                this.image = image;
+        }
+
+        public MultipartFile[] getMusicFiles() {
+                return musicFiles;
+        }
+
+        public void setMusicFiles(MultipartFile[] musicFiles) {
+                this.musicFiles = musicFiles;
         }
 
         public MultipartFile[] getFiles() {

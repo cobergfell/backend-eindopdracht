@@ -2,6 +2,7 @@ package com.novi.fassignment.controllers.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.novi.fassignment.models.FileStoredInDataBase;
+import com.novi.fassignment.models.MusicFileStoredInDataBase;
 import com.novi.fassignment.models.Question;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -17,8 +18,9 @@ public class QuestionDto
     public Long questionId;
     public String title;
     public String content;
-    public String tags;
     public String username;
+    public byte[] image;
+    public Long paintingId;
 
 //    @CreationTimestamp
 //    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:01")
@@ -35,7 +37,7 @@ public class QuestionDto
     public LocalDateTime lastUpdate;
 
     public Set<FileStoredInDataBaseDto> attachedFiles = new HashSet<FileStoredInDataBaseDto>();
-
+    public Set<MusicFileStoredInDataBaseDto> attachedMusicFiles = new HashSet<>();
 
     public Long getQuestionId() {
         return questionId;
@@ -61,20 +63,28 @@ public class QuestionDto
         this.content = content;
     }
 
-    public String getTags() {
-        return tags;
-    }
-
-    public void setTags(String tags) {
-        this.tags = tags;
-    }
-
     public String getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    public Long getPaintingId() {
+        return paintingId;
+    }
+
+    public void setPaintingId(Long paintingId) {
+        this.paintingId = paintingId;
     }
 
     public LocalDateTime getDateTimePosted() {
@@ -101,6 +111,14 @@ public class QuestionDto
         this.attachedFiles = attachedFiles;
     }
 
+    public Set<MusicFileStoredInDataBaseDto> getAttachedMusicFiles() {
+        return attachedMusicFiles;
+    }
+
+    public void setAttachedMusicFiles(Set<MusicFileStoredInDataBaseDto> attachedMusicFiles) {
+        this.attachedMusicFiles = attachedMusicFiles;
+    }
+
     public  static QuestionDto fromQuestionToDto(Question question) {
 
         var dto = new QuestionDto();
@@ -115,10 +133,13 @@ public class QuestionDto
         dto.questionId = question.getQuestionId();
         dto.title = question.getTitle();
         dto.content = question.getContent();
-        dto.tags = question.getTags();
         dto.dateTimePosted = question.getDateTimePosted();
         dto.lastUpdate = question.getLastUpdate();
         dto.username = question.getUser().getUsername();
+        try{dto.paintingId= question.getPainting().getPaintingId();}
+        catch (Exception exception) {dto.paintingId =null;}
+
+
 
         //How to filter a map, example 1 by converting a list into stream and apply the stream filter method
         //see https://mkyong.com/java8/java-8-streams-filter-examples/
@@ -149,6 +170,10 @@ public class QuestionDto
             dto.attachedFiles.add(responseFileDto);
         }
 
+        for (MusicFileStoredInDataBase musicFileStoredInDataBase : question.getMusicFiles()) {
+            MusicFileStoredInDataBaseDto responseFileDto=MusicFileStoredInDataBaseDto.fromFileStoredInDataBase(musicFileStoredInDataBase);
+            dto.attachedMusicFiles.add(responseFileDto);
+        }
         return dto;
 
 

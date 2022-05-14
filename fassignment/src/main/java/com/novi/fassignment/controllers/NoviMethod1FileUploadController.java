@@ -117,6 +117,8 @@ public class NoviMethod1FileUploadController {
         return ResponseEntity.created(location).body(location);
     }
 
+
+
     @DeleteMapping("api/user/delete-file-from-disk/{id}")
     public ResponseEntity<Object> deleteFile(@PathVariable long id) {
         methode1Service.deleteFile(id);

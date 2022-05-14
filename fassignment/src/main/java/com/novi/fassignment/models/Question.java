@@ -19,8 +19,10 @@ public class Question  {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long questionId;
     private String title;
+    @Lob
     private String content;
-    private String tags;
+    private byte[] image;
+    //private String tags;
 
 //    @CreationTimestamp
 //    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
@@ -48,15 +50,23 @@ public class Question  {
     @Column(name = "modify_date")
     private Date lastUpdate;*/
 
-
-
     @OneToMany(
             targetEntity = com.novi.fassignment.models.FileStoredInDataBase.class,
             mappedBy = "question",
             cascade = CascadeType.ALL,
-            orphanRemoval = true,
+            //orphanRemoval = true,
             fetch = FetchType.EAGER)
     private Set<FileStoredInDataBase> files = new HashSet<>();
+
+
+    @OneToMany(
+            targetEntity = com.novi.fassignment.models.MusicFileStoredInDataBase.class,
+            mappedBy = "question",
+            cascade = CascadeType.ALL,
+            //orphanRemoval = true,
+            fetch = FetchType.EAGER)
+    private Set<MusicFileStoredInDataBase> musicFiles = new HashSet<>();
+
 
     @OneToMany(
             targetEntity = com.novi.fassignment.models.Answer.class,
@@ -65,8 +75,6 @@ public class Question  {
             orphanRemoval = true,
             fetch = FetchType.EAGER)
     private Set<com.novi.fassignment.models.Answer> answers = new HashSet<>();
-
-
 
 /*    @ManyToMany
     @JoinTable(
@@ -108,12 +116,12 @@ public class Question  {
         this.content = content;
     }
 
-    public String getTags() {
-        return tags;
+    public byte[] getImage() {
+        return image;
     }
 
-    public void setTags(String tags) {
-        this.tags = tags;
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
     public LocalDateTime getDateTimePosted() {
@@ -140,6 +148,14 @@ public class Question  {
         this.files = files;
     }
 
+    public Set<MusicFileStoredInDataBase> getMusicFiles() {
+        return musicFiles;
+    }
+
+    public void setMusicFiles(Set<MusicFileStoredInDataBase> musicFiles) {
+        this.musicFiles = musicFiles;
+    }
+
     public Set<Answer> getAnswers() {
         return answers;
     }
@@ -155,7 +171,6 @@ public class Question  {
     public void setPainting(Painting painting) {
         this.painting = painting;
     }
-
 
     public User getUser() {
         return user;

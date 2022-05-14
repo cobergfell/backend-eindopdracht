@@ -227,6 +227,8 @@ public Long paintingId;//paintingId will only be specified when updating
                     PaintingInputDto inputDto= new PaintingInputDto();
                     inputDto.paintingId=paintingId;
                     inputDto.username=username;
+                    inputDto.dateTimePosted=localDateTimePosted;
+                    inputDto.lastUpdate=lastUpdate;
                     if (title != null){inputDto.title=title;}
                     else{inputDto.title=null;}
                     if (artist != null){inputDto.artist=artist;}

@@ -19,8 +19,10 @@ public class Answer  {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long answerId;
     private String title;
+    @Lob
     private String content;
-    private String tags;
+    private byte[] image;
+    //private String tags;
 
 //    @CreationTimestamp
 //    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
@@ -59,6 +61,14 @@ public class Answer  {
             orphanRemoval = true,
             fetch = FetchType.EAGER)
     private Set<FileStoredInDataBase> files = new HashSet<>();
+
+    @OneToMany(
+            targetEntity = com.novi.fassignment.models.MusicFileStoredInDataBase.class,
+            mappedBy = "answer",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER)
+    private Set<MusicFileStoredInDataBase> musicFiles = new HashSet<>();
 
 
 /*    @ManyToMany
@@ -106,12 +116,12 @@ public class Answer  {
         this.content = content;
     }
 
-    public String getTags() {
-        return tags;
+    public byte[] getImage() {
+        return image;
     }
 
-    public void setTags(String tags) {
-        this.tags = tags;
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
     public LocalDateTime getDateTimePosted() {
@@ -138,6 +148,14 @@ public class Answer  {
         this.files = files;
     }
 
+    public Set<MusicFileStoredInDataBase> getMusicFiles() {
+        return musicFiles;
+    }
+
+    public void setMusicFiles(Set<MusicFileStoredInDataBase> musicFiles) {
+        this.musicFiles = musicFiles;
+    }
+
     public User getUser() {
         return user;
     }
@@ -161,5 +179,4 @@ public class Answer  {
     public void setPainting(Painting painting) {
         this.painting = painting;
     }
-
 }

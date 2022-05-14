@@ -3,6 +3,7 @@ package com.novi.fassignment.controllers.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.novi.fassignment.models.FileStoredInDataBase;
 import com.novi.fassignment.models.Answer;
+import com.novi.fassignment.models.MusicFileStoredInDataBase;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -17,11 +18,11 @@ public class AnswerDto
     public Long answerId;
     public String title;
     public String content;
-    public String tags;
     public String username;
+    public byte[] image;
     public Long questionId;
-    public Long paintingId;
-    public Long musicPieceId;
+//    public Long paintingId;
+//    public Long musicPieceId;
 
 //    @CreationTimestamp
 //    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:01")
@@ -39,6 +40,8 @@ public class AnswerDto
 
 
     public Set<FileStoredInDataBaseDto> attachedFiles = new HashSet<FileStoredInDataBaseDto>();
+    public Set<MusicFileStoredInDataBaseDto> attachedMusicFiles = new HashSet<>();
+
 
     public Long getAnswerId() {
         return answerId;
@@ -64,12 +67,12 @@ public class AnswerDto
         this.content = content;
     }
 
-    public String getTags() {
-        return tags;
+    public byte[] getImage() {
+        return image;
     }
 
-    public void setTags(String tags) {
-        this.tags = tags;
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
     public String getUsername() {
@@ -88,21 +91,6 @@ public class AnswerDto
         this.questionId = questionId;
     }
 
-    public Long getPaintingId() {
-        return paintingId;
-    }
-
-    public void setPaintingId(Long paintingId) {
-        this.paintingId = paintingId;
-    }
-
-    public Long getMusicPieceId() {
-        return musicPieceId;
-    }
-
-    public void setMusicPieceId(Long musicPieceId) {
-        this.musicPieceId = musicPieceId;
-    }
 
     public LocalDateTime getDateTimePosted() {
         return dateTimePosted;
@@ -128,6 +116,14 @@ public class AnswerDto
         this.attachedFiles = attachedFiles;
     }
 
+    public Set<MusicFileStoredInDataBaseDto> getAttachedMusicFiles() {
+        return attachedMusicFiles;
+    }
+
+    public void setAttachedMusicFiles(Set<MusicFileStoredInDataBaseDto> attachedMusicFiles) {
+        this.attachedMusicFiles = attachedMusicFiles;
+    }
+
     public  static AnswerDto fromAnswerToDto(Answer answer) {
         var dto = new AnswerDto();
 
@@ -141,14 +137,14 @@ public class AnswerDto
         dto.answerId = answer.getAnswerId();
         dto.title = answer.getTitle();
         dto.content = answer.getContent();
-        dto.tags = answer.getTags();
+        //dto.tags = answer.getTags();
         dto.dateTimePosted = answer.getDateTimePosted();
         dto.lastUpdate = answer.getLastUpdate();
         dto.username = answer.getUser().getUsername();
         try{dto.questionId = answer.getQuestion().getQuestionId();}
         catch (Exception exception) {dto.questionId =null;}
-        try{dto.paintingId= answer.getPainting().getPaintingId();}
-        catch (Exception exception) {dto.paintingId =null;}
+//        try{dto.paintingId= answer.getPainting().getPaintingId();}
+//        catch (Exception exception) {dto.paintingId =null;}
 
         //How to filter a map, example 1 by converting a list into stream and apply the stream filter method
         //see https://mkyong.com/java8/java-8-streams-filter-examples/
@@ -177,6 +173,12 @@ public class AnswerDto
         for (FileStoredInDataBase fileStoredInDataBase : answer.getFiles()) {
             FileStoredInDataBaseDto responseFileDto=FileStoredInDataBaseDto.fromFileStoredInDataBase(fileStoredInDataBase);
             dto.attachedFiles.add(responseFileDto);
+        }
+
+
+        for (MusicFileStoredInDataBase musicFileStoredInDataBase : answer.getMusicFiles()) {
+            MusicFileStoredInDataBaseDto responseFileDto=MusicFileStoredInDataBaseDto.fromFileStoredInDataBase(musicFileStoredInDataBase);
+            dto.attachedMusicFiles.add(responseFileDto);
         }
 
         return dto;

@@ -15,13 +15,12 @@ public class AnswerInputDto {
     public String username;
     public String title;
     public String content;
-    public String tags;
-    public String answerRelatedTo;
     public Long idRelatedItem;
     public Question question;
     public Painting painting;
+    public byte[] image;
+    public MultipartFile[] musicFiles;
     public MultipartFile[] files;
-
 
 //    @CreationTimestamp
 //    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:01")
@@ -70,22 +69,6 @@ public class AnswerInputDto {
         this.content = content;
     }
 
-    public String getTags() {
-        return tags;
-    }
-
-    public void setTags(String tags) {
-        this.tags = tags;
-    }
-
-    public String getAnswerRelatedTo() {
-        return answerRelatedTo;
-    }
-
-    public void setAnswerRelatedTo(String answerRelatedTo) {
-        this.answerRelatedTo = answerRelatedTo;
-    }
-
     public Long getIdRelatedItem() {
         return idRelatedItem;
     }
@@ -110,6 +93,21 @@ public class AnswerInputDto {
         this.painting = painting;
     }
 
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    public MultipartFile[] getMusicFiles() {
+        return musicFiles;
+    }
+
+    public void setMusicFiles(MultipartFile[] musicFiles) {
+        this.musicFiles = musicFiles;
+    }
 
     public MultipartFile[] getFiles() {
         return files;

@@ -20,6 +20,7 @@ public class Painting  {
     private Long paintingId;
     private String title;
     private String artist;
+    @Lob
     private String description;
     private byte[] image;
 

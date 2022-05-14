@@ -3,6 +3,7 @@ package com.novi.fassignment.services;
 import com.novi.fassignment.controllers.dto.AnswerInputDto;
 import com.novi.fassignment.controllers.dto.FileStoredInDataBaseInputDto;
 import com.novi.fassignment.controllers.dto.AnswerInputDto;
+import com.novi.fassignment.controllers.dto.MusicFileStoredInDataBaseInputDto;
 import com.novi.fassignment.exceptions.RecordNotFoundException;
 import com.novi.fassignment.models.*;
 import com.novi.fassignment.repositories.AnswerRepository;
@@ -10,6 +11,7 @@ import com.novi.fassignment.repositories.FileStorageInDataBaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -25,6 +27,8 @@ public class AnswerServiceImpl implements AnswerService {
     @Autowired
     private FileStorageInDataBaseService storageService;
 
+    @Autowired
+    private MusicFileStorageInDataBaseService musicStorageService;
 
     @Autowired
     private AnswerServiceImpl answerService;
@@ -38,14 +42,6 @@ public class AnswerServiceImpl implements AnswerService {
     @Autowired
     PaintingService paintingService;
 
-
-    private FileStorageInDataBaseService fileStorageInDataBaseService;
-    //private List<Answer> answers = new ArrayList<>();
-
-/*    @Autowired
-    public QuestionServiceImpl(QuestionRepository questionRepository) {
-        this.questionRepository = questionRepository;
-    }*/
 
     @Override
     public Answer getAnswerById(Long id) {
@@ -101,60 +97,23 @@ public class AnswerServiceImpl implements AnswerService {
         answer.setTitle(dto.title);
         // answer.setDatePosted(datePosted.toString());
         answer.setContent(dto.content);
-        answer.setTags(dto.tags);
         Long idRelatedItem=dto.idRelatedItem;
 
-        if(idRelatedItem>=0){
-            if(dto.answerRelatedTo.equals("question")){
-                Question question= questionService.getQuestionById(Long.valueOf(idRelatedItem));
-                answer.setQuestion(question);
-                answer.setPainting(null);
+        Question question= questionService.getQuestionById(Long.valueOf(idRelatedItem));
+        answer.setQuestion(question);
 
-            }
-//            else if (dto.answerRelatedTo.equals("musicPiece")){
-//                MusicPiece musicPiece = musicPieceService.getMusicPieceById(Long.valueOf(idRelatedItem));
-//                answer.setMusicPiece(musicPiece);
-//                answer.setPainting(null);
-//            }
-
-        }
-
-
-        else{
-            answer.setQuestion(null);
-            answer.setPainting(null);
-        }
-
-        // test, remove line below
-        //Painting painting = paintingService.getPaintingById(Long.valueOf(1));
-        //answer.setPainting(painting);
-
-        //answerRepository.save(answer);
-        Answer mostRecentAnswer = answerService.createAnswerWithoutAttachment(answer);
-
+        Answer answerToBuildUp = answerService.createAnswerWithoutAttachment(answer);
 
 
         if(dto.files!=null){
-/*           List<Answer> sortedAnswers = answerService.getAllAnswersByDescId();
-            //Answer[] sortedAnswersArray= (Answer[]) sortedAnswers.toArray();//cast array of objects into array of answers
-            Answer mostRecentAnswer = sortedAnswers.get(0);
-            //Answer mostRecentAnswer=sortedAnswersArray[0];
-            Long mostRecentAnswerId = mostRecentAnswer.getAnswerId();*/
-
-            //storageService.store(file);
-
             List<String> fileNames = new ArrayList<>();
-
             Arrays.asList(dto.files).stream().forEach(file -> {
                 String message2 = "";
                 try {
-                    //storageService.store(file);
-                    //storageService.storeAnswerFile(file, answer);
                     FileStoredInDataBaseInputDto fileStoredInDataBaseInputDto = new FileStoredInDataBaseInputDto();
                     fileStoredInDataBaseInputDto.setFile(file);
                     fileStoredInDataBaseInputDto.setAnswer(answer);
                     FileStoredInDataBase fileStoredInDataBase=storageService.storeAttachedFile(fileStoredInDataBaseInputDto);
-
 
                     fileNames.add(file.getOriginalFilename());
                     message2 = "Uploaded the files successfully: " + fileNames;
@@ -170,12 +129,51 @@ public class AnswerServiceImpl implements AnswerService {
                 FileStoredInDataBase mostRecentFile = sortedFiles.get(i);
                 attachedFiles.add(mostRecentFile);
             }
-
-            mostRecentAnswer.setFiles(attachedFiles);
-
-
+            answerToBuildUp.setFiles(attachedFiles);
         }
 
+
+
+        if (dto.musicFiles!=null ){
+            List<String> musicFileNames = new ArrayList<>();
+            Set<MusicFileStoredInDataBase> attachedMusicFiles = new HashSet<>();
+            List<MultipartFile> musicMultipartFiles = new ArrayList<MultipartFile>();
+            Arrays.asList(dto.musicFiles).stream().forEach(theFile -> musicMultipartFiles.add(theFile));
+            //MultipartFile extra=multipartFiles.get(multipartFiles.size()-1);
+            //multipartFiles.add(extra);//this is a trick because of a bug part 1: you have to repeat the last element and remove it later in order to have setPainting work, I still don't get why
+            // solution of the bug was:    in FileStorageInDataBaseService.java, public FileStoredInDataBase storeAttachedFile I returned return fileStoredInDataBase;
+            // instead of  return fileStorageInDataBaseRepository.save(fileStoredInDataBase);
+
+
+            //Arrays.asList(dto.files).stream().forEach(file -> {
+            musicMultipartFiles.stream().forEach(file -> {
+                        String message3 = "";
+                        try {
+                            MusicFileStoredInDataBaseInputDto musicFileStoredInDataBaseInputDto = new MusicFileStoredInDataBaseInputDto();
+                            musicFileStoredInDataBaseInputDto.setFile(file);
+                            musicFileStoredInDataBaseInputDto.setAnswer(answerToBuildUp);// when is the database commit triggered following a setPainting command?
+                            MusicFileStoredInDataBase musicFileStoredInDataBase = musicStorageService.storeAttachedFile(musicFileStoredInDataBaseInputDto);
+                            //long fileId=fileStoredInDataBase.getFileId();
+                            //if (fileId==multipartFiles.size()){storageService.deleteFileStoredInDataBaseById(fileId);}// trick part 2: remove extra file
+                            // it took me hours ti find out that this trick to add the last file of the list and remove it
+                            // later is the way to associate the last multipart file to the painting
+                            // I do not now why it does not work without this trick, think about it later and fix it
+
+
+
+                            attachedMusicFiles.add(musicFileStoredInDataBase);
+                            message3 = "Files successfully added to painting object: " + musicFileNames;
+                        } catch (Exception e) {
+                            message3 = "Fail to attach files to painting object!";
+                        }
+                    }
+
+            );
+
+        }
+        else{
+            answer.setMusicFiles(null);
+        }
 
     }
 
@@ -194,8 +192,9 @@ public class AnswerServiceImpl implements AnswerService {
         answer.setTitle(dto.title);
         // answer.setDatePosted(datePosted.toString());
         answer.setContent(dto.content);
-        answer.setTags(dto.tags);
+        answer.setImage(dto.image);
         //answer.setId(dto.id);
+
         answerRepository.save(answer);
 
 
@@ -229,6 +228,46 @@ public class AnswerServiceImpl implements AnswerService {
         }
 
         answer.setFiles(attachedFiles);
+        if (dto.musicFiles!=null ){
+            List<String> musicFileNames = new ArrayList<>();
+            Set<MusicFileStoredInDataBase> attachedMusicFiles = new HashSet<>();
+            List<MultipartFile> musicMultipartFiles = new ArrayList<MultipartFile>();
+            Arrays.asList(dto.musicFiles).stream().forEach(theFile -> musicMultipartFiles.add(theFile));
+            //MultipartFile extra=multipartFiles.get(multipartFiles.size()-1);
+            //multipartFiles.add(extra);//this is a trick because of a bug part 1: you have to repeat the last element and remove it later in order to have setPainting work, I still don't get why
+            // solution of the bug was:    in FileStorageInDataBaseService.java, public FileStoredInDataBase storeAttachedFile I returnred return fileStoredInDataBase;
+            // instead of  return fileStorageInDataBaseRepository.save(fileStoredInDataBase);
+
+
+            //Arrays.asList(dto.files).stream().forEach(file -> {
+            musicMultipartFiles.stream().forEach(file -> {
+                        String message3 = "";
+                        try {
+                            MusicFileStoredInDataBaseInputDto musicFileStoredInDataBaseInputDto = new MusicFileStoredInDataBaseInputDto();
+                            musicFileStoredInDataBaseInputDto.setFile(file);
+                            musicFileStoredInDataBaseInputDto.setAnswer(answer);// when is the database commit triggered following a setPainting command?
+                            MusicFileStoredInDataBase musicFileStoredInDataBase = musicStorageService.storeAttachedFile(musicFileStoredInDataBaseInputDto);
+                            //long fileId=fileStoredInDataBase.getFileId();
+                            //if (fileId==multipartFiles.size()){storageService.deleteFileStoredInDataBaseById(fileId);}// trick part 2: remove extra file
+                            // it took me hours ti find out that this trick to add the last file of the list and remove it
+                            // later is the way to associate the last multipart file to the painting
+                            // I do not now why it does not work without this trick, think about it later and fix it
+
+
+
+                            attachedMusicFiles.add(musicFileStoredInDataBase);
+                            message3 = "Files successfully added to painting object: " + musicFileNames;
+                        } catch (Exception e) {
+                            message3 = "Fail to attach files to painting object!";
+                        }
+                    }
+
+            );
+
+        }
+        else{
+            answer.setMusicFiles(null);
+        }
 
     }
 
