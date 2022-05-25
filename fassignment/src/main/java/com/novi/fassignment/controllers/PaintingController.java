@@ -230,13 +230,13 @@ public Long paintingId;//paintingId will only be specified when updating
                     inputDto.dateTimePosted=localDateTimePosted;
                     inputDto.lastUpdate=lastUpdate;
                     if (title != null){inputDto.title=title;}
-                    else{inputDto.title=null;}
+                    else{inputDto.title=paintingToUpdate.getTitle();}
                     if (artist != null){inputDto.artist=artist;}
-                    else{inputDto.artist=null;}
+                    else{inputDto.artist=paintingToUpdate.getArtist();}
                     if (description != null){inputDto.description=description;}
-                    else{inputDto.description=null;}
+                    else{inputDto.description=paintingToUpdate.getDescription();}
                     if (image != null){inputDto.image=image.getBytes();}
-                    else{inputDto.image=null;}
+                    else{inputDto.image=paintingToUpdate.getImage();}
                     if (multipartFiles != null){inputDto.files=multipartFiles;}
                     else{inputDto.files=null;}
                     if (musicFiles != null){inputDto.musicFiles=musicFiles;}

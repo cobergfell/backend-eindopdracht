@@ -5,6 +5,7 @@ package com.novi.fassignment.services;
 
 
 import com.novi.fassignment.controllers.dto.FileStoredInDataBaseInputDto;
+import com.novi.fassignment.controllers.dto.NoviMethod1FileUploadRequestDto;
 import com.novi.fassignment.exceptions.UsernameNotFoundException;
 import com.novi.fassignment.models.*;
 import com.novi.fassignment.repositories.FileStorageInDataBaseRepository;
@@ -34,6 +35,8 @@ public class FileStorageInDataBaseService {
     @Autowired
     private FilesStorageServiceImpl fileStorageOnDiscService;//we use it to temporary copy files om disc to change files names
 
+    @Autowired
+    NoviMethod1FileUploadService noviFileUploadService;
 
     public Boolean checkIfAudio(MultipartFile multipartFile) {
         String contentTypeOfGivenFile = multipartFile.getContentType();
@@ -112,7 +115,24 @@ public class FileStorageInDataBaseService {
         fileStoredInDataBase.setAnswer(null);
         fileStoredInDataBase.setPainting(null);
         //fileStoredInDataBase.setFileId(Long.valueOf(999));//test
+        fileStoredInDataBase.setBytesInDatabaseUrl(null);
+        //added 13-4-22: store multipartfile also as complete blob on disc
+        //fileStoredInDataBase.setFileOnDiskUrl(fileUploadService.uploadFileAndReturnStorageLocationAbsolutePath(file));
+
+        //added 16-4-22: store multipartfile also as complete blob on disc following method Novi
+        NoviMethod1FileUploadRequestDto noviMethod1FileUploadRequestDto= new NoviMethod1FileUploadRequestDto();
+        noviMethod1FileUploadRequestDto.setTitle(fileName);
+        noviMethod1FileUploadRequestDto.setDescription(fileName);
+        noviMethod1FileUploadRequestDto.setFile(file);
+
+        long fileOnDiskId=noviFileUploadService.uploadFile(noviMethod1FileUploadRequestDto);
+        //NoviMethod1FileUploadResponseDto noviMethod1FileUploadResponseDto=noviFileUploadService.getFileById(fileOnDiskId);
+        fileStoredInDataBase.setFileOnDiskId(fileOnDiskId);
+        String fileOnDiskUrl="http://localhost:8080/api/user/download-file-from-disk/"+Long. toString(fileOnDiskId);
+        fileStoredInDataBase.setFileOnDiskUrl(fileOnDiskUrl);
+
         return fileStorageInDataBaseRepository.save(fileStoredInDataBase);
+
     }
 
 

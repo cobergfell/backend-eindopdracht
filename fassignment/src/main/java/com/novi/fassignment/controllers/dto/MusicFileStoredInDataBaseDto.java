@@ -16,8 +16,6 @@ public class MusicFileStoredInDataBaseDto {
     private String bytesInDatabaseUrl;//url to bytes
     private String fileOnDiskUrl;// url of  complete file stored on disc
     private long fileOnDiskId;// Id of complete file stored on disc
-
-
     @Lob
     private byte[] data;
 
@@ -49,14 +47,6 @@ public class MusicFileStoredInDataBaseDto {
         this.type = type;
     }
 
-    public String getUrl() {
-        return bytesInDatabaseUrl;
-    }
-
-    public void setUrl(String url) {
-        this.bytesInDatabaseUrl = url;
-    }
-
     public int getSize() {
         return size;
     }
@@ -64,15 +54,6 @@ public class MusicFileStoredInDataBaseDto {
     public void setSize(int size) {
         this.size = size;
     }
-
-    public byte[] getData() {
-        return data;
-    }
-
-    public void setData(byte[] data) {
-        this.data = data;
-    }
-
 
     public String getBytesInDatabaseUrl() {
         return bytesInDatabaseUrl;
@@ -96,6 +77,14 @@ public class MusicFileStoredInDataBaseDto {
 
     public void setFileOnDiskId(long fileOnDiskId) {
         this.fileOnDiskId = fileOnDiskId;
+    }
+
+    public byte[] getData() {
+        return data;
+    }
+
+    public void setData(byte[] data) {
+        this.data = data;
     }
 
     public static MusicFileStoredInDataBaseDto fromFileStoredInDataBase(MusicFileStoredInDataBase fileStoredInDataBase) {

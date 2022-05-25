@@ -10,12 +10,12 @@ public class FileStoredInDataBaseDto {
     private Long id;
     private String name;
     private String type;
-    private String url;
     private int size;
-
+    private String bytesInDatabaseUrl;//url to bytes
+    private String fileOnDiskUrl;// url of  complete file stored on disc
+    private long fileOnDiskId;// Id of complete file stored on disc
     @Lob
     private byte[] data;
-
 
     //do not forget the getters and setters with Dto's
 
@@ -44,20 +44,36 @@ public class FileStoredInDataBaseDto {
         this.type = type;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     public int getSize() {
         return size;
     }
 
     public void setSize(int size) {
         this.size = size;
+    }
+
+    public String getBytesInDatabaseUrl() {
+        return bytesInDatabaseUrl;
+    }
+
+    public void setBytesInDatabaseUrl(String bytesInDatabaseUrl) {
+        this.bytesInDatabaseUrl = bytesInDatabaseUrl;
+    }
+
+    public String getFileOnDiskUrl() {
+        return fileOnDiskUrl;
+    }
+
+    public void setFileOnDiskUrl(String fileOnDiskUrl) {
+        this.fileOnDiskUrl = fileOnDiskUrl;
+    }
+
+    public long getFileOnDiskId() {
+        return fileOnDiskId;
+    }
+
+    public void setFileOnDiskId(long fileOnDiskId) {
+        this.fileOnDiskId = fileOnDiskId;
     }
 
     public byte[] getData() {
@@ -80,10 +96,11 @@ public class FileStoredInDataBaseDto {
         dto.id = fileStoredInDataBase.getFileId();
         dto.name = fileStoredInDataBase.getName();
         dto.type = fileStoredInDataBase.getType();
-        dto.url = fileDownloadUri;
+        dto.bytesInDatabaseUrl = fileDownloadUri;
         dto.size = fileStoredInDataBase.getData().length;
         dto.data = fileStoredInDataBase.getData();
-
+        dto.fileOnDiskUrl = fileStoredInDataBase.getFileOnDiskUrl();
+        dto.fileOnDiskId = fileStoredInDataBase.getFileOnDiskId();
 
         return dto;
     }

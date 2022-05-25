@@ -101,10 +101,10 @@ public class QuestionController {
     public ResponseEntity<Object> sendPainting(
             @PathVariable("id") Long id,
             @RequestParam("username") String username,
-            @RequestParam("title")  String title,
-            @RequestParam("content")  String content,
+            @RequestParam(value="title",required=false)  String title,
+            @RequestParam(value="content",required=false)  String content,
             //@RequestParam("questionRelatedTo")  String questionRelatedTo,
-            @RequestParam("image")  MultipartFile image,
+            @RequestParam(value="image",required=false)  MultipartFile image,
             @RequestParam(value="files",required=false) MultipartFile[] files,
             @RequestParam(value="musicFiles",required=false) MultipartFile[] musicFiles) {
 
@@ -119,13 +119,20 @@ public class QuestionController {
             QuestionInputDto inputDto= new QuestionInputDto();
             inputDto.idRelatedItem=id;
             inputDto.username=username;
-            inputDto.title=title;
-            inputDto.content=content;
             inputDto.dateTimePosted=dateTimePosted;
             inputDto.lastUpdate=dateTimePosted;
-            inputDto.image=image.getBytes();
-            inputDto.files=files;
-            inputDto.musicFiles=musicFiles;
+            if (title != null){inputDto.title=title;}
+            else{inputDto.title=null;}
+            if (content != null){inputDto.content=content;}
+            else{inputDto.content=null;}
+            if (image != null){inputDto.image=image.getBytes();}
+            else{inputDto.image=null;}
+            if (files != null){inputDto.files=files;}
+            else{inputDto.files=null;}
+            if (musicFiles != null){inputDto.musicFiles=musicFiles;}
+            else{inputDto.musicFiles=null;}
+
+
 
             questionService.createQuestion(inputDto);
             message = "question submitted!";

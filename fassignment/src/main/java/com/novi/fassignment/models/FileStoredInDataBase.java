@@ -11,19 +11,18 @@ public class FileStoredInDataBase {
     //@GeneratedValue(generator = "uuid")
     //@GenericGenerator(name = "uuid", strategy = "uuid2")
     //private String file_id;
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long fileId;
-
     private String name;
-
     private String description;
-
     private String type;
-
-    private String url;
-
-
+    private String bytesInDatabaseUrl;//url to bytes
+    //private String fileOnDiskUrl;// url file stored on disc
+    private String fileOnDiskUrl;// url file stored on disc; Remark: fileOnDiskUrl as attribute name was not recognised in Spring boot but file_on_disk_url is recognised, do not ask me why...
+    private long fileOnDiskId;// idfile stored on disc
     @Lob
     private byte[] data;
 
@@ -38,7 +37,6 @@ public class FileStoredInDataBase {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "paintingId")
     private Painting painting;
-
 
     //default constructor needs to be given otherwise Postman send a 500 error, the reason for that is still unclear
     public FileStoredInDataBase(){
@@ -85,6 +83,30 @@ public class FileStoredInDataBase {
         this.type = type;
     }
 
+    public String getBytesInDatabaseUrl() {
+        return bytesInDatabaseUrl;
+    }
+
+    public void setBytesInDatabaseUrl(String bytesInDatabaseUrl) {
+        this.bytesInDatabaseUrl = bytesInDatabaseUrl;
+    }
+
+    public String getFileOnDiskUrl() {
+        return fileOnDiskUrl;
+    }
+
+    public void setFileOnDiskUrl(String fileOnDiskUrl) {
+        this.fileOnDiskUrl = fileOnDiskUrl;
+    }
+
+    public long getFileOnDiskId() {
+        return fileOnDiskId;
+    }
+
+    public void setFileOnDiskId(long fileOnDiskId) {
+        this.fileOnDiskId = fileOnDiskId;
+    }
+
     public byte[] getData() {
         return data;
     }
@@ -115,13 +137,5 @@ public class FileStoredInDataBase {
 
     public void setPainting(Painting painting) {
         this.painting = painting;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 }
