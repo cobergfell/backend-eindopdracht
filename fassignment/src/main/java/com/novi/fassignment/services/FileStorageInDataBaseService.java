@@ -125,7 +125,7 @@ public class FileStorageInDataBaseService {
         noviMethod1FileUploadRequestDto.setDescription(fileName);
         noviMethod1FileUploadRequestDto.setFile(file);
 
-        long fileOnDiskId=noviFileUploadService.uploadFile(noviMethod1FileUploadRequestDto);
+        Long fileOnDiskId=noviFileUploadService.uploadFile(noviMethod1FileUploadRequestDto);
         //NoviMethod1FileUploadResponseDto noviMethod1FileUploadResponseDto=noviFileUploadService.getFileById(fileOnDiskId);
         fileStoredInDataBase.setFileOnDiskId(fileOnDiskId);
         String fileOnDiskUrl="http://localhost:8080/api/user/download-file-from-disk/"+Long. toString(fileOnDiskId);

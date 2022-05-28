@@ -61,12 +61,24 @@ public class NoviMethod1FileUploadServiceImpl implements NoviMethod1FileUploadSe
         return repository.findAll();
     }
 
-    public long uploadFile(NoviMethod1FileUploadRequestDto method1Dto) {
+    public Long uploadFile(NoviMethod1FileUploadRequestDto method1Dto) {
 
         MultipartFile file = method1Dto.getFile();
 
         String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
         Path copyLocation = this.uploads.resolve(file.getOriginalFilename());
+/*        boolean exists = Files.exists(copyLocation);
+        if (exists){
+            try {
+                String[] splitted = originalFilename.split("\\.");
+                String extensionRemoved = splitted[0];
+                String extension = splitted[1];
+                String newName=extensionRemoved+"_bla";
+                copyLocation = this.uploads.resolve(newName+"."+extension);
+            }catch (Exception e) {
+                throw new FileStorageException("File " + originalFilename + " already exists!");
+            }
+        } */
 
         try {
             Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
@@ -75,6 +87,7 @@ public class NoviMethod1FileUploadServiceImpl implements NoviMethod1FileUploadSe
             newFileToStore.setLocation(copyLocation.toString());
             newFileToStore.setTitle(method1Dto.getTitle());
             newFileToStore.setDescription(method1Dto.getDescription());
+            //NoviMethod1FileStoredOnDisk saved = repository.save(newFileToStore);
             NoviMethod1FileStoredOnDisk saved = repository.save(newFileToStore);
             return saved.getId();
         } catch (Exception e) {
@@ -84,7 +97,7 @@ public class NoviMethod1FileUploadServiceImpl implements NoviMethod1FileUploadSe
 
 
     @Override
-    public void deleteFile(long id) {
+    public void deleteFile(Long id) {
         Optional<NoviMethod1FileStoredOnDisk> stored = repository.findById(id);
 
         if (stored.isPresent()) {
@@ -106,12 +119,12 @@ public class NoviMethod1FileUploadServiceImpl implements NoviMethod1FileUploadSe
 
 
     @Override
-    public boolean fileExistsById(long id) {
+    public boolean fileExistsById(Long id) {
         return repository.existsById(id);
     }
 
     @Override
-    public Resource downloadFile(long id) {
+    public Resource downloadFile(Long id) {
         Optional<NoviMethod1FileStoredOnDisk> stored = repository.findById(id);
 
         if (stored.isPresent()) {

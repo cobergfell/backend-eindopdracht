@@ -12,9 +12,9 @@ public interface NoviMethod1FileUploadService {
     void init();
     Iterable<NoviMethod1FileStoredOnDisk> getFiles();
     //NoviMethod1FileUploadResponseDto getFileById(long id);
-    boolean fileExistsById(long id);
-    long uploadFile(NoviMethod1FileUploadRequestDto method1Dto);
-    void deleteFile(long id);
-    Resource downloadFile(long id);
+    boolean fileExistsById(Long id);
+    Long uploadFile(NoviMethod1FileUploadRequestDto method1Dto);
+    void deleteFile(Long id);
+    Resource downloadFile(Long id);
 
 }

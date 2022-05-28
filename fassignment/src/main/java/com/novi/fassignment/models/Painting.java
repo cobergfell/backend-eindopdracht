@@ -57,16 +57,16 @@ public class Painting  {
     @OneToMany(
             targetEntity = com.novi.fassignment.models.FileStoredInDataBase.class,
             mappedBy = "painting",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
+            //cascade = CascadeType.ALL,
+            //orphanRemoval = true,
             fetch = FetchType.EAGER)
     private Set<FileStoredInDataBase> files = new HashSet<>();
 
     @OneToMany(
             targetEntity = com.novi.fassignment.models.MusicFileStoredInDataBase.class,
             mappedBy = "painting",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
+            //cascade = CascadeType.ALL,
+           //orphanRemoval = true,
             fetch = FetchType.EAGER)
     private Set<MusicFileStoredInDataBase> musicFiles = new HashSet<>();
 

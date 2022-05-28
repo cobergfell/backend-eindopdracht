@@ -172,7 +172,7 @@ public Long paintingId;//paintingId will only be specified when updating
                                                           @RequestParam(value="description",required=false)  String description,
                                                           @RequestParam(value="image",required=false)  MultipartFile image,
                                                           @RequestParam(value="files",required=false) MultipartFile[] multipartFiles,
-                                                          @RequestParam(value="musicFiles",required=false) MultipartFile[] musicFiles) {
+                                                          @RequestParam(value="audioFiles",required=false) MultipartFile[] audioFiles) {
         String message_painting = "";
         Optional<Painting> currentPainting = paintingRepository.findById(paintingId);
         //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss Z");
@@ -239,7 +239,7 @@ public Long paintingId;//paintingId will only be specified when updating
                     else{inputDto.image=paintingToUpdate.getImage();}
                     if (multipartFiles != null){inputDto.files=multipartFiles;}
                     else{inputDto.files=null;}
-                    if (musicFiles != null){inputDto.musicFiles=musicFiles;}
+                    if (audioFiles != null){inputDto.musicFiles=audioFiles;}
                     else{inputDto.musicFiles=null;}
 
 

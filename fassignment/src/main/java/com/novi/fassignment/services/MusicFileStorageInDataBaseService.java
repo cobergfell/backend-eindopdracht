@@ -7,6 +7,7 @@ import com.novi.fassignment.controllers.NoviMethod1FileUploadController;
 import com.novi.fassignment.controllers.dto.MusicFileStoredInDataBaseInputDto;
 import com.novi.fassignment.controllers.dto.NoviMethod1FileUploadRequestDto;
 import com.novi.fassignment.controllers.dto.NoviMethod1FileUploadResponseDto;
+import com.novi.fassignment.exceptions.FileStorageException;
 import com.novi.fassignment.models.MusicFileStoredInDataBase;
 import com.novi.fassignment.models.MusicFileStoredInDataBase;
 import com.novi.fassignment.repositories.MusicFileStorageInDataBaseRepository;
@@ -120,34 +121,27 @@ public class MusicFileStorageInDataBaseService {
         //added 13-4-22: store multipartfile also as complete blob on disc
         //fileStoredInDataBase.setFileOnDiskUrl(fileUploadService.uploadFileAndReturnStorageLocationAbsolutePath(file));
 
-        //added 16-4-22: store multipartfile also as complete blob on disc following method Novi
-        NoviMethod1FileUploadRequestDto noviMethod1FileUploadRequestDto= new NoviMethod1FileUploadRequestDto();
-        noviMethod1FileUploadRequestDto.setTitle(fileName);
-        noviMethod1FileUploadRequestDto.setDescription(fileName);
-        noviMethod1FileUploadRequestDto.setFile(file);
+        try {
 
-        long fileOnDiskId=noviFileUploadService.uploadFile(noviMethod1FileUploadRequestDto);
-        //NoviMethod1FileUploadResponseDto noviMethod1FileUploadResponseDto=noviFileUploadService.getFileById(fileOnDiskId);
-        fileStoredInDataBase.setFileOnDiskId(fileOnDiskId);
-        //String fileOnDiskUrl=noviMethod1FileUploadResponseDto.getDownloadUri();
-        //fileStoredInDataBase.setFileOnDiskUrl(fileOnDiskUrl);
+            //added 16-4-22: store multipartfile also as complete blob on disc following method Novi
+            NoviMethod1FileUploadRequestDto noviMethod1FileUploadRequestDto= new NoviMethod1FileUploadRequestDto();
+            noviMethod1FileUploadRequestDto.setTitle(fileName);
+            noviMethod1FileUploadRequestDto.setDescription(fileName);
+            noviMethod1FileUploadRequestDto.setFile(file);
 
-        //test
-        //String host = System.getenv("GENERATOR_HOST");
-        //String host2 = InetAddress.getLocalHost().getHostName();
-        //UriComponentsBuilder uriBuilder;
-        //UriComponentsBuilder uriBuilderTest = ServletUriComponentsBuilder.fromCurrentContextPath();
-        //System.out.println("uriBuilderTest"+uriBuilderTest);
-        //
+            //NoviMethod1FileUploadResponseDto noviMethod1FileUploadResponseDto=noviFileUploadService.getFileById(fileOnDiskId);
+            Long fileOnDiskId=noviFileUploadService.uploadFile(noviMethod1FileUploadRequestDto);
+            //Long fileOnDiskId=Long.valueOf(999);
+            fileStoredInDataBase.setFileOnDiskId(fileOnDiskId);
+            String fileOnDiskUrl="http://localhost:8080/api/user/download-file-from-disk/"+Long. toString(fileOnDiskId);
+            //fileStoredInDataBase.setFile_on_disk_url(fileOnDiskUrl);
+            fileStoredInDataBase.setFileOnDiskUrl(fileOnDiskUrl);
 
-        //not clear h t does not work...
-        //String url = MvcUriComponentsBuilder.fromMethodName(NoviMethod1FileUploadController.class, "downloadFile").buildAndExpand(Long. toString(fileOnDiskId)).toUri().toString();
+            return fileStorageInDataBaseRepository.save(fileStoredInDataBase);
+        } catch (Exception e) {
+            throw new FileStorageException("Could not store file " + fileName + ". Please try again!");
+        }
 
-        String fileOnDiskUrl="http://localhost:8080/api/user/download-file-from-disk/"+Long. toString(fileOnDiskId);
-
-        fileStoredInDataBase.setFile_on_disk_url(fileOnDiskUrl);
-
-        return fileStorageInDataBaseRepository.save(fileStoredInDataBase);
     }
 
     public MusicFileStoredInDataBase storeAttachedFile(MusicFileStoredInDataBaseInputDto fileStoredInDataBaseInputDto) throws IOException {

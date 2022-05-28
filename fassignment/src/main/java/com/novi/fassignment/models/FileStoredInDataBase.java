@@ -22,7 +22,7 @@ public class FileStoredInDataBase {
     private String bytesInDatabaseUrl;//url to bytes
     //private String fileOnDiskUrl;// url file stored on disc
     private String fileOnDiskUrl;// url file stored on disc; Remark: fileOnDiskUrl as attribute name was not recognised in Spring boot but file_on_disk_url is recognised, do not ask me why...
-    private long fileOnDiskId;// idfile stored on disc
+    private Long fileOnDiskId;// idfile stored on disc
     @Lob
     private byte[] data;
 
@@ -99,11 +99,11 @@ public class FileStoredInDataBase {
         this.fileOnDiskUrl = fileOnDiskUrl;
     }
 
-    public long getFileOnDiskId() {
+    public Long getFileOnDiskId() {
         return fileOnDiskId;
     }
 
-    public void setFileOnDiskId(long fileOnDiskId) {
+    public void setFileOnDiskId(Long fileOnDiskId) {
         this.fileOnDiskId = fileOnDiskId;
     }
 
