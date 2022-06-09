@@ -125,70 +125,79 @@ public class PaintingServiceImpl implements PaintingService {
         List<String> fileNames = new ArrayList<>();
         Set<FileStoredInDataBase> attachedFiles = new HashSet<>();
         List<MultipartFile> multipartFiles = new ArrayList<MultipartFile>();
-        Arrays.asList(dto.files).stream().forEach(theFile -> multipartFiles.add(theFile));
-        //MultipartFile extra=multipartFiles.get(multipartFiles.size()-1);
-        //multipartFiles.add(extra);//this is a trick because of a bug part 1: you have to repeat the last element and remove it later in order to have setPainting work, I still don't get why
-        // solution of the bug was:    in FileStorageInDataBaseService.java, public FileStoredInDataBase storeAttachedFile I returnred return fileStoredInDataBase;
-        // instead of  return fileStorageInDataBaseRepository.save(fileStoredInDataBase);
+
+        if (dto.files!=null){
+            Arrays.asList(dto.files).stream().forEach(theFile -> multipartFiles.add(theFile));
+            //MultipartFile extra=multipartFiles.get(multipartFiles.size()-1);
+            //multipartFiles.add(extra);//this is a trick because of a bug part 1: you have to repeat the last element and remove it later in order to have setPainting work, I still don't get why
+            // solution of the bug was:    in FileStorageInDataBaseService.java, public FileStoredInDataBase storeAttachedFile I returnred return fileStoredInDataBase;
+            // instead of  return fileStorageInDataBaseRepository.save(fileStoredInDataBase);
 
 
-        //Arrays.asList(dto.files).stream().forEach(file -> {
-        multipartFiles.stream().forEach(file -> {
-                    String message3 = "";
-                    try {
-                        FileStoredInDataBaseInputDto fileStoredInDataBaseInputDto = new FileStoredInDataBaseInputDto();
-                        fileStoredInDataBaseInputDto.setFile(file);
-                        fileStoredInDataBaseInputDto.setPainting(paintingToBuildUp);// when is the database commit triggered following a setPainting command?
-                        FileStoredInDataBase fileStoredInDataBase = storageService.storeAttachedFile(fileStoredInDataBaseInputDto);
-                        //long fileId=fileStoredInDataBase.getFileId();
-                        //if (fileId==multipartFiles.size()){storageService.deleteFileStoredInDataBaseById(fileId);}// trick part 2: remove extra file
-                        // it took me hours ti find out that this trick to add the last file of the list and remove it
-                        // later is the way to associate the last multipart file to the painting
-                        // I do not now why it does not work without this trick, think about it later and fix it
+            //Arrays.asList(dto.files).stream().forEach(file -> {
+            multipartFiles.stream().forEach(file -> {
+                        String message3 = "";
+                        try {
+                            FileStoredInDataBaseInputDto fileStoredInDataBaseInputDto = new FileStoredInDataBaseInputDto();
+                            fileStoredInDataBaseInputDto.setFile(file);
+                            fileStoredInDataBaseInputDto.setPainting(paintingToBuildUp);// when is the database commit triggered following a setPainting command?
+                            FileStoredInDataBase fileStoredInDataBase = storageService.storeAttachedFile(fileStoredInDataBaseInputDto);
+                            //long fileId=fileStoredInDataBase.getFileId();
+                            //if (fileId==multipartFiles.size()){storageService.deleteFileStoredInDataBaseById(fileId);}// trick part 2: remove extra file
+                            // it took me hours ti find out that this trick to add the last file of the list and remove it
+                            // later is the way to associate the last multipart file to the painting
+                            // I do not now why it does not work without this trick, think about it later and fix it
 
-                        attachedFiles.add(fileStoredInDataBase);
-                        message3 = "Files successfully added to painting object: " + fileNames;
-                    } catch (Exception e) {
-                        message3 = "Fail to attach files to painting object!";
+                            attachedFiles.add(fileStoredInDataBase);
+                            message3 = "Files successfully added to painting object: " + fileNames;
+                        } catch (Exception e) {
+                            message3 = "Fail to attach files to painting object!";
+                        }
                     }
-            }
 
-        );
+            );
+
+        }
+
 
         List<String> musicFileNames = new ArrayList<>();
         Set<MusicFileStoredInDataBase> attachedMusicFiles = new HashSet<>();
         List<MultipartFile> musicMultipartFiles = new ArrayList<MultipartFile>();
-        Arrays.asList(dto.musicFiles).stream().forEach(theFile -> musicMultipartFiles.add(theFile));
-        //MultipartFile extra=multipartFiles.get(multipartFiles.size()-1);
-        //multipartFiles.add(extra);//this is a trick because of a bug part 1: you have to repeat the last element and remove it later in order to have setPainting work, I still don't get why
-        // solution of the bug was:    in FileStorageInDataBaseService.java, public FileStoredInDataBase storeAttachedFile I returnred return fileStoredInDataBase;
-        // instead of  return fileStorageInDataBaseRepository.save(fileStoredInDataBase);
+
+        if (dto.audioFiles!=null){
+            Arrays.asList(dto.audioFiles).stream().forEach(theFile -> musicMultipartFiles.add(theFile));
+            //MultipartFile extra=multipartFiles.get(multipartFiles.size()-1);
+            //multipartFiles.add(extra);//this is a trick because of a bug part 1: you have to repeat the last element and remove it later in order to have setPainting work, I still don't get why
+            // solution of the bug was:    in FileStorageInDataBaseService.java, public FileStoredInDataBase storeAttachedFile I returnred return fileStoredInDataBase;
+            // instead of  return fileStorageInDataBaseRepository.save(fileStoredInDataBase);
 
 
-        //Arrays.asList(dto.files).stream().forEach(file -> {
-        musicMultipartFiles.stream().forEach(file -> {
-                    String message3 = "";
-                    try {
-                        MusicFileStoredInDataBaseInputDto musicFileStoredInDataBaseInputDto = new MusicFileStoredInDataBaseInputDto();
-                        musicFileStoredInDataBaseInputDto.setFile(file);
-                        musicFileStoredInDataBaseInputDto.setPainting(paintingToBuildUp);// when is the database commit triggered following a setPainting command?
-                        MusicFileStoredInDataBase musicFileStoredInDataBase = musicStorageService.storeAttachedFile(musicFileStoredInDataBaseInputDto);
-                        //long fileId=fileStoredInDataBase.getFileId();
-                        //if (fileId==multipartFiles.size()){storageService.deleteFileStoredInDataBaseById(fileId);}// trick part 2: remove extra file
-                        // it took me hours ti find out that this trick to add the last file of the list and remove it
-                        // later is the way to associate the last multipart file to the painting
-                        // I do not now why it does not work without this trick, think about it later and fix it
+            //Arrays.asList(dto.files).stream().forEach(file -> {
+            musicMultipartFiles.stream().forEach(file -> {
+                        String message3 = "";
+                        try {
+                            MusicFileStoredInDataBaseInputDto musicFileStoredInDataBaseInputDto = new MusicFileStoredInDataBaseInputDto();
+                            musicFileStoredInDataBaseInputDto.setFile(file);
+                            musicFileStoredInDataBaseInputDto.setPainting(paintingToBuildUp);// when is the database commit triggered following a setPainting command?
+                            MusicFileStoredInDataBase musicFileStoredInDataBase = musicStorageService.storeAttachedFile(musicFileStoredInDataBaseInputDto);
+                            //long fileId=fileStoredInDataBase.getFileId();
+                            //if (fileId==multipartFiles.size()){storageService.deleteFileStoredInDataBaseById(fileId);}// trick part 2: remove extra file
+                            // it took me hours ti find out that this trick to add the last file of the list and remove it
+                            // later is the way to associate the last multipart file to the painting
+                            // I do not now why it does not work without this trick, think about it later and fix it
 
 
 
-                        attachedMusicFiles.add(musicFileStoredInDataBase);
-                        message3 = "Files successfully added to painting object: " + musicFileNames;
-                    } catch (Exception e) {
-                        message3 = "Fail to attach files to painting object!";
+                            attachedMusicFiles.add(musicFileStoredInDataBase);
+                            message3 = "Files successfully added to painting object: " + musicFileNames;
+                        } catch (Exception e) {
+                            message3 = "Fail to attach files to painting object!";
+                        }
                     }
-                }
+            );
 
-        );
+        }
+
     }
 
 
@@ -249,9 +258,9 @@ public class PaintingServiceImpl implements PaintingService {
 
         //if (dto.musicFiles!=null  ){System.out.println("hello1");}
 
-        if (dto.musicFiles!=null ){
+        if (dto.audioFiles!=null ){
             List<String> musicFileNames = new ArrayList<>();
-            Arrays.asList(dto.musicFiles).stream().forEach(file -> {
+            Arrays.asList(dto.audioFiles).stream().forEach(file -> {
                 String message = "";
                 try {
                     //storageService.store(file);

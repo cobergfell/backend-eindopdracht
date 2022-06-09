@@ -58,13 +58,13 @@ public Long paintingId;//paintingId will only be specified when updating
 
     @PostMapping("api/user/paintings-upload")
     public ResponseEntity<Object> sendPainting(
-            @RequestParam("username") String username,
-            @RequestParam("title")  String title,
-            @RequestParam("artist") String artist,
-            @RequestParam("description")  String description,
-            @RequestParam("image")  MultipartFile image,
+            @RequestParam(value="username",required=false) String username,
+            @RequestParam(value="title",required=false)  String title,
+            @RequestParam(value="artist",required=false) String artist,
+            @RequestParam(value="description",required=false)  String description,
+            @RequestParam(value="image",required=false)  MultipartFile image,
             @RequestParam(value="files",required=false) MultipartFile[] files,
-            @RequestParam(value="musicFiles",required=false) MultipartFile[] musicFiles) {
+            @RequestParam(value="audioFiles",required=false) MultipartFile[] audioFiles) {
 
 
         String message = "";
@@ -84,7 +84,7 @@ public Long paintingId;//paintingId will only be specified when updating
             inputDto.lastUpdate=dateTimePosted;
             inputDto.image=image.getBytes();
             inputDto.files=files;
-            inputDto.musicFiles=musicFiles;
+            inputDto.audioFiles=audioFiles;
 
             paintingService.createPainting(inputDto);
             message = "Painting submitted!";
@@ -239,8 +239,8 @@ public Long paintingId;//paintingId will only be specified when updating
                     else{inputDto.image=paintingToUpdate.getImage();}
                     if (multipartFiles != null){inputDto.files=multipartFiles;}
                     else{inputDto.files=null;}
-                    if (audioFiles != null){inputDto.musicFiles=audioFiles;}
-                    else{inputDto.musicFiles=null;}
+                    if (audioFiles != null){inputDto.audioFiles=audioFiles;}
+                    else{inputDto.audioFiles=null;}
 
 
 /*                    if (multipartFiles != null){
