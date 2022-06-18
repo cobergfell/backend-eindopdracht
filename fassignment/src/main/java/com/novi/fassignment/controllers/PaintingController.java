@@ -9,7 +9,7 @@ import com.novi.fassignment.models.FileStoredInDataBase;
 import com.novi.fassignment.models.Painting;
 import com.novi.fassignment.models.User;
 import com.novi.fassignment.repositories.PaintingRepository;
-import com.novi.fassignment.services.FileStorageInDataBaseService;
+import com.novi.fassignment.services.FileStorageInDataBaseServiceImpl;
 import com.novi.fassignment.services.PaintingServiceImpl;
 import com.novi.fassignment.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ import static com.novi.fassignment.utils.Parsers.myLocalDateTimeParserTypeYearMo
 public class PaintingController {
 
     @Autowired
-    private FileStorageInDataBaseService storageService;
+    private FileStorageInDataBaseServiceImpl storageService;
 
     @Autowired
     private PaintingServiceImpl paintingService;

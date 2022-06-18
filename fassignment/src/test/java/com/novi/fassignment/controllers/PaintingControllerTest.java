@@ -1,15 +1,17 @@
 package com.novi.fassignment.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.novi.fassignment.models.FileStoredInDataBase;
-import com.novi.fassignment.models.Question;
-import com.novi.fassignment.models.User;
+import com.novi.fassignment.controllers.dto.PaintingDto;
+import com.novi.fassignment.controllers.dto.PaintingInputDto;
+import com.novi.fassignment.models.*;
+import com.novi.fassignment.repositories.PaintingRepository;
 import com.novi.fassignment.repositories.QuestionRepository;
 import com.novi.fassignment.repositories.UserRepository;
 import com.novi.fassignment.services.*;
 import com.novi.fassignment.utils.JwtUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -29,9 +31,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = QuestionController.class)
+@WebMvcTest(controllers = PaintingController.class)
 
-public class QuestionControllerTest {
+public class PaintingControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -69,13 +71,23 @@ public class QuestionControllerTest {
     @MockBean
     PaintingServiceImpl paintingServiceImpl;
 
+    @MockBean
+    PaintingRepository paintingRepository;
 
     @MockBean
     JwtUtil jwtUtil;
 
-
     @MockBean
     Question question;
+
+    @MockBean
+    Painting painting;
+
+    @MockBean
+    PaintingDto paintingDto;
+
+    @MockBean
+    PaintingInputDto paintingInputDto;
 
     @MockBean
     User user;
@@ -88,46 +100,11 @@ public class QuestionControllerTest {
 
     @WithMockUser(username = "cobergfell")
 
-    @Test
-    void whenValidPostRequestWithoutFileThenReturns204() throws Exception {
-        user.setUsername("cobergfell");
-
-/*        int i=1;
-        Long l= Long.valueOf(i);
-        question.setQuestionId(l);
-        question.setUser(user);
-        question.setTitle("Shostakovich 7th symphony");
-        question.setBody("Did Shostakovich really composed his 7th symphony in Leningrad?");
-        question.setTags("Shostakovich;7th symphony");*/
-        when(userService.getUser("cobergfell")).thenReturn(Optional.of(user));
-        //when(questionService.createQuestion(any(Question.class))).thenReturn(question);
-
-        mockMvc.perform(post("/api/user/question-upload/1")
-                .param("username", "cobergfell")
-                .param("title", "test1")
-                .param("content", "content"))
-                //.param("tags", "test1"))
-                //.content(objectMapper.writeValueAsString(question))
-                //.contentType("application/json"))
-                .andDo(print())
-                //.contentType("multipart/form-data"))
-                //.andExpect(status().isOk());
-                .andExpect(status().isNoContent());
-    }
-
-
 
     @Test
-    void whenValidPostRequestWithFilesThenReturns204() throws Exception {
+    void whenValidPostRequestThenReturns204() throws Exception {
         user.setUsername("cobergfell");
-
-/*        int i=1;
-        Long l= Long.valueOf(i);
-        question.setQuestionId(l);
-        question.setUser(user);
-        question.setTitle("Shostakovich 7th symphony");
-        question.setBody("Did Shostakovich really composed his 7th symphony in Leningrad?");
-        question.setTags("Shostakovich;7th symphony");*/
+        MockMultipartFile image = new MockMultipartFile("image", new byte[1]);
         when(userService.getUser("cobergfell")).thenReturn(Optional.of(user));
         //when(questionService.createQuestion(any(Question.class))).thenReturn(question);
 
@@ -157,33 +134,47 @@ public class QuestionControllerTest {
         } catch (Exception e) {};*/
         //to do: make an array of multipart files and loop on it
 
-        mockMvc.perform(multipart("/api/user/question-upload/1")
+        mockMvc.perform(multipart("/api/user/paintings-upload")
                 .file(sampleFile1)
                 .file(sampleFile2)
+                .file(image)
                 .param("username", "cobergfell")
                 .param("title", "test1")
-                .param("content", "content"))
+                .param("description", "description")
                 //.param("tags", "test1"))
                 //.content(objectMapper.writeValueAsString(question))
                 //.contentType("application/json"))
 
-                //.contentType("multipart/form-data")
+                .contentType("multipart/form-data"))
                 .andDo(print())
                 //.andExpect(status().isOk());
                 .andExpect(status().isNoContent());
     }
 
 
-    @Test
-    void whenValidPostRequestWithFilesThenStoreQuestion() throws Exception {
+/*    @Test
+    void whenValidPostRequestWithFilesThenStorePainting() throws Exception {
         user.setUsername("cobergfell");
 
         int i=1;
         Long l= Long.valueOf(i);
-        question.setQuestionId(l);
-        question.setUser(user);
-        question.setTitle("Shostakovich 7th symphony");
-        question.setContent("Did Shostakovich really composed his 7th symphony in Leningrad?");
+        painting.setPaintingId(l);
+        painting.setUser(user);
+        painting.setTitle("Test title");
+        painting.setDescription("This is the description");
+        //MockMultipartFile image = new MockMultipartFile("image", new byte[1]);
+        painting.setImage(new byte[1]);
+
+        int i=1;
+        Long l= Long.valueOf(i);
+        paintingInputDto.setPaintingId(l);
+        paintingInputDto.setUsername("cobergfell");
+        paintingInputDto.setTitle("Test title");
+        paintingInputDto.setArtist("Test artist name");
+        paintingInputDto.setDescription("This is the description");
+        //MockMultipartFile image = new MockMultipartFile("image", new byte[1]);
+        paintingInputDto.setImage(new byte[1]);
+
 
         String fileName = "sample-file-mock.txt";
         MockMultipartFile sampleFile1 = new MockMultipartFile(
@@ -192,56 +183,75 @@ public class QuestionControllerTest {
                 "text/plain",
                 "This is the first file content".getBytes());
 
-/*        try {
-            storageService.storeQuestionFile(sampleFile1,question);
-        } catch (Exception e) {};*/
-
         MockMultipartFile sampleFile2 = new MockMultipartFile(
                 "second-uploaded-test-file",
                 fileName,
                 "text/plain",
                 "This is the second file content".getBytes());
 
-        Set<FileStoredInDataBase> filesToStoredInDataBase = new HashSet<>();
-        FileStoredInDataBase fileStoredInDataBase1= new FileStoredInDataBase();
-        fileStoredInDataBase1.setName("file1");
-        fileStoredInDataBase1.setType("text/plain");
-        fileStoredInDataBase1.setData("This is the first file content".getBytes());
 
-        FileStoredInDataBase fileStoredInDataBase2= new FileStoredInDataBase();
-        fileStoredInDataBase2.setName("file2");
-        fileStoredInDataBase2.setType("text/plain");
-        fileStoredInDataBase2.setData("This is the second file content".getBytes());
+        MockMultipartFile sampleFile3 = new MockMultipartFile(
+                "third-uploaded-test-file",
+                fileName,
+                "text/plain",
+                "This is the third file content".getBytes());
 
-        filesToStoredInDataBase.add(fileStoredInDataBase1);
-        filesToStoredInDataBase.add(fileStoredInDataBase2);
+        MockMultipartFile[] sampleFiles = {sampleFile1, sampleFile2};
+        MockMultipartFile[] sampleMusicFiles = {sampleFile3};
+        //Set<FileStoredInDataBase> filesToStoredInDataBase = new HashSet<>();
+        //Set<MusicFileStoredInDataBase> audioFilesToStoredInDataBase = new HashSet<>();
 
-/*        try {
-            storageService.storeQuestionFile(sampleFile2,question);
-        } catch (Exception e) {};*/
-        //to do: make an array of multipart files and loop on it
-        question.setFiles(filesToStoredInDataBase);
+        List<MultipartFile> list = Arrays.asList(new MultipartFile[]{sampleFile1, sampleFile2});
 
-        when(userService.getUser("cobergfell")).thenReturn(Optional.of(user));
-        when(questionService.createQuestionWithoutAttachment(any(Question.class))).thenReturn(question);
+//        FileStoredInDataBase fileStoredInDataBase1= new FileStoredInDataBase();
+//        fileStoredInDataBase1.setName("file1");
+//        fileStoredInDataBase1.setType("text/plain");
+//        fileStoredInDataBase1.setData("This is the first file content".getBytes());
+//
+//        FileStoredInDataBase fileStoredInDataBase2= new FileStoredInDataBase();
+//        fileStoredInDataBase2.setName("file2");
+//        fileStoredInDataBase2.setType("text/plain");
+//        fileStoredInDataBase2.setData("This is the second file content".getBytes());
+//
+//        filesToStoredInDataBase.add(fileStoredInDataBase1);
+//        filesToStoredInDataBase.add(fileStoredInDataBase2);
+//
+//
+//        MusicFileStoredInDataBase fileStoredInDataBase3= new MusicFileStoredInDataBase();
+//        fileStoredInDataBase3.setName("file3");
+//        fileStoredInDataBase3.setType("text/plain");
+//        fileStoredInDataBase3.setData("This is the third file content".getBytes());
+//
+//        audioFilesToStoredInDataBase.add(fileStoredInDataBase3);
 
+        //painting.setFiles(filesToStoredInDataBase);
+        //painting.setMusicFiles(audioFilesToStoredInDataBase);
 
-        mockMvc.perform(multipart("/api/user/question-upload/1")
+        paintingInputDto.setFiles(sampleFiles);
+        paintingInputDto.setMusicFiles(sampleMusicFiles);
+
+        //when(userService.getUser("cobergfell")).thenReturn(Optional.of(user));
+
+       //when(paintingService.createPainting(any(PaintingInputDto.class))).thenReturn();
+        //Mockito.doNothing().when(paintingService.createPainting(any(PaintingInputDto.class)););
+
+        mockMvc.perform(multipart("http://localhost:8080/api/user/paintings-upload")
                 .file(sampleFile1)
-                .file(sampleFile2)
+                //.file(sampleFile2)
+                //.file(sampleFile3)
                 .param("username", "cobergfell")
                 .param("title", "test1")
                 .param("description", "test1")
-                .param("tags", "test1")
-                .contentType("multipart/form-data"))
+                .param("artist", "test1")
+                //.contentType("multipart/form-data"))
                 //.content(objectMapper.writeValueAsString(question))
                 //.contentType("application/json"))
 
-                //.contentType("multipart/form-data")
+                .contentType("multipart/form-data"))
                 .andDo(print())
                 //.andExpect(status().isOk());
                 .andExpect(status().isNoContent());
-    }
+    }*/
 
 
 }

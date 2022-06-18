@@ -21,10 +21,10 @@ public class PaintingServiceImpl implements PaintingService {
     private PaintingRepository paintingRepository;
 
     @Autowired
-    private FileStorageInDataBaseService storageService;
+    private FileStorageInDataBaseServiceImpl storageService;
 
     @Autowired
-    private MusicFileStorageInDataBaseService musicStorageService;
+    private MusicFileStorageInDataBaseServiceImpl musicStorageService;
 
     @Autowired
     private PaintingServiceImpl paintingService;
@@ -39,7 +39,7 @@ public class PaintingServiceImpl implements PaintingService {
     FileUploadService fileUploadService;
 
 
-    private FileStorageInDataBaseService fileStorageInDataBaseService;
+    private FileStorageInDataBaseServiceImpl fileStorageInDataBaseService;
     //private List<Painting> paintings = new ArrayList<>();
 
 /*    @Autowired
@@ -130,7 +130,7 @@ public class PaintingServiceImpl implements PaintingService {
             Arrays.asList(dto.files).stream().forEach(theFile -> multipartFiles.add(theFile));
             //MultipartFile extra=multipartFiles.get(multipartFiles.size()-1);
             //multipartFiles.add(extra);//this is a trick because of a bug part 1: you have to repeat the last element and remove it later in order to have setPainting work, I still don't get why
-            // solution of the bug was:    in FileStorageInDataBaseService.java, public FileStoredInDataBase storeAttachedFile I returnred return fileStoredInDataBase;
+            // solution of the bug was:    in FileStorageInDataBaseServiceImpl.java, public FileStoredInDataBase storeAttachedFile I returnred return fileStoredInDataBase;
             // instead of  return fileStorageInDataBaseRepository.save(fileStoredInDataBase);
 
 
@@ -168,7 +168,7 @@ public class PaintingServiceImpl implements PaintingService {
             Arrays.asList(dto.audioFiles).stream().forEach(theFile -> musicMultipartFiles.add(theFile));
             //MultipartFile extra=multipartFiles.get(multipartFiles.size()-1);
             //multipartFiles.add(extra);//this is a trick because of a bug part 1: you have to repeat the last element and remove it later in order to have setPainting work, I still don't get why
-            // solution of the bug was:    in FileStorageInDataBaseService.java, public FileStoredInDataBase storeAttachedFile I returnred return fileStoredInDataBase;
+            // solution of the bug was:    in FileStorageInDataBaseServiceImpl.java, public FileStoredInDataBase storeAttachedFile I returnred return fileStoredInDataBase;
             // instead of  return fileStorageInDataBaseRepository.save(fileStoredInDataBase);
 
 
