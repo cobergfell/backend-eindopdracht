@@ -102,7 +102,8 @@ public class MusicFileStoredInDataBaseDto {
         dto.bytesInDatabaseUrl = fileDownloadUri;
         dto.size = fileStoredInDataBase.getData().length;
         dto.data = fileStoredInDataBase.getData();
-        dto.fileOnDiskUrl = fileStoredInDataBase.getFile_on_disk_url();
+        //dto.fileOnDiskUrl = fileStoredInDataBase.getFile_on_disk_url();
+        dto.fileOnDiskUrl = fileStoredInDataBase.getFileOnDiskUrl();
         dto.fileOnDiskId = fileStoredInDataBase.getFileOnDiskId();
 
         return dto;

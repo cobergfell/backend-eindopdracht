@@ -1,53 +1,46 @@
 package com.novi.fassignment.controllers;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+
 import com.novi.fassignment.controllers.dto.AnswerDto;
 import com.novi.fassignment.controllers.dto.AnswerInputDto;
-import com.novi.fassignment.controllers.dto.QuestionDto;
-import com.novi.fassignment.controllers.dto.QuestionInputDto;
-import com.novi.fassignment.models.*;
+import com.novi.fassignment.models.Answer;
+import com.novi.fassignment.models.User;
 import com.novi.fassignment.repositories.AnswerRepository;
-import com.novi.fassignment.services.*;
+import com.novi.fassignment.services.AnswerServiceImpl;
+import com.novi.fassignment.services.QuestionServiceImpl;
+import com.novi.fassignment.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.novi.fassignment.services.AnswerService;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static com.novi.fassignment.utils.Parsers.myLocalDateTimeParserTypeYearMonthDayHourMinSec;
+
 
 @RestController
 //@CrossOrigin("http://localhost:8080")
 @CrossOrigin("*")
 public class AnswerController {
-
-    //@Autowired
-    //private FileStorageInDataBaseService storageService;
+    @Autowired
+    private AnswerService answerService;
 
     @Autowired
-    private AnswerServiceImpl answerService;
+    QuestionServiceImpl questionService;
 
     @Autowired
-    private QuestionServiceImpl questionService;
-
-    @Autowired
-    private PaintingServiceImpl paintingService;
-
-
-    @Autowired
-    private AnswerRepository answerRepository;
+    AnswerRepository answerRepository;
 
     @Autowired
     UserService userService;
-/*
-    @Autowired
-    private AnswerGetDto answerGetDto;//Dto are usually static methods but in this case it had to be instantiated to instantiate services
-*/
 
     @GetMapping("api/user/answers")
     public List<AnswerDto> getAnswers() {
@@ -125,7 +118,7 @@ public class AnswerController {
             @RequestParam("username") String username,
             @RequestParam(value="title",required=false)  String title,
             @RequestParam(value="content",required=false)  String content,
-            @RequestParam(value="image",required=false)  MultipartFile image,
+            @RequestParam(value="image",required=false) MultipartFile image,
             @RequestParam(value="files",required=false) MultipartFile[] files,
             @RequestParam(value="musicFiles",required=false) MultipartFile[] musicFiles) {
 

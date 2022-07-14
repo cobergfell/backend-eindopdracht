@@ -7,7 +7,7 @@ import com.novi.fassignment.controllers.dto.FileStoredInDataBaseDto;
 import com.novi.fassignment.messages.ResponseFile;
 import com.novi.fassignment.messages.ResponseMessage;
 import com.novi.fassignment.models.FileStoredInDataBase;
-import com.novi.fassignment.services.FileStorageInDataBaseService;
+import com.novi.fassignment.services.FileStorageInDataBaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class FileStorageInDataBaseController {
 
     @Autowired
-    private FileStorageInDataBaseService storageService;
+    private FileStorageInDataBaseServiceImpl storageService;
 
     @PostMapping("api/user/upload-to-database")
     public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {

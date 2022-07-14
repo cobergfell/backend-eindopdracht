@@ -59,7 +59,7 @@ public class UserServiceImpl implements com.novi.fassignment.services.UserServic
         String randomString = RandomStringGenerator.generateAlphaNumeric(20);
         user.setApikey(randomString);
         user.setPassword(passwordEncoder.encode(user.getPassword()));//added 18-7-21
-
+        user.setEnabled(true);
         User newUser = userRepository.save(user);
         return newUser.getUsername();
     }

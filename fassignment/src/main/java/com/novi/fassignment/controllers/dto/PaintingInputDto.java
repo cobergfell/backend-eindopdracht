@@ -17,7 +17,7 @@ public class PaintingInputDto {
     public String artist;
     public String description;
     public byte[] image;
-    public MultipartFile[] musicFiles;
+    public MultipartFile[] audioFiles;
     public MultipartFile[] files;
 
 //    @CreationTimestamp
@@ -107,11 +107,11 @@ public class PaintingInputDto {
     }
 
     public MultipartFile[] getMusicFiles() {
-        return musicFiles;
+        return audioFiles;
     }
 
-    public void setMusicFiles(MultipartFile[] musicFiles) {
-        this.musicFiles = musicFiles;
+    public void setMusicFiles(MultipartFile[] audioFiles) {
+        this.audioFiles = audioFiles;
     }
 }
 

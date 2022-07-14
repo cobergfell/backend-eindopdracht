@@ -19,9 +19,9 @@ public class MusicFileStoredInDataBase {
     private String description;
     private String type;
     private String bytesInDatabaseUrl;//url to bytes
-    //private String fileOnDiskUrl;// url file stored on disc
-    private String file_on_disk_url;// url file stored on disc; Remark: fileOnDiskUrl as attribute name was not recognised in Spring boot but file_on_disk_url is recognised, do not ask me why...
-    private long fileOnDiskId;// idfile stored on disc
+    private String fileOnDiskUrl;// url file stored on disc
+    //private String file_on_disk_url;// url file stored on disc; Remark: fileOnDiskUrl as attribute name was not recognised in Spring boot but file_on_disk_url is recognised, do not ask me why...
+    private Long fileOnDiskId;// idfile stored on disc
     @Lob
     private byte[] data;
 
@@ -123,19 +123,19 @@ public class MusicFileStoredInDataBase {
         this.bytesInDatabaseUrl = bytesInDatabaseUrl;
     }
 
-    public String getFile_on_disk_url() {
-        return file_on_disk_url;
-    }
-
-    public void setFile_on_disk_url(String file_on_disk_url) {
-        this.file_on_disk_url = file_on_disk_url;
-    }
-
-    public long getFileOnDiskId() {
+    public Long getFileOnDiskId() {
         return fileOnDiskId;
     }
 
-    public void setFileOnDiskId(long fileOnDiskId) {
+    public void setFileOnDiskId(Long fileOnDiskId) {
         this.fileOnDiskId = fileOnDiskId;
+    }
+
+    public String getFileOnDiskUrl() {
+        return fileOnDiskUrl;
+    }
+
+    public void setFileOnDiskUrl(String fileOnDiskUrl) {
+        this.fileOnDiskUrl = fileOnDiskUrl;
     }
 }

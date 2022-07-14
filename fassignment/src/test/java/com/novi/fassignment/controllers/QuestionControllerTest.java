@@ -36,10 +36,8 @@ public class QuestionControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-
     @Autowired
     private ObjectMapper objectMapper;
-
 
     @MockBean
     private QuestionRepository questionRepository;
@@ -57,14 +55,20 @@ public class QuestionControllerTest {
     private UserRepository userRepository;
 
     @MockBean
-    private FileStorageInDataBaseService storageService;
+    private FileStorageInDataBaseServiceImpl storageService;
 
     @MockBean
     FilesStorageService storageServiceOnDisc;
 
-
     @MockBean
     CustomUserDetailsService customUserDetailsService;
+
+    @MockBean
+    PaintingService paintingService;
+
+    @MockBean
+    PaintingServiceImpl paintingServiceImpl;
+
 
     @MockBean
     JwtUtil jwtUtil;
@@ -98,11 +102,11 @@ public class QuestionControllerTest {
         when(userService.getUser("cobergfell")).thenReturn(Optional.of(user));
         //when(questionService.createQuestion(any(Question.class))).thenReturn(question);
 
-        mockMvc.perform(post("/questions-upload-without-files")
+        mockMvc.perform(post("/api/user/question-upload/1")
                 .param("username", "cobergfell")
                 .param("title", "test1")
-                .param("description", "test1")
-                .param("tags", "test1"))
+                .param("content", "content"))
+                //.param("tags", "test1"))
                 //.content(objectMapper.writeValueAsString(question))
                 //.contentType("application/json"))
                 .andDo(print())
@@ -153,13 +157,13 @@ public class QuestionControllerTest {
         } catch (Exception e) {};*/
         //to do: make an array of multipart files and loop on it
 
-        mockMvc.perform(multipart("/questions-upload-with-files-in-database")
+        mockMvc.perform(multipart("/api/user/question-upload/1")
                 .file(sampleFile1)
                 .file(sampleFile2)
                 .param("username", "cobergfell")
                 .param("title", "test1")
-                .param("description", "description")
-                .param("tags", "test1"))
+                .param("content", "content"))
+                //.param("tags", "test1"))
                 //.content(objectMapper.writeValueAsString(question))
                 //.contentType("application/json"))
 
@@ -209,6 +213,8 @@ public class QuestionControllerTest {
         fileStoredInDataBase2.setType("text/plain");
         fileStoredInDataBase2.setData("This is the second file content".getBytes());
 
+        filesToStoredInDataBase.add(fileStoredInDataBase1);
+        filesToStoredInDataBase.add(fileStoredInDataBase2);
 
 /*        try {
             storageService.storeQuestionFile(sampleFile2,question);
@@ -220,7 +226,7 @@ public class QuestionControllerTest {
         when(questionService.createQuestionWithoutAttachment(any(Question.class))).thenReturn(question);
 
 
-        mockMvc.perform(multipart("/questions-upload-with-files-in-database")
+        mockMvc.perform(multipart("/api/user/question-upload/1")
                 .file(sampleFile1)
                 .file(sampleFile2)
                 .param("username", "cobergfell")

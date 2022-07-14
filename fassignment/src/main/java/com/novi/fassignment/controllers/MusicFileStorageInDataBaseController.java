@@ -2,12 +2,11 @@
 
 package com.novi.fassignment.controllers;
 
-import com.novi.fassignment.controllers.dto.FileStoredInDataBaseDto;
 import com.novi.fassignment.controllers.dto.MusicFileStoredInDataBaseDto;
 import com.novi.fassignment.messages.ResponseFile;
 import com.novi.fassignment.messages.ResponseMessage;
 import com.novi.fassignment.models.MusicFileStoredInDataBase;
-import com.novi.fassignment.services.MusicFileStorageInDataBaseService;
+import com.novi.fassignment.services.MusicFileStorageInDataBaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -27,9 +26,9 @@ import java.util.stream.Collectors;
 public class MusicFileStorageInDataBaseController {
 
     @Autowired
-    private MusicFileStorageInDataBaseService storageService;
+    private MusicFileStorageInDataBaseServiceImpl storageService;
 
-    @PostMapping("api/user/upload-music-file-to-database")
+    @PostMapping("api/user/upload-audio-file-to-database")
     public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
         String message = "";
         try {
@@ -48,12 +47,12 @@ public class MusicFileStorageInDataBaseController {
         return storageService.getAllFiles();
     }*/
 
-    @GetMapping("api/user/music-files-database-as-stream")
+    @GetMapping("api/user/audio-files-database-as-stream")
     public ResponseEntity<List<ResponseFile>> getListFilesAsStream() {
         List<ResponseFile> files = storageService.getAllFilesAsStream().map(dbFile -> {
             String fileDownloadUri = ServletUriComponentsBuilder
                     .fromCurrentContextPath()
-                    .path("/music_files_database/")
+                    .path("/audio-files-database/")
                     //.path(dbFile.getFileId().toString())
                     .buildAndExpand(dbFile.getFileId())
                     .toUriString();
@@ -84,7 +83,7 @@ public class MusicFileStorageInDataBaseController {
     }*/
 
 
-    @GetMapping("api/user/music-files-database")
+    @GetMapping("api/user/audio-files-database")
     public ResponseEntity<List<MusicFileStoredInDataBaseDto>> getResponseFilesAsList() {
         var dtos = new ArrayList<MusicFileStoredInDataBaseDto>();
         var filesStoredInDataBase = storageService.getAllFilesAsList();
@@ -96,7 +95,7 @@ public class MusicFileStorageInDataBaseController {
         return ResponseEntity.status(HttpStatus.OK).body(dtos);
     }
 
-    @GetMapping("api/user/music-files-database/{id}")
+    @GetMapping("api/user/audio-files-database/{id}")
     public ResponseEntity<byte[]> getFile(@PathVariable("id") Long id) {
         MusicFileStoredInDataBase fileDB = storageService.getFile(id);
 
@@ -140,7 +139,7 @@ public class MusicFileStorageInDataBaseController {
 
 
 
-    @DeleteMapping("api/user/music-files-database/{id}")
+    @DeleteMapping("api/user/audio-files-database/{id}")
     public ResponseEntity<HttpStatus> deleteFile(@PathVariable("id") long id) {
         try {
             storageService.deleteFileStoredInDataBaseById(id);
@@ -150,7 +149,7 @@ public class MusicFileStorageInDataBaseController {
         }
     }
 
-    @DeleteMapping("api/user/music-files-database")
+    @DeleteMapping("api/user/audio-files-database")
     public ResponseEntity<HttpStatus> deleteAllFiles() {
         try {
             storageService. deleteAllFileStoredInDataBase();
