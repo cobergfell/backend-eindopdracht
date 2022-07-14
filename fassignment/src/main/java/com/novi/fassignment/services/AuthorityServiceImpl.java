@@ -26,11 +26,31 @@ public class AuthorityServiceImpl implements com.novi.fassignment.services.Autho
     private AuthorityRepository authorityRepository;
 
 
-    @Override
+    /*@Override
     public void addAuthority(String username, String authorityName) {
         if (!userRepository.existsById(username)) throw new UsernameNotFoundException(username);
         Authority authority = new Authority(username, authorityName);
         authorityRepository.save(authority);
+    }*/
+
+
+    @Override //new version 9-7-22
+    public void addAuthority(String username, String authorityStr) {
+        Boolean authorityAlreadyExists=false;
+        if (!userRepository.existsById(username)) throw new UsernameNotFoundException(username);
+        User user = userRepository.findById(username).get();
+        Set<Authority> authorities= user.getAuthorities();
+        for(Authority authorityObject :authorities){
+            String authorityStrTobeInspected=authorityObject.getAuthority();
+            if(authorityStrTobeInspected.equals(authorityStr)){
+                authorityAlreadyExists=true;
+            }
+        }
+        if(authorityAlreadyExists==false){
+            Authority authority = new Authority(username, authorityStr);
+            authorityRepository.save(authority);
+        }
+
     }
 
 
@@ -40,6 +60,7 @@ public class AuthorityServiceImpl implements com.novi.fassignment.services.Autho
         User user = userRepository.findById(username).get();
         return user.getAuthorities();
     }
+
 
 /*    @Override
     public void addAuthority(String username, String authority) {
@@ -59,7 +80,6 @@ public class AuthorityServiceImpl implements com.novi.fassignment.services.Autho
         Set<Authority> authorities= user.getAuthorities();
         for(Authority authorityObject :authorities){
             String authorityStrTobeInspected=authorityObject.getAuthority();
-            Boolean check=authorityStrTobeInspected.equals(authorityStr);
             if(authorityStrTobeInspected.equals(authorityStr)){
                 authorityRepository.delete(authorityObject);
 

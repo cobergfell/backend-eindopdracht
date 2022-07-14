@@ -3,7 +3,9 @@ package com.novi.fassignment.controllers;
 import com.novi.fassignment.controllers.dto.QuestionDto;
 import com.novi.fassignment.exceptions.BadRequestException;
 import com.novi.fassignment.exceptions.RecordNotFoundException;
+import com.novi.fassignment.exceptions.UsernameNotFoundException;
 import com.novi.fassignment.models.*;
+import com.novi.fassignment.repositories.AuthorityRepository;
 import com.novi.fassignment.repositories.UserRepository;
 import com.novi.fassignment.services.AuthorityService;
 import com.novi.fassignment.services.UserService;
@@ -31,6 +33,9 @@ public class UserController {
 
     @Autowired
     private AuthorityService authorityService;
+
+    @Autowired
+    private AuthorityRepository authorityRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -65,14 +70,13 @@ public class UserController {
 
 
 
-    @PostMapping(value = "update/{username}")
+    @PostMapping(value = "/update/{username}")
     public ResponseEntity<Object> updateUser(@PathVariable("username") String username,
                                              @RequestParam("newUsername") String newUsername,
                                              @RequestParam("email") String email,
                                              @RequestParam("enabled")  boolean enabled,
                                              @RequestParam("moderator")  boolean moderator,
                                              @RequestParam("administrator")  boolean administrator){
-                                             //@RequestParam("authorities") List<Authority> authorities) {
 
         LocalDateTime dateTimePosted = LocalDateTime.now(ZoneId.of("GMT+00:00"));
         ZonedDateTime zonedDateTimePosted = dateTimePosted.atZone(ZoneId.of("GMT+00:00"));
@@ -81,6 +85,11 @@ public class UserController {
             if (username.equals(newUsername)){
                 User user =optionalUser.get();
             user.setEmail(email);
+            user.setEnabled(enabled);
+
+
+
+
             userService.updateUser(username, user);
             }
             else {
@@ -98,6 +107,23 @@ public class UserController {
         authorityService.removeAllAuthorities(username);
         System.out.println("Arrays.asList(ERole.values()): " + Arrays.asList(ERole.values()));
         List<ERole> test= Arrays.asList(ERole.values());
+
+
+        Authority user_authority = new Authority(username, "ROLE_USER");
+        authorityRepository.save(user_authority);
+
+        if(moderator==true){
+            Authority moderator_authority = new Authority(username, "ROLE_MODERATOR");
+            authorityRepository.save(moderator_authority);
+        }
+
+        if(administrator==true){
+            Authority admin_authority = new Authority(username, "ROLE_ADMIN");
+            authorityRepository.save(admin_authority);
+        }
+
+
+
 
 /*        Arrays.asList(ERole.values()).forEach(role -> {
             String strRole=role.name();
@@ -120,7 +146,7 @@ public class UserController {
         moderatorAuthorityKey.setUsername(username);
         moderatorAuthorityKey.setAuthority("ROLE_MODERATOR");*/
 
-        Arrays.asList(ERole.values()).forEach(role -> {
+        /*Arrays.asList(ERole.values()).forEach(role -> {
             String strRole=role.name();
             boolean a=role.name()=="ROLE_USER";
             //boolean b=role.name()=="ROLE_ADMIN"&authorities.contains(adminAuthorityKey);
@@ -130,7 +156,7 @@ public class UserController {
 
             if (a||b||c) {authorityService.addAuthority(newUsername, strRole);}
             else{ throw new IllegalStateException("Unexpected value: " + role.name()); }
-        });
+        });*/
 
 
         return ResponseEntity.noContent().build();
@@ -162,8 +188,8 @@ public class UserController {
         }
     }*/
 
-    @PostMapping(value = "authorities/{username}/{authority}")
-    public ResponseEntity<Object> addUserAuthority(@PathVariable("username") String username,@PathVariable("authority") String authority) {
+    @PostMapping(value = "authorities/add/{username}/{authority}")
+    public ResponseEntity<Object> addAuthority(@PathVariable("username") String username,@PathVariable("authority") String authority) {
         try {
             Optional<User> optionalUser=userService.getUser(username);
             if (optionalUser.isPresent()) {
@@ -176,7 +202,23 @@ public class UserController {
         }
     }
 
-    public ResponseEntity<Object> addUserAuthorities(@PathVariable("username") String username,@RequestParam("authority") String[] authorities) {
+    @PostMapping(value = "authorities/delete/{username}/{authority}")
+    public ResponseEntity<Object> deleteAuthority(@PathVariable("username") String username,@PathVariable("authority") String authority) {
+        try {
+            Optional<User> optionalUser=userService.getUser(username);
+            if (optionalUser.isPresent()) {
+                authorityService.removeAuthority(username, authority);;
+            }
+            return ResponseEntity.noContent().build();
+        }
+        catch (Exception ex) {
+            throw new BadRequestException();
+        }
+    }
+
+
+
+/*    public ResponseEntity<Object> addUserAuthorities(@PathVariable("username") String username,@RequestParam("authority") String[] authorities) {
         try {
             Optional<User> optionalUser=userService.getUser(username);
             if (optionalUser.isPresent()) {
@@ -191,7 +233,7 @@ public class UserController {
         catch (Exception ex) {
             throw new BadRequestException();
         }
-    }
+    }*/
 
 
 
