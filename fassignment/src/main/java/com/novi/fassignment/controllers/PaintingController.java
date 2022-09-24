@@ -143,7 +143,7 @@ public Long paintingId;//paintingId will only be specified when updating
     }
 
 
-    @DeleteMapping("api/user/paintings/{paintingId}")
+    @DeleteMapping("api/user/paintings/delete/{paintingId}")
     public ResponseEntity<HttpStatus> deletePainting(@PathVariable("paintingId") long paintingId) {
         try {
             paintingService.deletePaintingById(paintingId);
@@ -153,7 +153,7 @@ public Long paintingId;//paintingId will only be specified when updating
         }
     }
 
-    @DeleteMapping("api/user/paintings")
+    @DeleteMapping("api/user/paintings/delete")
     public ResponseEntity<HttpStatus> deleteAllPaintings() {
         try {
             paintingService.deleteAllPaintings();
@@ -163,6 +163,8 @@ public Long paintingId;//paintingId will only be specified when updating
         }
 
     }
+
+
     @PostMapping("api/user/paintings-update/{paintingId}")
     public ResponseEntity<Object> updatePaintingWithFiles(@PathVariable("paintingId") Long paintingId,
                                                           @RequestParam(value="username",required=false) String username,

@@ -20,7 +20,7 @@ public class Painting  {
     private Long paintingId;
     private String title;
     private String artist;
-    @Lob
+    //@Lob
     private String description;
     private byte[] image;
 
@@ -57,7 +57,7 @@ public class Painting  {
     @OneToMany(
             targetEntity = com.novi.fassignment.models.FileStoredInDataBase.class,
             mappedBy = "painting",
-            //cascade = CascadeType.ALL,
+            cascade = CascadeType.ALL,
             //orphanRemoval = true,
             fetch = FetchType.EAGER)
     private Set<FileStoredInDataBase> files = new HashSet<>();
@@ -65,8 +65,8 @@ public class Painting  {
     @OneToMany(
             targetEntity = com.novi.fassignment.models.MusicFileStoredInDataBase.class,
             mappedBy = "painting",
-            //cascade = CascadeType.ALL,
-           //orphanRemoval = true,
+            cascade = CascadeType.ALL,
+            //orphanRemoval = true,
             fetch = FetchType.EAGER)
     private Set<MusicFileStoredInDataBase> musicFiles = new HashSet<>();
 

@@ -70,6 +70,11 @@ public class UserServiceImpl implements com.novi.fassignment.services.UserServic
     }
 
     @Override
+    public void deleteAllUsers() {
+        userRepository.deleteAll();
+    }
+
+    @Override
     public void updateUser(String username, User newUser) {
         if (!userRepository.existsById(username)) throw new RecordNotFoundException();
         User user = userRepository.findById(username).get();
