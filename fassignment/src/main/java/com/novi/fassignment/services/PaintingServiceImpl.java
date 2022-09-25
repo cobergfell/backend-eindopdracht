@@ -223,6 +223,9 @@ public class PaintingServiceImpl implements PaintingService {
         updatedPainting.setDateTimePosted(dto.dateTimePosted);
         //painting.setDateTimePosted(dto.dateTimePosted.toString());
         updatedPainting.setLastUpdate(dto.dateTimePosted);
+        updatedPainting.setAnswers(dto.answers);
+        updatedPainting.setQuestions(dto.questions);
+
         paintingRepository.save(updatedPainting);
 
 

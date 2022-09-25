@@ -243,7 +243,8 @@ public Long paintingId;//paintingId will only be specified when updating
                     else{inputDto.files=null;}
                     if (audioFiles != null){inputDto.audioFiles=audioFiles;}
                     else{inputDto.audioFiles=null;}
-
+                    inputDto.questions=paintingToUpdate.getQuestions();
+                    inputDto.answers=paintingToUpdate.getAnswers();
 
 /*                    if (multipartFiles != null){
                         List<String> fileNames = new ArrayList<>();
