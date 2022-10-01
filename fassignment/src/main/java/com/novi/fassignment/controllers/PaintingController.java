@@ -5,6 +5,7 @@ import com.novi.fassignment.controllers.dto.FileStoredInDataBaseDto;
 import com.novi.fassignment.controllers.dto.FileStoredInDataBaseInputDto;
 import com.novi.fassignment.controllers.dto.PaintingDto;
 import com.novi.fassignment.controllers.dto.PaintingInputDto;
+import com.novi.fassignment.exceptions.FileStorageException;
 import com.novi.fassignment.models.FileStoredInDataBase;
 import com.novi.fassignment.models.Painting;
 import com.novi.fassignment.models.User;
@@ -12,6 +13,7 @@ import com.novi.fassignment.repositories.PaintingRepository;
 import com.novi.fassignment.services.FileStorageInDataBaseServiceImpl;
 import com.novi.fassignment.services.PaintingServiceImpl;
 import com.novi.fassignment.services.UserService;
+import com.novi.fassignment.utils.Checks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -49,7 +51,11 @@ public class PaintingController {
 
     @Autowired
     UserService userService;
-/*
+
+    //@Autowired
+    //private  Checks checks;// we finally do not use it, files conformity are checked in front end
+
+    /*
     @Autowired
     private PaintingGetDto paintingGetDto;//Dto are usually static methods but in this case it had to be instantiated to instantiate services
 */
@@ -281,6 +287,7 @@ public Long paintingId;//paintingId will only be specified when updating
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
 
 
     private Sort.Direction getSortDirection(String direction) {

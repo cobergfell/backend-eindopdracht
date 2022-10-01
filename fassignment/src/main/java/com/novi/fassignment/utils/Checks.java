@@ -1,17 +1,20 @@
 package com.novi.fassignment.utils;
 
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Service
 public class Checks {
 
-    public Boolean checkIfAudio(MultipartFile multipartFile) {
+
+    public boolean checkIfAudio(MultipartFile multipartFile) {
         String contentTypeOfGivenFile = multipartFile.getContentType();
-        Boolean isAudio=false;
+        boolean isAudio=false;
         // If you want a fixed size list.
         List<String> list1 = Arrays.asList("audio/basic", "audio/midi", "audio/mpeg", "audio/x-aiff", "audio/x-mpegurl", "audio/x-pn-realaudio", "audio/x-wav");
         // If you want the list to be mutable
