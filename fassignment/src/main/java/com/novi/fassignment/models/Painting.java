@@ -20,7 +20,8 @@ public class Painting  {
     private Long paintingId;
     private String title;
     private String artist;
-    //@Lob
+    @Lob
+    @Column(columnDefinition = "text")
     private String description;
     private byte[] image;
 
@@ -125,9 +126,7 @@ public class Painting  {
         this.artist = artist;
     }
 
-    public String getDescription() {
-        return description;
-    }
+    public String getDescription() { return description; }
 
     public void setDescription(String description) {
         this.description = description;

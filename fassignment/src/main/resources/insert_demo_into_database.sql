@@ -7,7 +7,9 @@ INSERT INTO public.users ("username","apikey","date_time_registeredgmt","email",
 
 
 INSERT INTO public.paintings ("artist","date_time_posted","description","image","last_update","title","username")
-              VALUES ('test',(select '2022-09-09T15:45:00.559339'::timestamp),'this is the description...',pg_read_binary_file('D:\your\path\backend-eindopdracht\fassignment\src\main\assets\The_Fiddler_Marc_Chagall.png'),(select '2022-09-09 15:45:00.559339'::timestamp),'test','cobergfell');
+              VALUES ('Marc chagall',(select '2022-09-09T15:45:00.559339'::timestamp),lo_from_bytea(0,pg_read_binary_file('D:\your\path\frontend-eindopdracht\src\assets\blog_item_1.txt')),pg_read_binary_file('D:\your\path\backend-eindopdracht\fassignment\src\main\assets\The_Fiddler_Marc_Chagall.png'),(select '2022-09-09 15:45:00.559339'::timestamp),'test','cobergfell');
+
+
 
 
 INSERT INTO public.questions ("content","date_time_posted","image","last_update","title","painting_id","username")
@@ -16,9 +18,6 @@ INSERT INTO public.questions ("content","date_time_posted","image","last_update"
 
 INSERT INTO answers ("content","date_time_posted","image","last_update","title","painting_id","question_id","username")
               VALUES ('This is my answer',(select '2022-09-09 15:45:00.559339'::timestamp),NULL,(select '2022-09-09 15:45:00.559339'::timestamp),'answer 1',NULL,1,'cobergfell');
-
-
-
 
 
 INSERT INTO public.files_database ("bytes_in_database_url","data","description","file_on_disk_id","file_on_disk_url","name","type","answer_id","painting_id","question_id")
@@ -33,16 +32,12 @@ INSERT INTO public.files_database ("bytes_in_database_url","data","description",
 
 
 
-
 INSERT INTO public.music_files_database ("bytes_in_database_url","data","description","file_on_disk_id","file_on_disk_url","name","type","answer_id","painting_id","question_id")
               VALUES (NULL,lo_from_bytea(0,pg_read_binary_file('D:\your\path\backend-eindopdracht\fassignment\src\main\assets\rachmaninov.mp3')),NULL,2,'http://localhost:8080/api/user/download-file-from-disk/2','rachmaninov.mp3','audio/mpeg',1,1,NULL);
 INSERT INTO public.music_files_database ("bytes_in_database_url","data","description","file_on_disk_id","file_on_disk_url","name","type","answer_id","painting_id","question_id")
               VALUES (NULL,lo_from_bytea(0,pg_read_binary_file('D:\your\path\backend-eindopdracht\fassignment\src\main\assets\Gurdjieff_by_Jeroen_van_Veen.mp3')),NULL,4,'http://localhost:8080/api/user/download-file-from-disk/4','Gurdjieff_by_Jeroen_van_Veen.mp3','audio/mpeg',NULL,1,NULL);
 INSERT INTO public.music_files_database ("bytes_in_database_url","data","description","file_on_disk_id","file_on_disk_url","name","type","answer_id","painting_id","question_id")
               VALUES (NULL,lo_from_bytea(0,pg_read_binary_file('D:\your\path\backend-eindopdracht\fassignment\src\main\assets\Anna_Thorvaldsdottir_Rhizoma_Hrim.mp3')),NULL,5,'http://localhost:8080/api/user/download-file-from-disk/4','Anna_Thorvaldsdottir_Rhizoma_Hrim.mp3','audio/mpeg',NULL,1,1);
-
-
-
 
 
 
