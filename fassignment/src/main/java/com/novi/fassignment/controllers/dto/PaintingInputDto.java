@@ -1,6 +1,8 @@
 package com.novi.fassignment.controllers.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.novi.fassignment.models.Answer;
+import com.novi.fassignment.models.Question;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.web.multipart.MultipartFile;
@@ -8,6 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 public class PaintingInputDto {
 
@@ -19,6 +23,9 @@ public class PaintingInputDto {
     public byte[] image;
     public MultipartFile[] audioFiles;
     public MultipartFile[] files;
+
+    public Set<Question> questions;
+    public Set<Answer> answers;
 
 //    @CreationTimestamp
 //    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:01")
@@ -106,13 +113,40 @@ public class PaintingInputDto {
         this.lastUpdate = lastUpdate;
     }
 
-    public MultipartFile[] getMusicFiles() {
+//    public MultipartFile[] getMusicFiles() {
+//        return audioFiles;
+//    }
+//
+//    public void setMusicFiles(MultipartFile[] audioFiles) {
+//        this.audioFiles = audioFiles;
+//    }
+
+    public MultipartFile[] getAudioFiles() {
         return audioFiles;
     }
 
-    public void setMusicFiles(MultipartFile[] audioFiles) {
+    public void setAudioFiles(MultipartFile[] audioFiles) {
         this.audioFiles = audioFiles;
     }
+
+    public Set<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(Set<Question> questions) {
+        this.questions = questions;
+    }
+
+    public Set<Answer> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(Set<Answer> answers) {
+        this.answers = answers;
+    }
+
+
+
 }
 
 

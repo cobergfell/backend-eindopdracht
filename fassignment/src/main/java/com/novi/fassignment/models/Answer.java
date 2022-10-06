@@ -19,7 +19,7 @@ public class Answer  {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long answerId;
     private String title;
-    @Lob
+    //@Lob
     private String content;
     private byte[] image;
     //private String tags;

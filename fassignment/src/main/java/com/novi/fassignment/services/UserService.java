@@ -12,6 +12,7 @@ public interface UserService {
     public abstract String createUser(User user);
     public abstract void updateUser(String username, User user);
     public abstract void deleteUser(String username);
+    public abstract void deleteAllUsers();
     public abstract Collection<User> getUsers();
     public abstract Optional<User> getUser(String username);
     public abstract boolean userExists(String username);

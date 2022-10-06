@@ -3,6 +3,7 @@ package com.novi.fassignment.services;
 import com.novi.fassignment.controllers.dto.FileStoredInDataBaseInputDto;
 import com.novi.fassignment.controllers.dto.MusicFileStoredInDataBaseInputDto;
 import com.novi.fassignment.controllers.dto.PaintingInputDto;
+import com.novi.fassignment.exceptions.FileStorageException;
 import com.novi.fassignment.exceptions.RecordNotFoundException;
 import com.novi.fassignment.models.*;
 import com.novi.fassignment.repositories.FileStorageInDataBaseRepository;
@@ -37,7 +38,6 @@ public class PaintingServiceImpl implements PaintingService {
 
     @Autowired
     FileUploadService fileUploadService;
-
 
     private FileStorageInDataBaseServiceImpl fileStorageInDataBaseService;
     //private List<Painting> paintings = new ArrayList<>();
@@ -223,6 +223,9 @@ public class PaintingServiceImpl implements PaintingService {
         updatedPainting.setDateTimePosted(dto.dateTimePosted);
         //painting.setDateTimePosted(dto.dateTimePosted.toString());
         updatedPainting.setLastUpdate(dto.dateTimePosted);
+        updatedPainting.setAnswers(dto.answers);
+        updatedPainting.setQuestions(dto.questions);
+
         paintingRepository.save(updatedPainting);
 
 
@@ -244,7 +247,8 @@ public class PaintingServiceImpl implements PaintingService {
                     message = "Fail to upload files!";
                 }
             });
-            Set<FileStoredInDataBase> attachedFiles = new HashSet<>();
+
+            Set<FileStoredInDataBase> attachedFiles = painting.getFiles();//new HashSet<>();
             List<FileStoredInDataBase> sortedFiles = storageService.getAllFilesByDescId();
             //FileStoredInDataBase[] sortedFilesArray= (FileStoredInDataBase[]) sortedQuestions.toArray();//cast array of objects into array of questions
             for (int i = 0; i < fileNames.size(); i++) {
@@ -268,7 +272,7 @@ public class PaintingServiceImpl implements PaintingService {
                     MusicFileStoredInDataBaseInputDto musicFileStoredInDataBaseInputDto = new MusicFileStoredInDataBaseInputDto();
                     musicFileStoredInDataBaseInputDto.setFile(file);
                     musicFileStoredInDataBaseInputDto.setPainting(updatedPainting);
-                    MusicFileStoredInDataBase musicFileStoredInDataBase=musicStorageService.storeAttachedFile(musicFileStoredInDataBaseInputDto);
+                    MusicFileStoredInDataBase musicFileStoredInDataBase = musicStorageService.storeAttachedFile(musicFileStoredInDataBaseInputDto);
 
                     musicFileNames.add(file.getOriginalFilename());
                     message = "Uploaded the files successfully: " + musicFileNames;
@@ -277,7 +281,8 @@ public class PaintingServiceImpl implements PaintingService {
                 }
             });
 
-            Set<MusicFileStoredInDataBase> attachedMusicFiles = new HashSet<>();
+            //Set<MusicFileStoredInDataBase> attachedMusicFiles = new HashSet<>();
+            Set<MusicFileStoredInDataBase> attachedMusicFiles = painting.getMusicFiles();//new HashSet<>();
             List<MusicFileStoredInDataBase> sortedMusicFiles = musicStorageService.getAllFilesByDescId();
             //FileStoredInDataBase[] sortedFilesArray= (FileStoredInDataBase[]) sortedQuestions.toArray();//cast array of objects into array of questions
             for (int i = 0; i < musicFileNames.size(); i++) {

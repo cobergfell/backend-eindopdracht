@@ -21,6 +21,7 @@ public class Painting  {
     private String title;
     private String artist;
     @Lob
+    @Column(columnDefinition = "text")
     private String description;
     private byte[] image;
 
@@ -57,7 +58,7 @@ public class Painting  {
     @OneToMany(
             targetEntity = com.novi.fassignment.models.FileStoredInDataBase.class,
             mappedBy = "painting",
-            //cascade = CascadeType.ALL,
+            cascade = CascadeType.ALL,
             //orphanRemoval = true,
             fetch = FetchType.EAGER)
     private Set<FileStoredInDataBase> files = new HashSet<>();
@@ -65,8 +66,8 @@ public class Painting  {
     @OneToMany(
             targetEntity = com.novi.fassignment.models.MusicFileStoredInDataBase.class,
             mappedBy = "painting",
-            //cascade = CascadeType.ALL,
-           //orphanRemoval = true,
+            cascade = CascadeType.ALL,
+            //orphanRemoval = true,
             fetch = FetchType.EAGER)
     private Set<MusicFileStoredInDataBase> musicFiles = new HashSet<>();
 
@@ -125,9 +126,7 @@ public class Painting  {
         this.artist = artist;
     }
 
-    public String getDescription() {
-        return description;
-    }
+    public String getDescription() { return description; }
 
     public void setDescription(String description) {
         this.description = description;

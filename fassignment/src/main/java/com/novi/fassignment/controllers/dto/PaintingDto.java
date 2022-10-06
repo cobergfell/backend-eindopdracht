@@ -7,6 +7,7 @@ import com.novi.fassignment.models.Painting;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import javax.persistence.Lob;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
@@ -19,6 +20,7 @@ public class PaintingDto
     public String username;
     public String title;
     public String artist;
+    //@Lob
     public String description;
     public byte[] image;
 

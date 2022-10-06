@@ -10,6 +10,7 @@ import com.novi.fassignment.repositories.UserRepository;
 import com.novi.fassignment.services.AuthorityService;
 import com.novi.fassignment.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -170,6 +171,19 @@ public class UserController {
         userService.deleteUser(username);
         return ResponseEntity.noContent().build();
     }
+
+
+    @DeleteMapping(value ="delete")
+    public ResponseEntity<HttpStatus> deleteAllUsers() {
+        try {
+            userService.deleteAllUsers();
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
 
     @GetMapping(value = "authorities/{username}")
     public ResponseEntity<Object> getUserAuthorities(@PathVariable("username") String username) {

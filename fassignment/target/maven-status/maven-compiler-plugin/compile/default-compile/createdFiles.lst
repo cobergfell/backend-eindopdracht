@@ -13,9 +13,7 @@ com\novi\fassignment\services\AnswerService.class
 com\novi\fassignment\utils\RandomStringGenerator.class
 com\novi\fassignment\services\FilesStorageService.class
 com\novi\fassignment\models\Question.class
-com\novi\fassignment\services\QuestionWithFilesStoredOnDiscServiceImpl.class
 com\novi\fassignment\services\FileUploadService.class
-com\novi\fassignment\services\QuestionWithFilesStoredOnDiscService.class
 com\novi\fassignment\models\User.class
 com\novi\fassignment\controllers\AuthenticationController.class
 com\novi\fassignment\services\QuestionServiceImpl.class
@@ -24,9 +22,7 @@ com\novi\fassignment\messages\ResponseMessage.class
 com\novi\fassignment\payload\MessageResponse.class
 com\novi\fassignment\controllers\dto\QuestionDto.class
 com\novi\fassignment\payload\AuthenticationRequest.class
-com\novi\fassignment\models\QuestionWithFilesStoredOnDisc.class
 com\novi\fassignment\controllers\FileStorageInDataBaseController.class
-com\novi\fassignment\repositories\QuestionWithFilesStoredOnDiscRepository.class
 com\novi\fassignment\exceptions\StorageException.class
 com\novi\fassignment\services\UserService.class
 com\novi\fassignment\services\AnswerServiceImpl.class
@@ -35,7 +31,6 @@ com\novi\fassignment\controllers\TestController.class
 com\novi\fassignment\FassignmentApplication.class
 com\novi\fassignment\repositories\FileStorageInDataBaseRepository.class
 com\novi\fassignment\models\FileStoredInDataBase.class
-com\novi\fassignment\controllers\dto\QuestionWithFilesStoredOnDiscDto.class
 com\novi\fassignment\messages\ResponseFile.class
 com\novi\fassignment\controllers\AnswerController.class
 com\novi\fassignment\repositories\UserRepository.class
@@ -52,4 +47,3 @@ com\novi\fassignment\services\UserServiceImpl.class
 com\novi\fassignment\services\FilesStorageServiceImpl.class
 com\novi\fassignment\models\AuthorityKey.class
 com\novi\fassignment\payload\LoginRequest.class
-com\novi\fassignment\controllers\QuestionWithFilesStoredOnDiscController.class
