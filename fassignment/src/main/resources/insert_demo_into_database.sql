@@ -7,7 +7,7 @@ INSERT INTO public.users ("username","apikey","date_time_registeredgmt","email",
 
 
 INSERT INTO public.paintings ("artist","date_time_posted","description","image","last_update","title","username")
-              VALUES ('Marc chagall',(select '2022-09-09T15:45:00.559339'::timestamp),lo_from_bytea(0,pg_read_binary_file('D:\your\path\frontend-eindopdracht\src\assets\blog_item_1.txt')),pg_read_binary_file('D:\your\path\backend-eindopdracht\fassignment\src\main\assets\The_Fiddler_Marc_Chagall.png'),(select '2022-09-09 15:45:00.559339'::timestamp),'test','cobergfell');
+              VALUES ('Marc chagall',(select '2022-09-09T15:45:00.559339'::timestamp),lo_from_bytea(0,pg_read_binary_file('D:\your\path\frontend-eindopdracht\src\assets\blog_item_1.txt')),pg_read_binary_file('D:\your\path\backend-eindopdracht\fassignment\src\main\assets\The_Fiddler_Marc_Chagall.png'),(select '2022-09-09 15:45:00.559339'::timestamp),'Demo','cobergfell');
 
 
 
