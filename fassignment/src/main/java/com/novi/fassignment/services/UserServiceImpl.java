@@ -87,8 +87,6 @@ public class UserServiceImpl implements com.novi.fassignment.services.UserServic
         user.setAuthorities(newUser.getAuthorities());
         User check=user;
         userRepository.save(user);
-
-
     }
 
 

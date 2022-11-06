@@ -11,6 +11,7 @@
 	<groupId>com.novi</groupId>
 	<artifactId>fassignment</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>fassignment</name>
 	<description>novi full stack web dev final assignment</description>
 	<properties>
@@ -112,6 +113,23 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<!-- added 30-10-22 https://stackoverflow.com/questions/49398894/unable-to-compile-simple-java-10-java-11-project-with-maven-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.0</version>
+				<!--<configuration>
+					<release>11</release>  &lt;!&ndash;or <release>10</release>&ndash;&gt;
+				</configuration>-->
+				<configuration>
+					<source>11</source>
+					<target>11</target>
+				</configuration>
+
+			</plugin>
+
+
+
 
 			<!-- added 16-9-21 https://stackoverflow.com/questions/66313435/autowired-applicationcontext-is-null-in-junit-5 but did not solve the issue-->
 			<plugin>

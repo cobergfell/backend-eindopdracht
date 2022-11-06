@@ -46,7 +46,7 @@ public class AuthenticationController {
     @Autowired
     JwtUtil jwtUtl;
 
-    @GetMapping(value = "/authenticated")//This methode is not used anymore in this app but we keep it for the moment
+    @GetMapping(value = "/authenticated")//This method is not used anymore in this app but we keep it for the moment
     public ResponseEntity<Object> authenticated(Authentication authentication, Principal principal) {
         return ResponseEntity.ok().body(principal);
     }

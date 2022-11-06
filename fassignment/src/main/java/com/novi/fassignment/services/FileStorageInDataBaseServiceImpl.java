@@ -42,7 +42,7 @@ public class FileStorageInDataBaseServiceImpl {
     @Autowired
     NoviMethod1FileUploadService noviFileUploadService;
 
-
+    //the method below is finally not used but kept as reference
     public Boolean checkIfAudio(MultipartFile multipartFile) {
         String contentTypeOfGivenFile = multipartFile.getContentType();
         Boolean isAudio=false;
@@ -69,6 +69,7 @@ public class FileStorageInDataBaseServiceImpl {
         return isAudio;
     }
 
+    //the method below is finally not used but kept as reference
     public String cleanFileName(String fileName) {
         String newFileName = "";
         List<Character> fileNameAsCharactersList = new ArrayList<>();

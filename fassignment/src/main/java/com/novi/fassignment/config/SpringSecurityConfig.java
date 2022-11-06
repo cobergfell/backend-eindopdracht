@@ -53,20 +53,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         //JWT token authentication
-        http.cors().and().csrf().disable()
+        //http.cors().and().csrf().disable() // I removed last minute on 4-11-22 because cors error solved with @CORS works well
+        http.csrf().disable()
                 .authorizeRequests().
-/*                antMatchers(HttpMethod.POST, "http://localhost:8080/api/user/questions-upload-without-files").permitAll().
-                antMatchers(HttpMethod.POST, "http://localhost:8080/api/user/questions-upload-with-files-in-database").permitAll().
-                antMatchers(HttpMethod.PUT, "http://localhost:8080/api/user/questions-edit-with-files/{id}").permitAll().
-                antMatchers(HttpMethod.PUT, "http://localhost:8080/api/user/questions-edit-without-files/{id}").permitAll().
-                antMatchers(HttpMethod.GET, "http://localhost:8080/api/user/questions-with-files-in-database").permitAll().
-                antMatchers(HttpMethod.GET, "http://localhost:8080/api/user/questions-with-files-in-database").permitAll().
-                antMatchers(HttpMethod.GET, "http://localhost:8080/api/user/questions-with-files-in-database/{id}").permitAll().
-                antMatchers(HttpMethod.DELETE, "http://localhost:8080/api/user/questions-with-files-in-database/{id}").hasAuthority("ADMIN").
-                antMatchers(HttpMethod.DELETE, "http://localhost:8080/api/user/questions-with-files-in-database").hasAuthority("ADMIN").
-                antMatchers(HttpMethod.POST, "http://localhost:8080/api/auth/signup").permitAll().
-                antMatchers(HttpMethod.POST, "http://localhost:8080/api/auth/signin").permitAll().*/
-
+                /* antMatchers(HttpMethod.POST, "http://localhost:8080/api/user/questions-upload-without-files").permitAll().
+                 antMatchers(HttpMethod.POST, "http://localhost:8080/api/user/questions-upload-with-files-in-database").permitAll().
+                 antMatchers(HttpMethod.PUT, "http://localhost:8080/api/user/questions-edit-with-files/{id}").permitAll().*/
                 anyRequest().permitAll()
                 .and()
                 .sessionManagement()
