@@ -22,14 +22,6 @@ public class Question  {
     //@Lob
     private String content;
     private byte[] image;
-    //private String tags;
-
-//    @CreationTimestamp
-//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
-//    private ZonedDateTime dateTimePosted;
-//    @UpdateTimestamp
-//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
-//    private ZonedDateTime lastUpdate;
 
     @CreationTimestamp
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
@@ -38,17 +30,6 @@ public class Question  {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     public LocalDateTime lastUpdate;
 
-/*    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
-    @Column(name = "create_date")
-    private Date dateTimePosted;
-
-    @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
-    @Column(name = "modify_date")
-    private Date lastUpdate;*/
 
     @OneToMany(
             targetEntity = com.novi.fassignment.models.FileStoredInDataBase.class,

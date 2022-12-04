@@ -2,10 +2,7 @@ package com.novi.fassignment.services;
 
 
 
-import com.novi.fassignment.controllers.FilesControllerNotUsedAnymoreInThisApp;
-import com.novi.fassignment.controllers.NoviMethod1FileUploadController;
 import com.novi.fassignment.controllers.dto.NoviMethod1FileUploadRequestDto;
-import com.novi.fassignment.controllers.dto.NoviMethod1FileUploadResponseDto;
 import com.novi.fassignment.exceptions.FileStorageException;
 import com.novi.fassignment.exceptions.RecordNotFoundException;
 
@@ -18,15 +15,9 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;

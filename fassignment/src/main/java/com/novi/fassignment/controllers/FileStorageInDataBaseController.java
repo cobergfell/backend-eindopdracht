@@ -21,9 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-//@CrossOrigin("http://localhost:8080")
 @CrossOrigin("*")
-//@CrossOrigin(origins = "http://localhost:3000")
 public class FileStorageInDataBaseController {
 
     @Autowired
@@ -43,10 +41,6 @@ public class FileStorageInDataBaseController {
         }
     }
 
-/*    @GetMapping("/files_database")
-    public Stream<FileStoredInDataBase> getAllQuestions() {
-        return storageService.getAllFiles();
-    }*/
 
     @GetMapping("api/user/files_database_as_stream")
     public ResponseEntity<List<ResponseFile>> getListFilesAsStream() {
@@ -54,7 +48,6 @@ public class FileStorageInDataBaseController {
             String fileDownloadUri = ServletUriComponentsBuilder
                     .fromCurrentContextPath()
                     .path("/files_database/")
-                    //.path(dbFile.getFileId().toString())
                     .buildAndExpand(dbFile.getFileId())
                     .toUriString();
 
@@ -67,21 +60,6 @@ public class FileStorageInDataBaseController {
 
         return ResponseEntity.status(HttpStatus.OK).body(files);
     }
-
-
-/*    @GetMapping("/files_database")
-    @ResponseBody
-    public List<ResponseFileDto> getResponseFilesAsList() {
-
-        var dtos = new ArrayList<ResponseFileDto>();
-        var filesStoredInDataBase = storageService.getAllFilesAsList();
-
-        for (FileStoredInDataBase fileStoredInDataBase : filesStoredInDataBase) {
-            dtos.add(ResponseFileDto.fromFileStoredInDataBase(fileStoredInDataBase));
-        }
-
-        return dtos;
-    }*/
 
 
     @GetMapping("api/user/files-database")
@@ -107,8 +85,6 @@ public class FileStorageInDataBaseController {
 
 
 
-
-
     @GetMapping("api/user/question-files-from-database")
     public ResponseEntity<List<FileStoredInDataBaseDto>> getFileListById(@RequestBody List<Integer> list) {
         var dtos = new ArrayList<FileStoredInDataBaseDto>();
@@ -121,23 +97,6 @@ public class FileStorageInDataBaseController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(dtos);
     }
-
-
-
-/*    @GetMapping("/download_version_dev/files")
-    public ResponseEntity<List<FileInfo>> getListFiles() {
-        List<FileInfo> fileInfos = storageService.loadAll().map(path -> {
-            String filename = path.getFileName().toString();
-            String url = MvcUriComponentsBuilder
-                    .fromMethodName(FilesController.class, "getFile", path.getFileName().toString()).build().toString();
-
-            return new FileInfo(filename, url);
-        }).collect(Collectors.toList());
-
-        Stream<Path> pathStream = storageService.loadAll();
-        return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
-    }*/
-
 
 
     @DeleteMapping("api/user/files-database/{id}")

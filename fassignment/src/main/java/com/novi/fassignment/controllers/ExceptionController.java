@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @ControllerAdvice
-//@CrossOrigin(origins ="http://localhost:3000")
-//@CrossOrigin("http://localhost:8080")
+
 @CrossOrigin(origins ="*")
 public class ExceptionController {
 

@@ -25,7 +25,7 @@ import java.util.Optional;
 
 
 @RestController
-//@RequestMapping("api/user")
+
 @CrossOrigin
 public class NoviMethod1FileUploadController {
 
@@ -41,20 +41,6 @@ public class NoviMethod1FileUploadController {
         Iterable<NoviMethod1FileStoredOnDisk> files = methode1Service.getFiles();
         return ResponseEntity.ok().body(files);
     }
-
-    //version https://www.bezkoder.com/spring-boot-file-upload/
-    /*    @GetMapping("/files")
-   public ResponseEntity<List<FileInfo>> getListFiles() {
-        List<FileInfo> fileInfos = storageService.loadAll().map(path -> {
-            String filename = path.getFileName().toString();
-            String url = MvcUriComponentsBuilder
-                    .fromMethodName(FilesController.class, "getFile", path.getFileName().toString()).build().toString();
-            return new FileInfo(filename, url);
-        }).collect(Collectors.toList());
-        return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
-    }*/
-
-    //version https://www.bezkoder.com/spring-boot-file-upload/
     @GetMapping("api/user/get-files-data-from-disk-bezkoder")
     public ResponseEntity<List<FileInfo>>  getFilesVersionBezkoder() {
         List<FileInfo> fileInfos = new ArrayList<FileInfo>();
@@ -70,15 +56,6 @@ public class NoviMethod1FileUploadController {
     }
 
 
-/*    @GetMapping("/files/{filename:.+}")
-    @ResponseBody
-    public ResponseEntity<Resource> getFile(@PathVariable String filename) {
-        Resource file = storageService.load(filename);
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
-    }*/
-
-
     @GetMapping("api/user/get-file-data-from-disk-bezkoder/{id}")
     @ResponseBody
     public ResponseEntity<Resource> getFile(@PathVariable long id) {
@@ -87,13 +64,6 @@ public class NoviMethod1FileUploadController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
-
-
-/*    @GetMapping("api/user/get-file-data-from-disk/{id}")
-    public ResponseEntity<Object> getFileInfo(@PathVariable long id) {
-        NoviMethod1FileUploadResponseDto response = methode1Service.getFileById(id);
-        return ResponseEntity.ok().body(response);
-    }*/
 
     @GetMapping("api/user/download-file-from-disk/{id}")
     public ResponseEntity downloadFile(@PathVariable long id) {
@@ -106,7 +76,6 @@ public class NoviMethod1FileUploadController {
     }
 
     @PostMapping(value = "api/user/upload-file-to-disk",
-//            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE} )
     public ResponseEntity<Object> uploadFile(NoviMethod1FileUploadRequestDto method1Dto) {
         long newId = methode1Service.uploadFile(method1Dto);

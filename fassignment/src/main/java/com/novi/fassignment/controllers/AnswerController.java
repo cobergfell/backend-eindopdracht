@@ -3,6 +3,7 @@ package com.novi.fassignment.controllers;
 
 import com.novi.fassignment.controllers.dto.AnswerDto;
 import com.novi.fassignment.controllers.dto.AnswerInputDto;
+import com.novi.fassignment.controllers.dto.QuestionDto;
 import com.novi.fassignment.models.Answer;
 import com.novi.fassignment.models.User;
 import com.novi.fassignment.repositories.AnswerRepository;
@@ -43,53 +44,22 @@ public class AnswerController {
     UserService userService;
 
     @GetMapping("api/user/answers")
-    public List<AnswerDto> getAnswers() {
-        var dtos = new ArrayList<AnswerDto>();
-        var answers = answerService.getAllAnswers();
-        //List<FileStoredInDataBase> filesStoredInDataBase = storageService.getAllFilesAsList();
-
-        for (Answer answer : answers) {
-            //answerService.getFiles(answer);
-            dtos.add(AnswerDto.fromAnswerToDto(answer));
-        }
-        return dtos;
+    public ResponseEntity<List<AnswerDto>> getAnswers()
+    {    List<AnswerDto> answersDtos = answerService.getAllAnswers();
+        return ResponseEntity.ok(answersDtos);
     }
 
     @GetMapping("api/user/answers/{answerId}")
-    public AnswerDto getAnswer(@PathVariable("answerId") Long answerId) {
-        var dto = new AnswerDto();
-        var answer = answerService.getAnswerById(answerId);
-        dto=AnswerDto.fromAnswerToDto(answer);
-        return dto;
+    public ResponseEntity<AnswerDto> getAnswerById(@PathVariable("answerId") Long answerId)
+    {    AnswerDto answerDto = answerService.getAnswerById(answerId);
+        return ResponseEntity.ok(answerDto);
     }
-
-/*    @GetMapping("api/user/answers-by-paintingId/{paintingId}")
-    public List<AnswerDto>  getAnswersByPaintingId(@PathVariable("paintingId") Long paintingId) {
-        var dtos = new ArrayList<AnswerDto>();
-        var painting = paintingService.getPaintingById(paintingId);
-        var answers= painting.getAnswers();
-        for (Answer answer : answers) {
-            //answerService.getFiles(answer);
-            dtos.add(AnswerDto.fromAnswerToDto(answer));
-        }
-        return dtos;
-    }*/
-
 
     @GetMapping("api/user/answers-by-questionId/{questionId}")
-    public List<AnswerDto>  getAnswersByPaintingId(@PathVariable("questionId") Long questionId) {
-        var dtos = new ArrayList<AnswerDto>();
-        var question = questionService.getQuestionById(questionId);
-        var answers= question.getAnswers();
-        for (Answer answer : answers) {
-            //answerService.getFiles(answer);
-            dtos.add(AnswerDto.fromAnswerToDto(answer));
-        }
-        return dtos;
+    public ResponseEntity<List<AnswerDto>> getAnswersByQuestionId(@PathVariable("questionId") Long questionId)
+    {    List<AnswerDto> answerDtos = answerService.getAnswersByQuestionId(questionId);
+        return ResponseEntity.ok(answerDtos);
     }
-
-
-
 
     @DeleteMapping("api/user/answers/{answerId}")
     public ResponseEntity<HttpStatus> deleteAnswer(@PathVariable("answerId") long answerId) {
@@ -149,7 +119,7 @@ public class AnswerController {
 
         } catch (Exception exception) {
             message = "Question could not be submitted/uploaded!";
-            return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -169,85 +139,48 @@ public class AnswerController {
 
 
         if (currentAnswer.isPresent()) {
-            //paintingService.deletePaintingById(id);
             Answer answerToUpdate = currentAnswer.get();
-            ///paintingService.createPainting(updatedPainting);
             try {
-                //LocalDate datePosted = LocalDate.now(ZoneId.of("GMT+00:00"));
                 String message = "";
-                try {
-                    //LocalDate datePosted = LocalDate.now(ZoneId.of("GMT+00:00"));
+                LocalDateTime localDateTimePosted =myLocalDateTimeParserTypeYearMonthDayHourMinSec(dateTimePosted);
+                LocalDateTime lastUpdate = LocalDateTime.now(ZoneId.of("GMT+00:01"));
+                ZonedDateTime zonedLastUpdate = lastUpdate.atZone(ZoneId.of("GMT+00:01"));
 
-//                    var dto = new PaintingDto();
-//                    var painting = paintingService.getPaintingById(paintingId);
-//                    dto=PaintingDto.fromPaintingToDto(painting);
-
-//                    ZonedDateTime dateTimePostedWithZoneOffset = ZonedDateTime
-//                            .parse("2011-12-03T10:15:30+01:00", formatter);
-                    //ZonedDateTime dateTimePostedWithZoneOffset = ZonedDateTime
-                    //        .parse(dateTimePosted, formatter);
-
-                    LocalDateTime localDateTimePosted =myLocalDateTimeParserTypeYearMonthDayHourMinSec(dateTimePosted);
-                    LocalDateTime lastUpdate = LocalDateTime.now(ZoneId.of("GMT+00:01"));
-                    ZonedDateTime zonedLastUpdate = lastUpdate.atZone(ZoneId.of("GMT+00:01"));
-                    //formatter.format(zonedLastUpdate);
-
-
-                    if (username != null){
-                        Optional<User> user = userService.getUser(username);
-                        String password = user.get().getPassword();
-                        String email = user.get().getEmail();
-                        User userFromCustomUser = new User();
-                        userFromCustomUser.setUsername(username);
-                        userFromCustomUser.setPassword(password);
-                        userFromCustomUser.setEmail(email);
-                        answerToUpdate.setUser(userFromCustomUser);
-                    }
-
-                    AnswerInputDto inputDto= new AnswerInputDto();
-                    inputDto.answerId=answerId;
-                    inputDto.username=username;
-                    inputDto.idRelatedItem = questionId;
-                    if (title != null){inputDto.title=title;}
-                    else{inputDto.title=null;}
-                    if (content != null){inputDto.content=content;}
-                    else{inputDto.content=null;}
-                    if (image != null){inputDto.image=image.getBytes();}
-                    else{inputDto.image=null;}
-                    if (multipartFiles != null){inputDto.files=multipartFiles;}
-                    else{inputDto.files=null;}
-                    if (musicFiles != null){inputDto.musicFiles=musicFiles;}
-                    else{inputDto.musicFiles=null;}
-
-
-/*                    if (multipartFiles != null){
-                        List<String> fileNames = new ArrayList<>();
-                        //Set<FileStoredInDataBase> attachedFiles = new HashSet<>();
-                        List<MultipartFile> multipartFilesList = new ArrayList<MultipartFile>();
-                        Arrays.asList(multipartFiles).stream().forEach(theFile -> multipartFilesList.add(theFile));
-                    }
-                    if (musicFiles != null){
-                        List<String> fileNames = new ArrayList<>();
-                        //Set<FileStoredInDataBase> attachedFiles = new HashSet<>();
-                        List<MultipartFile> multipartFilesList = new ArrayList<MultipartFile>();
-                        Arrays.asList(musicFiles).stream().forEach(theFile -> multipartFilesList.add(theFile));
-                    }*/
-                    //paintingRepository.save(paintingToUpdate);
-
-                    answerService.updateAnswer(inputDto, answerToUpdate);
-
-                    message = "Question submitted!";
-                    return ResponseEntity.noContent().build();
-
-                } catch (Exception exception) {
-                    message = "Painting could not be submitted/uploaded!";
-                    return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+                if (username != null){
+                    Optional<User> user = userService.getUser(username);
+                    String password = user.get().getPassword();
+                    String email = user.get().getEmail();
+                    User userFromCustomUser = new User();
+                    userFromCustomUser.setUsername(username);
+                    userFromCustomUser.setPassword(password);
+                    userFromCustomUser.setEmail(email);
+                    answerToUpdate.setUser(userFromCustomUser);
                 }
+
+                AnswerInputDto inputDto= new AnswerInputDto();
+                inputDto.answerId=answerId;
+                inputDto.username=username;
+                inputDto.idRelatedItem = questionId;
+                if (title != null){inputDto.title=title;}
+                else{inputDto.title=null;}
+                if (content != null){inputDto.content=content;}
+                else{inputDto.content=null;}
+                if (image != null){inputDto.image=image.getBytes();}
+                else{inputDto.image=null;}
+                if (multipartFiles != null){inputDto.files=multipartFiles;}
+                else{inputDto.files=null;}
+                if (musicFiles != null){inputDto.musicFiles=musicFiles;}
+                else{inputDto.musicFiles=null;}
+
+                answerService.updateAnswer(inputDto, answerToUpdate);
+
+                message = "Question submitted!";
+                return ResponseEntity.noContent().build();
 
 
             } catch (Exception exception) {
                 message_painting = "Painting could not be submitted/uploaded!";
-                return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
 
 
@@ -255,76 +188,5 @@ public class AnswerController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-/*    @PostMapping("api/user/create-or-update-answer/{id}")//id must always refer to a question or to an answer for update purposes
-    public ResponseEntity<Object> createOrUpdateAnswer(
-            @PathVariable("id") Long id,
-            @RequestParam("username") String username,
-            @RequestParam("title")  String title,
-            @RequestParam("content") String content,
-            //@RequestParam("tags")  String tags,
-            @RequestParam("answerRelatedTo")  String answerRelatedTo,
-            @RequestParam(value="files",required=false) MultipartFile[] files) {
-        String message = "";
-        LocalDateTime dateTimePosted = LocalDateTime.now(ZoneId.of("GMT+00:00"));
-        //ZonedDateTime zonedDateTimePosted = dateTimePosted.atZone(ZoneId.of("GMT+00:00"));
-
-        Answer answer = new Answer();
-        Question question = new Question();
-//        Painting painting = new Painting();
-//        MusicPiece musicPiece = new MusicPiece();
-        if (answerRelatedTo.equals("question")) {
-            try {
-                question = questionService.getQuestionById(id);
-            } catch (Exception exception) {
-                message = "question Id not found";
-                id = Long.valueOf(-1);
-            }
-//        } else if (answerRelatedTo.equals("musicPiece")) {
-//            try {
-//                musicPiece = musicPieceService.getMusicPieceById(id);
-//            } catch (Exception exception) {
-//                message = "Music piece Id not found";
-//                id = Long.valueOf(-1);
-//            }
-        } else if (answerRelatedTo.equals("answer")) {   //in that case we edit answer
-            try {
-                answer =answerService.getAnswerById(id);
-
-            } catch (Exception exception) {
-                message = "answer Id not found";
-                id = Long.valueOf(-1);
-            }
-
-        } else {
-            id = Long.valueOf(-1);
-        }
-        try {
-            AnswerInputDto inputDto = new AnswerInputDto();
-            inputDto.username = username;
-            inputDto.title = title;
-            inputDto.content = content;
-            //inputDto.tags = tags;
-            inputDto.dateTimePosted = dateTimePosted;
-            inputDto.lastUpdate = dateTimePosted;
-            inputDto.answerRelatedTo = answerRelatedTo;
-            inputDto.idRelatedItem = id;
-            inputDto.files = files;
-
-            if (answerRelatedTo.equals("answer")){//in that case we edit answer
-                inputDto.answerId = id;
-                answerService.updateAnswer(inputDto,answer);
-            }
-            else{answerService.createAnswer(inputDto);}
-
-
-            message = "Answer submitted!";
-            return ResponseEntity.noContent().build();
-        } catch (Exception exception) {
-            message = "Answer could not be submitted";
-            return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
-        }
-
-    }*/
 
 }

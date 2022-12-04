@@ -122,29 +122,6 @@ public class AuthenticationController {
     }
 
 
-/*    @PostMapping(value = "api/auth/signin") //this was the authentication up to 25-9-21
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
-
-        String username = authenticationRequest.getUsername();
-        String password = authenticationRequest.getPassword();
-
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(username, password)
-            );
-        }
-        catch (BadCredentialsException ex) {
-            throw new Exception("Incorrect username or password", ex);
-        }
-
-        final UserDetails userDetails = userDetailsService
-                .loadUserByUsername(username);
-
-        final String jwt = jwtUtl.generateToken(userDetails);
-
-        return ResponseEntity.ok(new AuthenticationResponse(jwt));
-    }*/
-
 }
 
 
