@@ -64,28 +64,28 @@ public class PaintingController {
 
 
 
-    @GetMapping("api/user/paintings")
+    @GetMapping("paintings")
     public ResponseEntity<List<PaintingDto>> getPaintings()
     {    List<PaintingDto> paintingDtos = paintingService.getAllPaintingsByAscId();
         return ResponseEntity.ok(paintingDtos);
     }
 
-    @GetMapping("api/user/paintings/{paintingId}")
-    public ResponseEntity<PaintingDto> getPainting(@PathVariable("paintingId") Long paintingId)
+    @GetMapping("paintings/{id}")
+    public ResponseEntity<PaintingDto> getPainting(@PathVariable("id") Long paintingId)
     {    PaintingDto paintingDto = paintingService.getPaintingById(paintingId);
         return ResponseEntity.ok(paintingDto);
     }
 
 
-    @GetMapping(value = "api/user/paintings/image/{paintingId}")
-    public ResponseEntity<byte[]> getImage(@PathVariable("paintingId") Long paintingId) {
+    @GetMapping(value = "paintings/{id}/image")
+    public ResponseEntity<byte[]> getImage(@PathVariable("id") Long paintingId) {
         var dto = paintingService.getPaintingById(paintingId);
         byte[] image = dto.getImage();
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
     }
 
 
-    @PostMapping("api/user/paintings-upload")
+    @PostMapping("paintings")
     public ResponseEntity<Object> sendPainting(
             @RequestParam(value="username",required=false) String username,
             @RequestParam(value="title",required=false)  String title,
@@ -122,8 +122,8 @@ public class PaintingController {
     }
 
 
-    @PostMapping("api/user/paintings-update/{paintingId}")
-    public ResponseEntity<Object> updatePaintingWithFiles(@PathVariable("paintingId") Long paintingId,
+    @PostMapping("paintings/{id}")
+    public ResponseEntity<Object> updatePaintingWithFiles(@PathVariable("id") Long paintingId,
                                                           @RequestParam(value="username",required=false) String username,
                                                           @RequestParam(value="dateTimePosted",required=false) String dateTimePosted,
                                                           @RequestParam(value="title",required=false)  String title,
@@ -202,17 +202,17 @@ public class PaintingController {
 
 
 
-    @DeleteMapping("api/user/paintings/delete/{paintingId}")
-    public ResponseEntity<HttpStatus> deletePainting(@PathVariable("paintingId") long paintingId) {
+    @DeleteMapping("paintings/{id}")
+    public ResponseEntity<HttpStatus> deletePainting(@PathVariable("id") long id) {
         try {
-            paintingService.deletePaintingById(paintingId);
+            paintingService.deletePaintingById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @DeleteMapping("api/user/paintings/delete")
+    @DeleteMapping("paintings")
     public ResponseEntity<HttpStatus> deleteAllPaintings() {
         try {
             paintingService.deleteAllPaintings();

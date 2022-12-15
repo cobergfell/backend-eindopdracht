@@ -65,7 +65,7 @@ public class AnswerControllerTest {
     private FileStorageInDataBaseServiceImpl storageService;
 
     @MockBean
-    FilesStorageService storageServiceOnDisc;
+    NoviMethod1FileUploadServiceImpl storageServiceOnDisc;
 
     @MockBean
     CustomUserDetailsService customUserDetailsService;

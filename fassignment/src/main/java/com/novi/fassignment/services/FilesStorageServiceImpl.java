@@ -5,6 +5,7 @@ package com.novi.fassignment.services;
 
 import com.novi.fassignment.exceptions.StorageException;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -25,8 +26,8 @@ import java.util.stream.Stream;
 @Service
 public class FilesStorageServiceImpl implements FilesStorageService {
 
-//    @Value("${app.upload.dir:${user.home}}")
-//    public String uploadDir;
+    @Value("${app.upload.dir:${user.home}}")
+    public String uploadDir;
 //    Path root = uploadDir;
 //    Path path = dir.resolve("file");
 //    Path root = Paths.get(uploadDir);

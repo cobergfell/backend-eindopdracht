@@ -36,27 +36,27 @@ public class QuestionController {
     private PaintingServiceImpl paintingService;
 
 
-    @GetMapping("api/user/questions")
+    @GetMapping("questions")
     public ResponseEntity<List<QuestionDto>> getQuestions()
     {    List<QuestionDto> questionDtos = questionService.getAllQuestions();
         return ResponseEntity.ok(questionDtos);
     }
 
-    @GetMapping("api/user/questions/{questionId}")
+    @GetMapping("questions/{questionId}")
     public ResponseEntity<QuestionDto> getQuestion(@PathVariable("questionId") Long questionId)
     {    QuestionDto questionDto = questionService.getQuestionById(questionId);
         return ResponseEntity.ok(questionDto);
     }
 
-    @GetMapping("api/user/questions-by-paintingId/{paintingId}")
-    public ResponseEntity<List<QuestionDto>> getQuestionsByPaintingId(@PathVariable("paintingId") Long paintingId)
+    @GetMapping("questions/byProject/{projectId}")
+    public ResponseEntity<List<QuestionDto>> getQuestionsByPaintingId(@PathVariable("projectId") Long paintingId)
     {    List<QuestionDto> questionDtos = questionService.getQuestionsByPaintingId(paintingId);
         return ResponseEntity.ok(questionDtos);
     }
 
 
 
-    @PostMapping("api/user/question-upload/{id}")//id is the id of the project about which the question is asked
+    @PostMapping("questions-upload/{id}")//id is the id of the project about which the question is asked
     public ResponseEntity<Object> sendPainting(
             @PathVariable("id") Long id,
             @RequestParam("username") String username,
@@ -98,7 +98,7 @@ public class QuestionController {
         }
     }
 
-    @PostMapping("api/user/update-question/{id}")
+    @PostMapping("questions/update/{id}")
     public ResponseEntity<Object> updatePaintingWithFiles(@PathVariable("questionId") Long questionId,
                                                           @RequestParam(value="username",required=false) String username,
                                                           @RequestParam(value="dateTimePosted",required=false) String dateTimePosted,
@@ -166,7 +166,7 @@ public class QuestionController {
         }
     }
 
-    @DeleteMapping("api/user/questions/{questionId}")
+    @DeleteMapping("questions/delete/{questionId}")
     public ResponseEntity<HttpStatus> deleteQuestion(@PathVariable("questionId") long questionId) {
         try {
             questionService.deleteQuestionById(questionId);
@@ -176,7 +176,7 @@ public class QuestionController {
         }
     }
 
-    @DeleteMapping("api/user/questions")
+    @DeleteMapping("questions/delete")
     public ResponseEntity<HttpStatus> deleteAllQuestions() {
         try {
             questionService.deleteAllQuestions();

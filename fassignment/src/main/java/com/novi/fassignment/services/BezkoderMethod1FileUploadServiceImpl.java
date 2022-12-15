@@ -36,16 +36,21 @@ public class BezkoderMethod1FileUploadServiceImpl implements BezkoderMethod1File
 
 
     @Value("${app.upload.dir:${user.home}}")
-    private String uploadDirectory;  // relative to root
-    //private final Path uploads = Paths.get("uploads");
-    private final Path root = Paths.get("C:\\Users\\Gebruiker\\Test\\uploads");
-    //private final Path uploads = Paths.get("D:\\Data\\NOVI\\eindopdracht\\fassignment-frontend\\src\\assets");
+    //private String uploadDirectory;  // relative to root
+    private final Path uploads = Paths.get("uploads");
+   // private final Path root = Paths.get("C:\\Users\\Gebruiker\\Test\\uploads");
+    //String userDirectoryString = Path.of("").toAbsolutePath().toString();
+
+
+
+    //System.out.println("line 15 userDirectoryString: "+userDirectoryString);
+
 
     @Autowired
     private NoviMethod1FileUploadRepository repository;
 
 
-   //private final Path root = Paths.get("uploads");
+   private final Path root = Paths.get("uploads");
     @Override
     public void init() {
         try {

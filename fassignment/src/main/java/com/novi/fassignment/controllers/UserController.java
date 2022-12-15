@@ -21,7 +21,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins ="*")
-@RequestMapping(value = "api/users")
+@RequestMapping(value = "users")
 
 public class UserController {
     @Autowired
@@ -47,40 +47,6 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getUser(username));
     }
 
-    @GetMapping(value = "authorities/{username}")
-    public ResponseEntity<Object> getUserAuthorities(@PathVariable("username") String username) {
-        return ResponseEntity.ok().body(userService.getAuthorities(username));
-    }
-
-    @PostMapping(value = "authorities/add/{username}/{authority}")
-    public ResponseEntity<Object> addAuthority(@PathVariable("username") String username,@PathVariable("authority") String authority) {
-        try {
-            Optional<User> optionalUser=userService.getUser(username);
-            if (optionalUser.isPresent()) {
-                authorityService.addAuthority(username, authority);;
-            }
-            return ResponseEntity.noContent().build();
-        }
-        catch (Exception ex) {
-            throw new BadRequestException();
-        }
-    }
-
-    @PostMapping(value = "authorities/delete/{username}/{authority}")
-    public ResponseEntity<Object> deleteAuthority(@PathVariable("username") String username,@PathVariable("authority") String authority) {
-        try {
-            Optional<User> optionalUser=userService.getUser(username);
-            if (optionalUser.isPresent()) {
-                authorityService.removeAuthority(username, authority);;
-            }
-            return ResponseEntity.noContent().build();
-        }
-        catch (Exception ex) {
-            throw new BadRequestException();
-        }
-    }
-
-
 
     @PostMapping(value = "")
     public ResponseEntity<Object> createUser(@RequestBody User user) {
@@ -92,7 +58,7 @@ public class UserController {
         return ResponseEntity.created(location).build();
     }
 
-    @PostMapping(value = "/update/{username}")
+    @PutMapping(value = "/{username}")
     public ResponseEntity<Object> updateUser(@PathVariable("username") String username,
                                              @RequestParam("newUsername") String newUsername,
                                              @RequestParam("email") String email,
@@ -106,10 +72,10 @@ public class UserController {
         if (optionalUser.isPresent()) {
             if (username.equals(newUsername)){
                 User user =optionalUser.get();
-            user.setEmail(email);
-            user.setEnabled(enabled);
+                user.setEmail(email);
+                user.setEnabled(enabled);
 
-            userService.updateUser(username, user);
+                userService.updateUser(username, user);
             }
             else {
                 User newUser = new User();
@@ -147,14 +113,14 @@ public class UserController {
 
 
 
-    @DeleteMapping(value = "delete/{username}")
+    @DeleteMapping(value = "/{username}")
     public ResponseEntity<Object> deleteUser(@PathVariable("username") String username) {
         userService.deleteUser(username);
         return ResponseEntity.noContent().build();
     }
 
 
-    @DeleteMapping(value ="delete")
+    @DeleteMapping(value ="")
     public ResponseEntity<HttpStatus> deleteAllUsers() {
         try {
             userService.deleteAllUsers();
@@ -166,10 +132,44 @@ public class UserController {
     }
 
 
+/*
+    @GetMapping(value = "authorities/{username}")
+    public ResponseEntity<Object> getUserAuthorities(@PathVariable("username") String username) {
+        return ResponseEntity.ok().body(userService.getAuthorities(username));
+    }
+
+
+    @PostMapping(value = "authorities/add/{username}/{authority}")
+    public ResponseEntity<Object> addAuthority(@PathVariable("username") String username,@PathVariable("authority") String authority) {
+        try {
+            Optional<User> optionalUser=userService.getUser(username);
+            if (optionalUser.isPresent()) {
+                authorityService.addAuthority(username, authority);;
+            }
+            return ResponseEntity.noContent().build();
+        }
+        catch (Exception ex) {
+            throw new BadRequestException();
+        }
+    }
+
+    @PostMapping(value = "authorities/delete/{username}/{authority}")
+    public ResponseEntity<Object> deleteAuthority(@PathVariable("username") String username,@PathVariable("authority") String authority) {
+        try {
+            Optional<User> optionalUser=userService.getUser(username);
+            if (optionalUser.isPresent()) {
+                authorityService.removeAuthority(username, authority);;
+            }
+            return ResponseEntity.noContent().build();
+        }
+        catch (Exception ex) {
+            throw new BadRequestException();
+        }
+    }
     @DeleteMapping(value = "/authorities/{username}/{authority}")
     public ResponseEntity<Object> deleteUserAuthority(@PathVariable("username") String username, @PathVariable("authority") String authority) {
         authorityService.removeAuthority(username, authority);
         return ResponseEntity.noContent().build();
-    }
+    }*/
 
 }

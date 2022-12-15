@@ -1,13 +1,10 @@
 package com.novi.fassignment.controllers;
 
-
 import com.novi.fassignment.controllers.dto.AnswerDto;
 import com.novi.fassignment.controllers.dto.AnswerInputDto;
-import com.novi.fassignment.controllers.dto.QuestionDto;
 import com.novi.fassignment.models.Answer;
 import com.novi.fassignment.models.User;
 import com.novi.fassignment.repositories.AnswerRepository;
-import com.novi.fassignment.services.AnswerServiceImpl;
 import com.novi.fassignment.services.QuestionServiceImpl;
 import com.novi.fassignment.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +13,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.novi.fassignment.services.AnswerService;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import static com.novi.fassignment.utils.Parsers.myLocalDateTimeParserTypeYearMonthDayHourMinSec;
 
 
@@ -43,25 +37,25 @@ public class AnswerController {
     @Autowired
     UserService userService;
 
-    @GetMapping("api/user/answers")
+    @GetMapping("answers")
     public ResponseEntity<List<AnswerDto>> getAnswers()
     {    List<AnswerDto> answersDtos = answerService.getAllAnswers();
         return ResponseEntity.ok(answersDtos);
     }
 
-    @GetMapping("api/user/answers/{answerId}")
+    @GetMapping("answers/{answerId}")
     public ResponseEntity<AnswerDto> getAnswerById(@PathVariable("answerId") Long answerId)
     {    AnswerDto answerDto = answerService.getAnswerById(answerId);
         return ResponseEntity.ok(answerDto);
     }
 
-    @GetMapping("api/user/answers-by-questionId/{questionId}")
+    @GetMapping("answers/byQuestion/{questionId}")
     public ResponseEntity<List<AnswerDto>> getAnswersByQuestionId(@PathVariable("questionId") Long questionId)
     {    List<AnswerDto> answerDtos = answerService.getAnswersByQuestionId(questionId);
         return ResponseEntity.ok(answerDtos);
     }
 
-    @DeleteMapping("api/user/answers/{answerId}")
+    @DeleteMapping("answers/delete/{answerId}")
     public ResponseEntity<HttpStatus> deleteAnswer(@PathVariable("answerId") long answerId) {
         try {
             answerService.deleteAnswerById(answerId);
@@ -71,7 +65,7 @@ public class AnswerController {
         }
     }
 
-    @DeleteMapping("api/user/answers")
+    @DeleteMapping("answers/delete")
     public ResponseEntity<HttpStatus> deleteAllAnswers() {
         try {
             answerService.deleteAllAnswers();
@@ -82,7 +76,7 @@ public class AnswerController {
 
     }
 
-    @PostMapping("api/user/answer-upload/{id}")
+    @PostMapping("answers/upload/{id}")
     public ResponseEntity<Object> sendPainting(
             @PathVariable("id") Long questionId,
             @RequestParam("username") String username,
@@ -124,7 +118,7 @@ public class AnswerController {
     }
 
 
-    @PostMapping("api/user/update-answer/{id}")
+    @PostMapping("answers/update/{id}")
     public ResponseEntity<Object> updatePaintingWithFiles(@PathVariable("answerId") Long answerId,
                                                           @RequestParam(value="username",required=false) String username,
                                                           @RequestParam(value="dateTimePosted",required=false) String dateTimePosted,

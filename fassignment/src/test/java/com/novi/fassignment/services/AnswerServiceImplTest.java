@@ -78,7 +78,7 @@ class AnswerServiceImplTest {
         try {
             answerService.getAnswerById(id);
         } catch (Exception e) {
-            Assertions.assertEquals("id does not exist", e.getMessage());
+            Assertions.assertEquals("Answer id does not exist", e.getMessage());
         }
     }
 

@@ -1,12 +1,8 @@
 //Modified from https://github.com/bezkoder/spring-boot-upload-file-database.git
-
 package com.novi.fassignment.services;
-
-
 
 import com.novi.fassignment.controllers.dto.FileStoredInDataBaseInputDto;
 import com.novi.fassignment.controllers.dto.NoviMethod1FileUploadRequestDto;
-import com.novi.fassignment.exceptions.UsernameNotFoundException;
 import com.novi.fassignment.models.*;
 import com.novi.fassignment.repositories.FileStorageInDataBaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,14 +21,7 @@ import java.util.stream.Stream;
 public class FileStorageInDataBaseServiceImpl {
 
     @Autowired
-    //private FileStorageInDataBaseRepository fileStorageInDataBaseRepository;
     FileStorageInDataBaseRepository fileStorageInDataBaseRepository;
-
-
-    @Autowired
-    //private FilesStorageServiceImpl fileStorageOnDiscService;//we use it to temporary copy files om disc to change files names
-    //FilesStorageServiceImpl fileStorageOnDiscService;//we use it to temporary copy files om disc to change files names
-    FilesStorageService fileStorageOnDiscService;//we use it to temporary copy files om disc to change files names
 
     @Autowired
     NoviMethod1FileUploadService noviFileUploadService;
@@ -95,19 +79,11 @@ public class FileStorageInDataBaseServiceImpl {
 
 
     public Resource  changeName(MultipartFile multipartFile,String newFileName){
-        fileStorageOnDiscService.saveAs(multipartFile, newFileName);
-        Resource resource=fileStorageOnDiscService.load(newFileName);
+        noviFileUploadService.saveAs(multipartFile, newFileName);
+        Resource resource=noviFileUploadService.load(newFileName);
         return resource;
     };
 
-
-
-/*    public FileStoredInDataBase store(MultipartFile file) throws IOException {
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        FileStoredInDataBase fileStoredInDataBase = new FileStoredInDataBase(fileName, file.getContentType(), file.getBytes());
-
-        return fileStorageInDataBaseRepository.save(fileStoredInDataBase);
-    }*/
 
     public FileStoredInDataBase store(MultipartFile file) throws IOException {
 
@@ -150,48 +126,12 @@ public class FileStorageInDataBaseServiceImpl {
         fileStoredInDataBase.setAnswer(fileStoredInDataBaseInputDto.getAnswer());
         fileStoredInDataBase.setPainting(fileStoredInDataBaseInputDto.getPainting());
 
-
-        /*
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        Boolean isAudio=checkIfAudio(multipartFile);
-        String newFileName=cleanFileName(fileName);
-        Resource resource=changeName(multipartFile,newFileName);
-        URL url=resource.getURL();
-        String newFilePath=url.getFile();
-        File file = new File(newFilePath);
-*/
-
-        /*        if (isAudio==true){
-            //String fileNameWithoutExtension=file.getOriginalFilename().split("\\.")[1];
-            String newFileName=cleanFileName(fileName);
-            MultipartFile fileWithNewName=changeName(multipartFile,newFileName);
-        }*/
-
-        //return fileStoredInDataBase;
         return fileStorageInDataBaseRepository.save(fileStoredInDataBase);
 
     }
-
-/*    public FileStoredInDataBase storeMusicPieceFile(MultipartFile file, MusicPiece musicPiece) throws IOException {
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        FileStoredInDataBase fileStoredInDataBase = new FileStoredInDataBase(fileName, file.getContentType(), file.getBytes());
-        fileStoredInDataBase.setMusicPiece(musicPiece);
-
-        return fileStorageInDataBaseRepository.save(fileStoredInDataBase);
-    }*/
-
-
     public FileStoredInDataBase getFile(Long id) {
         return fileStorageInDataBaseRepository.findById(id).get();
     }
-
-/*    //these two lines below where an experiment to override storageService.store(file) but it does not work
-    public FileStoredInDataBase store(MultipartFile file,Long questionID) throws IOException {
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        FileStoredInDataBase fileStoredInDataBase = new FileStoredInDataBase(fileName, file.getContentType(), file.getBytes());
-
-        return fileStorageInDataBaseRepository.save(fileStoredInDataBase,questionID);
-    }*/
 
     public Stream<FileStoredInDataBase> getAllFilesAsStream() {return fileStorageInDataBaseRepository.findAll().stream();}
     public List<FileStoredInDataBase> getAllFilesAsList() { return fileStorageInDataBaseRepository.findAll(); }
@@ -199,60 +139,6 @@ public class FileStorageInDataBaseServiceImpl {
     public List<FileStoredInDataBase> findFileStoredInDataBaseByQuestionId(Long questionId) { return fileStorageInDataBaseRepository.findByQuestionId(questionId); }
     public void deleteFileStoredInDataBaseById(Long FileId) { fileStorageInDataBaseRepository.deleteById(FileId); }
     public void deleteAllFileStoredInDataBase() { fileStorageInDataBaseRepository.deleteAll(); }
-
-/*    public FileStoredInDataBase storeQuestionFile(MultipartFile file, Question question) throws IOException {
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        FileStoredInDataBase fileStoredInDataBase = new FileStoredInDataBase(fileName, file.getContentType(), file.getBytes());
-        //fileStorageInDataBaseRepository.save(fileStoredInDataBase);
-        //fileStoredInDataBase.setQuestion(question);
-        List<FileStoredInDataBase> sortedFiles = getAllFilesByDescId();
-        FileStoredInDataBase mostRecentFile = sortedFiles.get(0);
-        mostRecentFile.setQuestion(question);
-        return fileStorageInDataBaseRepository.save(fileStoredInDataBase);
-    }*/
-
-
-/*    public void storeQuestionFile(MultipartFile file, Question question) throws IOException {
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        FileStoredInDataBase fileStoredInDataBase = new FileStoredInDataBase(fileName, file.getContentType(), file.getBytes());
-        fileStorageInDataBaseRepository.save(fileStoredInDataBase);
-        //fileStoredInDataBase.setQuestion(question);
-        List<FileStoredInDataBase> sortedFiles = getAllFilesByDescId();
-        FileStoredInDataBase mostRecentFile = sortedFiles.get(0);
-        mostRecentFile.setQuestion(question);
-        //return fileStorageInDataBaseRepository.save(fileStoredInDataBase);
-    }*/
-
-/*    public FileStoredInDataBase storeAnswerFile(MultipartFile file, Answer answer) throws IOException {
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        FileStoredInDataBase fileStoredInDataBase = new FileStoredInDataBase(fileName, file.getContentType(), file.getBytes());
-        //fileStorageInDataBaseRepository.save(fileStoredInDataBase);
-        //fileStoredInDataBase.setAnswer(answer);
-        List<FileStoredInDataBase> sortedFiles = getAllFilesByDescId();
-        FileStoredInDataBase mostRecentFile = sortedFiles.get(0);
-        mostRecentFile.setAnswer(answer);
-
-        return fileStorageInDataBaseRepository.save(fileStoredInDataBase);
-    }*/
-
-
-/*    public void storeAnswerFile(MultipartFile file, Answer answer) throws IOException {
-        String message = "";
-        try {
-            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-            FileStoredInDataBase fileStoredInDataBase = new FileStoredInDataBase(fileName, file.getContentType(), file.getBytes());
-            fileStorageInDataBaseRepository.save(file);
-            List<FileStoredInDataBase> sortedFiles = getAllFilesByDescId();
-            FileStoredInDataBase mostRecentFile = sortedFiles.get(0);
-            mostRecentFile.setAnswer(answer);
-
-            message = "Uploaded the files successfully: ";
-        } catch (Exception e) {
-            message = "Fail to upload files!";
-        }
-
-    }*/
-
 
 
 }

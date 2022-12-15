@@ -45,7 +45,7 @@ public class UserServiceImpl implements com.novi.fassignment.services.UserServic
 
     @Override
     public String createUser(User user) {
-        String errorMessage="bla";
+        String errorMessage="";
 
         if(userRepository.existsById(user.getUsername())) {
             errorMessage="This username already exists.";

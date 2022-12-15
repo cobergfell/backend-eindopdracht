@@ -1,6 +1,8 @@
 package com.novi.fassignment;
 
+//import com.novi.fassignment.services.FilesStorageService;
 import com.novi.fassignment.services.FilesStorageService;
+import com.novi.fassignment.services.NoviMethod1FileUploadServiceImpl;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,7 +15,9 @@ import javax.annotation.Resource;
 public class FassignmentApplication implements CommandLineRunner {
 
 	@Resource
-	FilesStorageService storageService;
+	//FilesStorageService storageService;
+	NoviMethod1FileUploadServiceImpl storageService;
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(FassignmentApplication.class, args);

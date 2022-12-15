@@ -6,8 +6,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -57,12 +55,6 @@ public class Question  {
             fetch = FetchType.EAGER)
     private Set<com.novi.fassignment.models.Answer> answers = new HashSet<>();
 
-/*    @ManyToMany
-    @JoinTable(
-            name = "question_files_join_table",
-            joinColumns = @JoinColumn(name = "questionId"),
-            inverseJoinColumns = @JoinColumn(name = "filesId"))
-    private List<FileStoredInDataBase> files = new ArrayList<FileStoredInDataBase>();*/
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "paintingId")

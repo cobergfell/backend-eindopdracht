@@ -35,25 +35,25 @@ public class MusicFileStorageInDataBaseServiceImpl {
     @Autowired
     private MusicFileStorageInDataBaseRepository fileStorageInDataBaseRepository;
 
-    @Autowired
+    //@Autowired
     //private FilesStorageServiceImpl fileStorageOnDiscService;//we use it to temporary copy files om disc to change files names
-    FilesStorageService fileStorageOnDiscService;//we use it to temporary copy files om disc to change files names
+    //FilesStorageService fileStorageOnDiscService;//we use it to temporary copy files om disc to change files names
 
-    @Autowired
-    FileUploadService fileUploadService;
+//    @Autowired
+//    FileUploadService fileUploadService;
 
     @Autowired
     NoviMethod1FileUploadService noviFileUploadService;
 
-    @Autowired
-    BezkoderMethod1FileUploadService bezkoderFileUploadService;
+//    @Autowired
+//    BezkoderMethod1FileUploadService bezkoderFileUploadService;
 
 
 
 
     public Resource changeName(MultipartFile multipartFile, String newFileName){
-        fileStorageOnDiscService.saveAs(multipartFile, newFileName);
-        Resource resource=fileStorageOnDiscService.load(newFileName);
+        noviFileUploadService.saveAs(multipartFile, newFileName);
+        Resource resource=noviFileUploadService.load(newFileName);
         return resource;
     };
 

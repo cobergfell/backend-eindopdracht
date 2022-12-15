@@ -27,7 +27,7 @@ public class FileStorageInDataBaseController {
     @Autowired
     private FileStorageInDataBaseServiceImpl storageService;
 
-    @PostMapping("api/user/upload-to-database")
+    @PostMapping("attached-files/upload-to-database/miscellaneous")
     public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
         String message = "";
         try {
@@ -42,7 +42,7 @@ public class FileStorageInDataBaseController {
     }
 
 
-    @GetMapping("api/user/files_database_as_stream")
+    @GetMapping("attached-files/get-all-from-database-as-stream/miscellaneous")
     public ResponseEntity<List<ResponseFile>> getListFilesAsStream() {
         List<ResponseFile> files = storageService.getAllFilesAsStream().map(dbFile -> {
             String fileDownloadUri = ServletUriComponentsBuilder
@@ -62,7 +62,7 @@ public class FileStorageInDataBaseController {
     }
 
 
-    @GetMapping("api/user/files-database")
+    @GetMapping("attached-files/get-all-files-from-database/miscellaneous")
     public ResponseEntity<List<FileStoredInDataBaseDto>> getResponseFilesAsList() {
         var dtos = new ArrayList<FileStoredInDataBaseDto>();
         var filesStoredInDataBase = storageService.getAllFilesAsList();
@@ -74,7 +74,7 @@ public class FileStorageInDataBaseController {
         return ResponseEntity.status(HttpStatus.OK).body(dtos);
     }
 
-    @GetMapping("api/user/files-database/{id}")
+    @GetMapping("attached-files/get-file-from-database/miscellaneous/{id}")
     public ResponseEntity<byte[]> getFile(@PathVariable("id") Long id) {
         FileStoredInDataBase fileDB = storageService.getFile(id);
 
@@ -85,7 +85,7 @@ public class FileStorageInDataBaseController {
 
 
 
-    @GetMapping("api/user/question-files-from-database")
+    @GetMapping("attached-files/get-question-specific-files-from-database/miscellaneous/{id}")
     public ResponseEntity<List<FileStoredInDataBaseDto>> getFileListById(@RequestBody List<Integer> list) {
         var dtos = new ArrayList<FileStoredInDataBaseDto>();
 
@@ -99,7 +99,7 @@ public class FileStorageInDataBaseController {
     }
 
 
-    @DeleteMapping("api/user/files-database/{id}")
+    @DeleteMapping("attached-files/delete-file-from-database/miscellaneous/{id}")
     public ResponseEntity<HttpStatus> deleteFile(@PathVariable("id") long id) {
         try {
             storageService.deleteFileStoredInDataBaseById(id);
@@ -109,7 +109,7 @@ public class FileStorageInDataBaseController {
         }
     }
 
-    @DeleteMapping("api/user/files-database")
+    @DeleteMapping("attached-files/delete-all-files-from-database/miscellaneous")
     public ResponseEntity<HttpStatus> deleteAllFiles() {
         try {
             storageService. deleteAllFileStoredInDataBase();

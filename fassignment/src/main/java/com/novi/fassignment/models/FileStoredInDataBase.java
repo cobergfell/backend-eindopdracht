@@ -7,11 +7,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "files_database")
 public class FileStoredInDataBase {
-    //@Id
-    //@GeneratedValue(generator = "uuid")
-    //@GenericGenerator(name = "uuid", strategy = "uuid2")
-    //private String file_id;
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +15,6 @@ public class FileStoredInDataBase {
     private String description;
     private String type;
     private String bytesInDatabaseUrl;//url to bytes
-    //private String fileOnDiskUrl;// url file stored on disc
     private String fileOnDiskUrl;// url file stored on disc; Remark: fileOnDiskUrl as attribute name was not recognised in Spring boot but file_on_disk_url is recognised, do not ask me why...
     private Long fileOnDiskId;// idfile stored on disc
     @Lob

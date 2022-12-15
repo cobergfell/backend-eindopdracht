@@ -1,4 +1,3 @@
-D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\services\SESService.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\exceptions\FileStorageException.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\controllers\dto\MusicFileStoredInDataBaseDto.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\services\FilesStorageServiceImpl.java
@@ -21,14 +20,12 @@ D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\nov
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\controllers\UserController.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\controllers\dto\MusicFileStoredInDataBaseInputDto.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\services\FileUploadService.java
-D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\services\SendingMailService.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\services\BezkoderMethod1FileUploadService.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\services\PaintingService.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\services\QuestionServiceImpl.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\exceptions\FileUploadExceptionAdvice.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\controllers\FileUploadController.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\controllers\dto\UserDto.java
-D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\controllers\FormController.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\services\AuthorityServiceImpl.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\filter\JwtRequestFilter.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\controllers\dto\FileStoredInDataBaseDto.java
@@ -61,7 +58,6 @@ D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\nov
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\models\NoviMethod1FileStoredOnDisk.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\services\FileUploadServiceImpl.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\messages\ResponseMessage.java
-D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\controllers\FilesControllerNotUsedAnymoreInThisApp.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\models\MailProperties.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\services\UserService.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\controllers\dto\NoviMethod1FileUploadRequestDto.java
@@ -88,6 +84,5 @@ D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\nov
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\controllers\dto\PaintingInputDto.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\models\MusicFileStoredInDataBase.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\utils\RandomStringGenerator.java
-D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\controllers\TestController.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\services\FilesStorageService.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\utils\JwtUtil.java
