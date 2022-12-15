@@ -44,10 +44,13 @@ public class User {
             fetch = FetchType.EAGER)
     private Set<com.novi.fassignment.models.Authority> authorities = new HashSet<>();
 
+//    the @OneToMany relations of user with question and answer table induce 'violoate foreign key contraint'
+    // is is not clear why so they are commented for the moment but not removed from the code
+
 /*    @OneToMany(
             targetEntity = com.novi.fassignment.models.Question.class,
             mappedBy = "questionId",
-            cascade = CascadeType.ALL,
+            //cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.EAGER)
     private Set<com.novi.fassignment.models.Question> questions = new HashSet<>();
@@ -55,7 +58,7 @@ public class User {
     @OneToMany(
             targetEntity = com.novi.fassignment.models.Answer.class,
             mappedBy = "answerId",
-            cascade = CascadeType.ALL,
+            //cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.EAGER)
     private Set<com.novi.fassignment.models.Answer> answers = new HashSet<>();*/
