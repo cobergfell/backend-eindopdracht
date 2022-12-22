@@ -27,8 +27,6 @@ class PaintingServiceImplTest {
 
     @InjectMocks PaintingServiceImpl paintingService;
 
-
-
     @InjectMocks
     UserServiceImpl userService;
 

@@ -32,7 +32,7 @@ public class MusicFileStorageInDataBaseController {
      private Checks checks;
 
 
-    @PostMapping("attached-files/upload-to-database/audio")
+    @PostMapping("audioFilesInDatabase")
     public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
 
         // the 3 liners below were added on 25-9-22 but have not been controlled yet
@@ -52,13 +52,55 @@ public class MusicFileStorageInDataBaseController {
         }
     }
 
-    @GetMapping("attached-files/get-all-from-database-as-stream/audio")
+
+
+    @GetMapping("audioFilesInDatabase")
+    public ResponseEntity<List<MusicFileStoredInDataBaseDto>> getResponseFilesAsList() {
+        var dtos = new ArrayList<MusicFileStoredInDataBaseDto>();
+        var filesStoredInDataBase = storageService.getAllFilesAsList();
+
+        for (MusicFileStoredInDataBase fileStoredInDataBase : filesStoredInDataBase) {
+            dtos.add(MusicFileStoredInDataBaseDto.fromFileStoredInDataBase(fileStoredInDataBase));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(dtos);
+    }
+
+    @GetMapping("audioFilesInDatabase/{id}")
+    public ResponseEntity<byte[]> getFile(@PathVariable("id") Long id) {
+        MusicFileStoredInDataBase fileDB = storageService.getFile(id);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+fileDB.getName())
+                .body(fileDB.getData());
+    }
+
+
+    @DeleteMapping("audioFilesInDatabase/{id}")
+    public ResponseEntity<HttpStatus> deleteFile(@PathVariable("id") long id) {
+        try {
+            storageService.deleteFileStoredInDataBaseById(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("audioFilesInDatabase")
+    public ResponseEntity<HttpStatus> deleteAllFiles() {
+        try {
+            storageService. deleteAllFileStoredInDataBase();
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("audioFilesInDatabaseAsStream")
 
     public ResponseEntity<List<ResponseFile>> getListFilesAsStream() {
         List<ResponseFile> files = storageService.getAllFilesAsStream().map(dbFile -> {
             String fileDownloadUri = ServletUriComponentsBuilder
                     .fromCurrentContextPath()
-                    .path("/audio-files-database/")
+                    .path("/audioFilesInDatabase/")
                     .buildAndExpand(dbFile.getFileId())
                     .toUriString();
 
@@ -71,46 +113,4 @@ public class MusicFileStorageInDataBaseController {
 
         return ResponseEntity.status(HttpStatus.OK).body(files);
     }
-
-
-    @GetMapping("attached-files/get-all-files-from-database/audio")
-    public ResponseEntity<List<MusicFileStoredInDataBaseDto>> getResponseFilesAsList() {
-        var dtos = new ArrayList<MusicFileStoredInDataBaseDto>();
-        var filesStoredInDataBase = storageService.getAllFilesAsList();
-
-        for (MusicFileStoredInDataBase fileStoredInDataBase : filesStoredInDataBase) {
-            dtos.add(MusicFileStoredInDataBaseDto.fromFileStoredInDataBase(fileStoredInDataBase));
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(dtos);
-    }
-
-    @GetMapping("attached-files/get-file-from-database/audio/{id}")
-    public ResponseEntity<byte[]> getFile(@PathVariable("id") Long id) {
-        MusicFileStoredInDataBase fileDB = storageService.getFile(id);
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+fileDB.getName())
-                .body(fileDB.getData());
-    }
-
-
-    @DeleteMapping("attached-files/delete-file-from-database/audio/{id}")
-    public ResponseEntity<HttpStatus> deleteFile(@PathVariable("id") long id) {
-        try {
-            storageService.deleteFileStoredInDataBaseById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @DeleteMapping("attached-files/delete-all-files-from-database/audio")
-    public ResponseEntity<HttpStatus> deleteAllFiles() {
-        try {
-            storageService. deleteAllFileStoredInDataBase();
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
 }

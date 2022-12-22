@@ -6,6 +6,7 @@ import com.novi.fassignment.repositories.QuestionRepository;
 import com.novi.fassignment.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,15 +49,20 @@ public class QuestionController {
         return ResponseEntity.ok(questionDto);
     }
 
-    @GetMapping("questions/byProject/{projectId}")
-    public ResponseEntity<List<QuestionDto>> getQuestionsByPaintingId(@PathVariable("projectId") Long paintingId)
+    @GetMapping("questions/byPainting/{id}")
+    public ResponseEntity<List<QuestionDto>> getQuestionsByPaintingId(@PathVariable("id") Long paintingId)
     {    List<QuestionDto> questionDtos = questionService.getQuestionsByPaintingId(paintingId);
         return ResponseEntity.ok(questionDtos);
     }
 
+    @GetMapping(value = "questions/{id}/image")
+    public ResponseEntity<byte[]> getImage(@PathVariable("id") Long id) {
+        var dto = questionService.getQuestionById(id);
+        byte[] image = dto.getImage();
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
+    }
 
-
-    @PostMapping("questions-upload/{id}")//id is the id of the project about which the question is asked
+    @PostMapping("questions/{id}")//id is the id of the painting about which the question is asked
     public ResponseEntity<Object> sendPainting(
             @PathVariable("id") Long id,
             @RequestParam("username") String username,
@@ -90,7 +96,7 @@ public class QuestionController {
 
             questionService.createQuestion(inputDto);
             message = "question submitted!";
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.status(HttpStatus.CREATED).build();
 
         } catch (Exception exception) {
             message = "Question could not be submitted/uploaded!";
@@ -98,8 +104,8 @@ public class QuestionController {
         }
     }
 
-    @PostMapping("questions/update/{id}")
-    public ResponseEntity<Object> updatePaintingWithFiles(@PathVariable("questionId") Long questionId,
+    @PutMapping("questions/{id}")
+    public ResponseEntity<Object> updatePaintingWithFiles(@PathVariable("id") Long questionId,
                                                           @RequestParam(value="username",required=false) String username,
                                                           @RequestParam(value="dateTimePosted",required=false) String dateTimePosted,
                                                           @RequestParam(value="title",required=false)  String title,
@@ -166,17 +172,17 @@ public class QuestionController {
         }
     }
 
-    @DeleteMapping("questions/delete/{questionId}")
-    public ResponseEntity<HttpStatus> deleteQuestion(@PathVariable("questionId") long questionId) {
+    @DeleteMapping("questions/{id}")
+    public ResponseEntity<HttpStatus> deleteQuestion(@PathVariable("id") long id) {
         try {
-            questionService.deleteQuestionById(questionId);
+            questionService.deleteQuestionById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @DeleteMapping("questions/delete")
+    @DeleteMapping("questions")
     public ResponseEntity<HttpStatus> deleteAllQuestions() {
         try {
             questionService.deleteAllQuestions();

@@ -27,13 +27,6 @@ public class PaintingInputDto {
     public Set<Question> questions;
     public Set<Answer> answers;
 
-//    @CreationTimestamp
-//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:01")
-//    public ZonedDateTime dateTimePosted;
-//    @UpdateTimestamp
-//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:01")
-//    public ZonedDateTime lastUpdate;
-
     @CreationTimestamp
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     public LocalDateTime dateTimePosted;
@@ -112,14 +105,6 @@ public class PaintingInputDto {
     public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
-
-//    public MultipartFile[] getMusicFiles() {
-//        return audioFiles;
-//    }
-//
-//    public void setMusicFiles(MultipartFile[] audioFiles) {
-//        this.audioFiles = audioFiles;
-//    }
 
     public MultipartFile[] getAudioFiles() {
         return audioFiles;

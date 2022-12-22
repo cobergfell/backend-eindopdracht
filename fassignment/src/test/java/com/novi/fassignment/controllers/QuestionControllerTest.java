@@ -88,7 +88,7 @@ public class QuestionControllerTest {
 
         when(userService.getUser("cobergfell")).thenReturn(Optional.of(user));
 
-        mockMvc.perform(post("/api/user/question-upload/1")
+        mockMvc.perform(post("/questions/1")
                 .param("username", "cobergfell")
                 .param("title", "test1")
                 .param("content", "content"))
@@ -125,7 +125,7 @@ public class QuestionControllerTest {
         files.add(sampleFile2);
 
 
-        mockMvc.perform(multipart("/api/user/question-upload/1")
+        mockMvc.perform(multipart("/questions/1")
                 .file(sampleFile1)
                 .file(sampleFile2)
                 .param("username", "cobergfell")

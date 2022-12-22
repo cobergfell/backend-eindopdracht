@@ -43,20 +43,20 @@ public class AnswerController {
         return ResponseEntity.ok(answersDtos);
     }
 
-    @GetMapping("answers/{answerId}")
-    public ResponseEntity<AnswerDto> getAnswerById(@PathVariable("answerId") Long answerId)
+    @GetMapping("answers/{id}")
+    public ResponseEntity<AnswerDto> getAnswerById(@PathVariable("id") Long answerId)
     {    AnswerDto answerDto = answerService.getAnswerById(answerId);
         return ResponseEntity.ok(answerDto);
     }
 
-    @GetMapping("answers/byQuestion/{questionId}")
-    public ResponseEntity<List<AnswerDto>> getAnswersByQuestionId(@PathVariable("questionId") Long questionId)
+    @GetMapping("answers/byQuestion/{id}")
+    public ResponseEntity<List<AnswerDto>> getAnswersByQuestionId(@PathVariable("id") Long questionId)
     {    List<AnswerDto> answerDtos = answerService.getAnswersByQuestionId(questionId);
         return ResponseEntity.ok(answerDtos);
     }
 
-    @DeleteMapping("answers/delete/{answerId}")
-    public ResponseEntity<HttpStatus> deleteAnswer(@PathVariable("answerId") long answerId) {
+    @DeleteMapping("answers/{id}")
+    public ResponseEntity<HttpStatus> deleteAnswer(@PathVariable("id") long answerId) {
         try {
             answerService.deleteAnswerById(answerId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -65,7 +65,7 @@ public class AnswerController {
         }
     }
 
-    @DeleteMapping("answers/delete")
+    @DeleteMapping("answers")
     public ResponseEntity<HttpStatus> deleteAllAnswers() {
         try {
             answerService.deleteAllAnswers();
@@ -76,7 +76,7 @@ public class AnswerController {
 
     }
 
-    @PostMapping("answers/upload/{id}")
+    @PostMapping("answers/{id}")
     public ResponseEntity<Object> sendPainting(
             @PathVariable("id") Long questionId,
             @RequestParam("username") String username,
@@ -118,8 +118,8 @@ public class AnswerController {
     }
 
 
-    @PostMapping("answers/update/{id}")
-    public ResponseEntity<Object> updatePaintingWithFiles(@PathVariable("answerId") Long answerId,
+    @PutMapping("answers/{id}")
+    public ResponseEntity<Object> updatePaintingWithFiles(@PathVariable("id") Long answerId,
                                                           @RequestParam(value="username",required=false) String username,
                                                           @RequestParam(value="dateTimePosted",required=false) String dateTimePosted,
                                                           @RequestParam(value="title",required=false)  String title,
@@ -169,7 +169,7 @@ public class AnswerController {
                 answerService.updateAnswer(inputDto, answerToUpdate);
 
                 message = "Question submitted!";
-                return ResponseEntity.noContent().build();
+                return ResponseEntity.status(HttpStatus.CREATED).build();
 
 
             } catch (Exception exception) {

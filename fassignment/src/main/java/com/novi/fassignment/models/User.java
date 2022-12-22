@@ -1,5 +1,6 @@
 package com.novi.fassignment.models;
 
+import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -14,6 +15,7 @@ import java.util.Set;
 public class User {
 
     @Id
+    @NotNull
     @Column(nullable = false, unique = true)
     private String username;
 

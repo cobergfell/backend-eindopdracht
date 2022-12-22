@@ -22,23 +22,23 @@ INSERT INTO answers ("content","date_time_posted","image","last_update","title",
 
 
 INSERT INTO public.files_database ("bytes_in_database_url","data","description","file_on_disk_id","file_on_disk_url","name","type","answer_id","painting_id","question_id")
-              VALUES (NULL,lo_from_bytea(0,pg_read_binary_file('D:\\Data\\NOVI\\eindopdracht\\backend-eindopdracht\\fassignment\\src\\main\\assets\\myText.txt')),NULL,1,'http://localhost:8080/api/user/download-file-from-disk/1','myText.txt','text/plain',NULL,1,NULL);
+              VALUES (NULL,lo_from_bytea(0,pg_read_binary_file('D:\\Data\\NOVI\\eindopdracht\\backend-eindopdracht\\fassignment\\src\\main\\assets\\myText.txt')),NULL,1,'http://localhost:8080/filesOnDisk/1','myText.txt','text/plain',NULL,1,NULL);
 INSERT INTO public.files_database ("bytes_in_database_url","data","description","file_on_disk_id","file_on_disk_url","name","type","answer_id","painting_id","question_id")
-              VALUES (NULL,lo_from_bytea(0,pg_read_binary_file('D:\\Data\\NOVI\\eindopdracht\\backend-eindopdracht\\fassignment\\src\\main\\assets\\myText.txt')),NULL,3,'http://localhost:8080/api/user/download-file-from-disk/3','myText.txt','text/plain',NULL,1,NULL);
+              VALUES (NULL,lo_from_bytea(0,pg_read_binary_file('D:\\Data\\NOVI\\eindopdracht\\backend-eindopdracht\\fassignment\\src\\main\\assets\\myText.txt')),NULL,3,'http://localhost:8080/filesOnDisk/3','myText.txt','text/plain',NULL,1,NULL);
 INSERT INTO public.files_database ("bytes_in_database_url","data","description","file_on_disk_id","file_on_disk_url","name","type","answer_id","painting_id","question_id")
-              VALUES (NULL,lo_from_bytea(0,pg_read_binary_file('D:\\Data\\NOVI\\eindopdracht\\backend-eindopdracht\\fassignment\\src\\main\\assets\\myText.txt')),NULL,5,'http://localhost:8080/api/user/download-file-from-disk/5','myText.txt','text/plain',NULL,1,NULL);
+              VALUES (NULL,lo_from_bytea(0,pg_read_binary_file('D:\\Data\\NOVI\\eindopdracht\\backend-eindopdracht\\fassignment\\src\\main\\assets\\myText.txt')),NULL,5,'http://localhost:8080/filesOnDisk/5','myText.txt','text/plain',NULL,1,NULL);
 
 INSERT INTO public.files_database ("bytes_in_database_url","data","description","file_on_disk_id","file_on_disk_url","name","type","answer_id","painting_id","question_id")
-              VALUES (NULL,lo_from_bytea(0,pg_read_binary_file('D:\\Data\\NOVI\\eindopdracht\\backend-eindopdracht\\fassignment\\src\\main\\assets\\Kandinsky_Composition_IX_1936.png')),NULL,3,'http://localhost:8080/api/user/download-file-from-disk/3','Kandinsky_Composition_IX_1936.png','image/png',1,1,NULL);
+              VALUES (NULL,lo_from_bytea(0,pg_read_binary_file('D:\\Data\\NOVI\\eindopdracht\\backend-eindopdracht\\fassignment\\src\\main\\assets\\Kandinsky_Composition_IX_1936.png')),NULL,3,'http://localhost:8080/filesOnDisk/3','Kandinsky_Composition_IX_1936.png','image/png',1,1,NULL);
 
 
 
 INSERT INTO public.music_files_database ("bytes_in_database_url","data","description","file_on_disk_id","file_on_disk_url","name","type","answer_id","painting_id","question_id")
-              VALUES (NULL,lo_from_bytea(0,pg_read_binary_file('D:\\Data\\NOVI\\eindopdracht\\backend-eindopdracht\\fassignment\\src\\main\\assets\\rachmaninov.mp3')),NULL,2,'http://localhost:8080/api/user/download-file-from-disk/2','rachmaninov.mp3','audio/mpeg',1,1,NULL);
+              VALUES (NULL,lo_from_bytea(0,pg_read_binary_file('D:\\Data\\NOVI\\eindopdracht\\backend-eindopdracht\\fassignment\\src\\main\\assets\\rachmaninov.mp3')),NULL,2,'http://localhost:8080/filesOnDisk/2','rachmaninov.mp3','audio/mpeg',1,1,NULL);
 INSERT INTO public.music_files_database ("bytes_in_database_url","data","description","file_on_disk_id","file_on_disk_url","name","type","answer_id","painting_id","question_id")
-              VALUES (NULL,lo_from_bytea(0,pg_read_binary_file('D:\\Data\\NOVI\\eindopdracht\\backend-eindopdracht\\fassignment\\src\\main\\assets\\Gurdjieff_by_Jeroen_van_Veen.mp3')),NULL,4,'http://localhost:8080/api/user/download-file-from-disk/4','Gurdjieff_by_Jeroen_van_Veen.mp3','audio/mpeg',NULL,1,NULL);
+              VALUES (NULL,lo_from_bytea(0,pg_read_binary_file('D:\\Data\\NOVI\\eindopdracht\\backend-eindopdracht\\fassignment\\src\\main\\assets\\Gurdjieff_by_Jeroen_van_Veen.mp3')),NULL,4,'http://localhost:8080/filesOnDisk/4','Gurdjieff_by_Jeroen_van_Veen.mp3','audio/mpeg',NULL,1,NULL);
 INSERT INTO public.music_files_database ("bytes_in_database_url","data","description","file_on_disk_id","file_on_disk_url","name","type","answer_id","painting_id","question_id")
-              VALUES (NULL,lo_from_bytea(0,pg_read_binary_file('D:\\Data\\NOVI\\eindopdracht\\backend-eindopdracht\\fassignment\\src\\main\\assets\\Anna_Thorvaldsdottir_Rhizoma_Hrim.mp3')),NULL,5,'http://localhost:8080/api/user/download-file-from-disk/4','Anna_Thorvaldsdottir_Rhizoma_Hrim.mp3','audio/mpeg',NULL,1,1);
+              VALUES (NULL,lo_from_bytea(0,pg_read_binary_file('D:\\Data\\NOVI\\eindopdracht\\backend-eindopdracht\\fassignment\\src\\main\\assets\\Anna_Thorvaldsdottir_Rhizoma_Hrim.mp3')),NULL,5,'http://localhost:8080/filesOnDisk/4','Anna_Thorvaldsdottir_Rhizoma_Hrim.mp3','audio/mpeg',NULL,1,1);
 
 
 

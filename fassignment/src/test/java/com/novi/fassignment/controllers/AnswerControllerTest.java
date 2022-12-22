@@ -95,7 +95,7 @@ public class AnswerControllerTest {
 
         when(userService.getUser("cobergfell")).thenReturn(Optional.of(user));
 
-        mockMvc.perform(post("/api/user/answer-upload/1")
+        mockMvc.perform(post("/answers/1")
                 .param("username", "cobergfell")
                 .param("title", "test1")
                 .param("content", "content"))
@@ -131,7 +131,7 @@ public class AnswerControllerTest {
         files.add(sampleFile2);
 
 
-        mockMvc.perform(multipart("/api/user/answer-upload/1")
+        mockMvc.perform(multipart("/answers/1")
                 .file(sampleFile1)
                 .file(sampleFile2)
                 .param("username", "cobergfell")
@@ -188,7 +188,7 @@ public class AnswerControllerTest {
         when(answerService.createAnswerWithoutAttachment(any(Answer.class))).thenReturn(answer);
 
 
-        mockMvc.perform(multipart("/api/user/answer-upload/1")
+        mockMvc.perform(multipart("/answers/1")
                 .file(sampleFile1)
                 .file(sampleFile2)
                 .param("username", "cobergfell")

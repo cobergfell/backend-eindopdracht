@@ -40,29 +40,6 @@ public class PaintingController {
     UserService userService;
 
 
-/*    @GetMapping("api/user/paintings")
-    public List<PaintingDto> getPaintings() {
-        var dtos = new ArrayList<PaintingDto>();
-        //var paintings = paintingService.getAllPaintings();
-        var paintings = paintingService.getAllPaintingsByAscId();
-        List<FileStoredInDataBase> filesStoredInDataBase = storageService.getAllFilesAsList();
-
-        for (Painting painting : paintings) {
-            //paintingService.getFiles(painting);
-            dtos.add(PaintingDto.fromPaintingToDto(painting));
-        }
-        return dtos;
-    }
-
-    @GetMapping("api/user/paintings/{paintingId}")
-    public PaintingDto getPainting(@PathVariable("paintingId") Long paintingId) {
-        var dto = new PaintingDto();
-        var painting = paintingService.getPaintingById(paintingId);
-        dto=PaintingDto.fromPaintingToDto(painting);
-        return dto;
-    }*/
-
-
 
     @GetMapping("paintings")
     public ResponseEntity<List<PaintingDto>> getPaintings()
@@ -113,7 +90,9 @@ public class PaintingController {
 
             paintingService.createPainting(inputDto);
             message = "Painting submitted!";
-            return ResponseEntity.noContent().build();
+            //return ResponseEntity.noContent().build();
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+
 
         } catch (Exception exception) {
             message = "Painting could not be submitted/uploaded!";
@@ -181,7 +160,7 @@ public class PaintingController {
                     paintingService.updatePainting(inputDto, paintingToUpdate);
 
                     message = "Painting submitted!";
-                    return ResponseEntity.noContent().build();
+                    return ResponseEntity.status(HttpStatus.CREATED).build();
 
                 } catch (Exception exception) {
                     message = "Painting could not be submitted/uploaded!";

@@ -36,12 +36,12 @@ public class NoviMethod1FileUploadController {
     BezkoderMethod1FileUploadService bezkoderMethodService;
 
 
-    @GetMapping("api/user/get-files-data-from-disk")
+    @GetMapping("filesOnDisk")
     public ResponseEntity<Object> getFiles() {
         Iterable<NoviMethod1FileStoredOnDisk> files = methode1Service.getFiles();
         return ResponseEntity.ok().body(files);
     }
-    @GetMapping("api/user/get-files-data-from-disk-bezkoder")
+    @GetMapping("filesOnDiskBezkoderMethod")
     public ResponseEntity<List<FileInfo>>  getFilesVersionBezkoder() {
         List<FileInfo> fileInfos = new ArrayList<FileInfo>();
                 Iterable<NoviMethod1FileStoredOnDisk> files = methode1Service.getFiles();
@@ -56,7 +56,7 @@ public class NoviMethod1FileUploadController {
     }
 
 
-    @GetMapping("api/user/get-file-data-from-disk-bezkoder/{id}")
+    @GetMapping("filesOnDiskBezkoderMethod/{id}")
     @ResponseBody
     public ResponseEntity<Resource> getFile(@PathVariable long id) {
         Resource file = bezkoderMethodService.load(id);
@@ -65,7 +65,7 @@ public class NoviMethod1FileUploadController {
     }
 
 
-    @GetMapping("api/user/download-file-from-disk/{id}")
+    @GetMapping("filesOnDisk/{id}")
     public ResponseEntity downloadFile(@PathVariable long id) {
         Resource resource = methode1Service.downloadFile(id);
         String mediaType = "application/octet-stream";
@@ -75,7 +75,7 @@ public class NoviMethod1FileUploadController {
                 .body(resource);
     }
 
-    @PostMapping(value = "api/user/upload-file-to-disk",
+    @PostMapping(value = "filesOnDisk",
             produces = {MediaType.APPLICATION_JSON_VALUE} )
     public ResponseEntity<Object> uploadFile(NoviMethod1FileUploadRequestDto method1Dto) {
         long newId = methode1Service.uploadFile(method1Dto);
@@ -88,7 +88,7 @@ public class NoviMethod1FileUploadController {
 
 
 
-    @DeleteMapping("api/user/delete-file-from-disk/{id}")
+    @DeleteMapping("filesOnDisk/{id}")
     public ResponseEntity<Object> deleteFile(@PathVariable long id) {
         methode1Service.deleteFile(id);
         return ResponseEntity.noContent().build();

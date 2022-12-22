@@ -24,9 +24,6 @@ public class Painting  {
     private byte[] image;
 
     @CreationTimestamp
-    //@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:01")
-    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone="GMT+00:01")
-    //private ZonedDateTime dateTimePosted;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dateTimePosted;
 
@@ -69,15 +66,6 @@ public class Painting  {
             orphanRemoval = true,
             fetch = FetchType.EAGER)
     private Set<com.novi.fassignment.models.Answer> answers = new HashSet<>();
-
-
-
-/*    @ManyToMany
-    @JoinTable(
-            name = "painting_files_join_table",
-            joinColumns = @JoinColumn(name = "paintingId"),
-            inverseJoinColumns = @JoinColumn(name = "filesId"))
-    private List<FileStoredInDataBase> files = new ArrayList<FileStoredInDataBase>();*/
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "username")

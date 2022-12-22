@@ -21,15 +21,6 @@ public class AnswerDto
     public String username;
     public byte[] image;
     public Long questionId;
-//    public Long paintingId;
-//    public Long musicPieceId;
-
-//    @CreationTimestamp
-//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:01")
-//    public ZonedDateTime dateTimePosted;
-//    @UpdateTimestamp
-//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:01")
-//    public ZonedDateTime lastUpdate;
 
     @CreationTimestamp
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
