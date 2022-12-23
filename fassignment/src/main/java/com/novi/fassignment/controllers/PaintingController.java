@@ -44,13 +44,15 @@ public class PaintingController {
     @GetMapping("paintings")
     public ResponseEntity<List<PaintingDto>> getPaintings()
     {    List<PaintingDto> paintingDtos = paintingService.getAllPaintingsByAscId();
-        return ResponseEntity.ok(paintingDtos);
+        //return ResponseEntity.ok(paintingDtos);
+        return new ResponseEntity<List<PaintingDto>>(paintingDtos, HttpStatus.OK);
     }
 
     @GetMapping("paintings/{id}")
     public ResponseEntity<PaintingDto> getPainting(@PathVariable("id") Long paintingId)
     {    PaintingDto paintingDto = paintingService.getPaintingById(paintingId);
-        return ResponseEntity.ok(paintingDto);
+        //return ResponseEntity.ok(paintingDto);
+        return new ResponseEntity<PaintingDto>(paintingDto, HttpStatus.OK);
     }
 
 
@@ -90,9 +92,8 @@ public class PaintingController {
 
             paintingService.createPainting(inputDto);
             message = "Painting submitted!";
-            //return ResponseEntity.noContent().build();
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-
+            //return ResponseEntity.status(HttpStatus.CREATED).build();
+            return new ResponseEntity<Object>(inputDto, HttpStatus.CREATED);
 
         } catch (Exception exception) {
             message = "Painting could not be submitted/uploaded!";
@@ -160,7 +161,8 @@ public class PaintingController {
                     paintingService.updatePainting(inputDto, paintingToUpdate);
 
                     message = "Painting submitted!";
-                    return ResponseEntity.status(HttpStatus.CREATED).build();
+                    //return ResponseEntity.status(HttpStatus.CREATED).build();
+                    return new ResponseEntity<Object>(inputDto, HttpStatus.CREATED);
 
                 } catch (Exception exception) {
                     message = "Painting could not be submitted/uploaded!";

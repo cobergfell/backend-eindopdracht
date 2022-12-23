@@ -48,7 +48,6 @@ public class UserController {
     private UserRepository userRepository;
 
 
-
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -147,13 +146,6 @@ public class UserController {
     }
 
 
-
-
-
-
-
-
-
     @GetMapping(value = "")
     public ResponseEntity<Object> getUsers() {
         return ResponseEntity.ok().body(userService.getUsers());
@@ -164,22 +156,6 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getUser(username));
     }
 
-
-//    @PostMapping(value = "")
-//    public ResponseEntity<Object> createUser(@RequestBody User user) {
-//        String message = "";
-//        try {
-//            String newUsername = userService.createUser(user);
-//
-//            URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{username}")
-//                    .buildAndExpand(newUsername).toUri();
-//            //return ResponseEntity.created(location).build();
-//            return new ResponseEntity<Object>(user, HttpStatus.CREATED);
-//        } catch (Exception exception) {
-//            message = "Registration failed";
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//    }
 
     @PutMapping(value = "/{username}")
     public ResponseEntity<Object> updateUser(@PathVariable("username") String username,
@@ -234,14 +210,11 @@ public class UserController {
     }
 
 
-
-
     @DeleteMapping(value = "/{username}")
     public ResponseEntity<Object> deleteUser(@PathVariable("username") String username) {
         userService.deleteUser(username);
         return ResponseEntity.noContent().build();
     }
-
 
     @DeleteMapping(value ="")
     public ResponseEntity<HttpStatus> deleteAllUsers() {
@@ -254,60 +227,67 @@ public class UserController {
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-    @GetMapping(value = "authorities/{username}")
-    public ResponseEntity<Object> getUserAuthorities(@PathVariable("username") String username) {
-        return ResponseEntity.ok().body(userService.getAuthorities(username));
-    }
-
-
-    @PostMapping(value = "authorities/add/{username}/{authority}")
-    public ResponseEntity<Object> addAuthority(@PathVariable("username") String username,@PathVariable("authority") String authority) {
-        try {
-            Optional<User> optionalUser=userService.getUser(username);
-            if (optionalUser.isPresent()) {
-                authorityService.addAuthority(username, authority);;
-            }
-            return ResponseEntity.noContent().build();
-        }
-        catch (Exception ex) {
-            throw new BadRequestException();
-        }
-    }
-
-    @PostMapping(value = "authorities/delete/{username}/{authority}")
-    public ResponseEntity<Object> deleteAuthority(@PathVariable("username") String username,@PathVariable("authority") String authority) {
-        try {
-            Optional<User> optionalUser=userService.getUser(username);
-            if (optionalUser.isPresent()) {
-                authorityService.removeAuthority(username, authority);;
-            }
-            return ResponseEntity.noContent().build();
-        }
-        catch (Exception ex) {
-            throw new BadRequestException();
-        }
-    }
-    @DeleteMapping(value = "/authorities/{username}/{authority}")
-    public ResponseEntity<Object> deleteUserAuthority(@PathVariable("username") String username, @PathVariable("authority") String authority) {
-        authorityService.removeAuthority(username, authority);
-        return ResponseEntity.noContent().build();
-    }*/
-
 }
+
+
+
+
+
+// Lines below is deprecated code just kept temporarily for reference
+
+
+//    @PostMapping(value = "")
+//    public ResponseEntity<Object> createUser(@RequestBody User user) {
+//        String message = "";
+//        try {
+//            String newUsername = userService.createUser(user);
+//
+//            URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{username}")
+//                    .buildAndExpand(newUsername).toUri();
+//            //return ResponseEntity.created(location).build();
+//            return new ResponseEntity<Object>(user, HttpStatus.CREATED);
+//        } catch (Exception exception) {
+//            message = "Registration failed";
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//    }
+
+//    @GetMapping(value = "authorities/{username}")
+//    public ResponseEntity<Object> getUserAuthorities(@PathVariable("username") String username) {
+//        return ResponseEntity.ok().body(userService.getAuthorities(username));
+//    }
+//
+//
+//    @PostMapping(value = "authorities/add/{username}/{authority}")
+//    public ResponseEntity<Object> addAuthority(@PathVariable("username") String username,@PathVariable("authority") String authority) {
+//        try {
+//            Optional<User> optionalUser=userService.getUser(username);
+//            if (optionalUser.isPresent()) {
+//                authorityService.addAuthority(username, authority);;
+//            }
+//            return ResponseEntity.noContent().build();
+//        }
+//        catch (Exception ex) {
+//            throw new BadRequestException();
+//        }
+//    }
+//
+//    @PostMapping(value = "authorities/delete/{username}/{authority}")
+//    public ResponseEntity<Object> deleteAuthority(@PathVariable("username") String username,@PathVariable("authority") String authority) {
+//        try {
+//            Optional<User> optionalUser=userService.getUser(username);
+//            if (optionalUser.isPresent()) {
+//                authorityService.removeAuthority(username, authority);;
+//            }
+//            return ResponseEntity.noContent().build();
+//        }
+//        catch (Exception ex) {
+//            throw new BadRequestException();
+//        }
+//    }
+//    @DeleteMapping(value = "/authorities/{username}/{authority}")
+//    public ResponseEntity<Object> deleteUserAuthority(@PathVariable("username") String username, @PathVariable("authority") String authority) {
+//        authorityService.removeAuthority(username, authority);
+//        return ResponseEntity.noContent().build();
+//    }
+

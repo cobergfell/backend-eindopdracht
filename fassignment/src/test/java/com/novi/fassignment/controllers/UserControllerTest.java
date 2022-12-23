@@ -23,10 +23,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import static org.springframework.security.config.http.MatcherType.mvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -128,7 +130,6 @@ public class UserControllerTest {
 //        UserDto userDto=UserDto.fromUser(user);
 //    }
 
-
     @Test
     void whenValidSignupInput_thenReturns201() throws Exception {
         User user = new User();
@@ -146,6 +147,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.email").value("fake@mail.com"))
                 .andDo(print());
     }
+
 
 
     @Test
@@ -212,8 +214,6 @@ public class UserControllerTest {
 
     }
 
-
-
     @Test
     void whenNullValue_thenReturns400() throws Exception {
 
@@ -227,40 +227,17 @@ public class UserControllerTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
-//
+
+//     Test below not so interesting,
 //    @Test
-//    void whenNullValue_thenReturns400AndErrorResult() throws Exception {
-//
-//        UserResource user = new UserResource(null, "zaphod@galaxy.net");
-//
-//        MvcResult mvcResult = mockMvc.perform(post("/forums/{forumId}/register", 42L)
-//                .contentType("application/json")
-//                .param("sendWelcomeMail", "true")
-//                .content(objectMapper.writeValueAsString(user)))
-//                .andExpect(status().isBadRequest())
-//                .andReturn();
-//
-//        ErrorResult expectedErrorResponse = new ErrorResult("name", "must not be null");
-//        String actualResponseBody = mvcResult.getResponse().getContentAsString();
-//        String expectedResponseBody = objectMapper.writeValueAsString(expectedErrorResponse);
-//        assertThat(actualResponseBody).isEqualToIgnoringWhitespace(expectedResponseBody);
+//    @WithMockUser(username = "cobergfell", password = "mySecretPassword")
+//    public void whenValidSignInInput_thenReturns200() throws Exception {
+//        mockMvc.perform(get("/users/signin"))
+//                .andExpect(status().isOk())
+//                //.andExpect(jsonPath("$.username").value("cobergfell"))
+//                .andDo(print());
 //    }
-//
-//    @Test
-//    void whenNullValue_thenReturns400AndErrorResult_withFluentApi() throws Exception {
-//
-//        UserResource user = new UserResource(null, "zaphod@galaxy.net");
-//
-//        mockMvc.perform(post("/forums/{forumId}/register", 42L)
-//                .contentType("application/json")
-//                .param("sendWelcomeMail", "true")
-//                .content(objectMapper.writeValueAsString(user)))
-//                .andExpect(status().isBadRequest())
-//                .andExpect(responseBody().containsError("name", "must not be null"));
-//    }
-
-
-
 
 
 }
+
