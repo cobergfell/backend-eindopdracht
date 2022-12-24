@@ -4,7 +4,6 @@ D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\nov
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\models\AuthorityKey.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\services\BezkoderMethod1FileUploadServiceImpl.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\services\PaintingServiceImpl.java
-D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\controllers\AuthenticationController.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\FassignmentApplication.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\controllers\dto\AnswerInputDto.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\controllers\dto\PaintingDto.java
@@ -24,7 +23,6 @@ D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\nov
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\services\PaintingService.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\services\QuestionServiceImpl.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\exceptions\FileUploadExceptionAdvice.java
-D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\controllers\FileUploadController.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\controllers\dto\UserDto.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\services\AuthorityServiceImpl.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\filter\JwtRequestFilter.java

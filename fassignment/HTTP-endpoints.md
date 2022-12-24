@@ -47,7 +47,8 @@ DELETE  /audioFilesInDatabase/{id}
 
 GET     /users
 GET     /users/{id}
-POST    /users
+POST    /users/signup
+POST    /users/signin
 PUT     /users/{id}
 DELETE  /users
 DELETE  /users/{id}

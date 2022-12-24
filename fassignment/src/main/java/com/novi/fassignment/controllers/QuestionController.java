@@ -93,10 +93,10 @@ public class QuestionController {
             else{inputDto.musicFiles=null;}
 
 
-
             questionService.createQuestion(inputDto);
             message = "question submitted!";
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+            //return ResponseEntity.status(HttpStatus.CREATED).build();
+            return new ResponseEntity<Object>(inputDto, HttpStatus.CREATED);
 
         } catch (Exception exception) {
             message = "Question could not be submitted/uploaded!";

@@ -109,7 +109,9 @@ public class AnswerController {
 
             answerService.createAnswer(inputDto);
             message = "question submitted!";
-            return ResponseEntity.noContent().build();
+            //return ResponseEntity.noContent().build();
+            return new ResponseEntity<Object>(inputDto, HttpStatus.CREATED);
+
 
         } catch (Exception exception) {
             message = "Question could not be submitted/uploaded!";
@@ -168,8 +170,9 @@ public class AnswerController {
 
                 answerService.updateAnswer(inputDto, answerToUpdate);
 
-                message = "Question submitted!";
-                return ResponseEntity.status(HttpStatus.CREATED).build();
+                message = "Answer submitted!";
+                //return ResponseEntity.status(HttpStatus.CREATED).build();
+                return new ResponseEntity<Object>(inputDto, HttpStatus.CREATED);
 
 
             } catch (Exception exception) {

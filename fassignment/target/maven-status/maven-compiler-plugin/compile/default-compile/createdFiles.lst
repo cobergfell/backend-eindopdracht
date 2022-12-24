@@ -30,12 +30,10 @@ com\novi\fassignment\services\FileUploadServiceImpl.class
 com\novi\fassignment\filter\JwtRequestFilter.class
 com\novi\fassignment\controllers\dto\QuestionInputDto.class
 com\novi\fassignment\exceptions\FileStorageException.class
-com\novi\fassignment\controllers\FileUploadController.class
 com\novi\fassignment\services\FileUploadService.class
 com\novi\fassignment\exceptions\FileUploadExceptionAdvice.class
 com\novi\fassignment\exceptions\BadRequestException.class
 com\novi\fassignment\models\User.class
-com\novi\fassignment\controllers\AuthenticationController.class
 com\novi\fassignment\services\QuestionServiceImpl.class
 com\novi\fassignment\utils\JwtUtil.class
 com\novi\fassignment\services\UserServiceImpl.class
