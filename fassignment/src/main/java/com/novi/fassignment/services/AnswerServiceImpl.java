@@ -108,7 +108,6 @@ public class AnswerServiceImpl implements AnswerService {
             Long idRelatedItem=dto.idRelatedItem;
 
 
-            QuestionDto questionDto = questionService.getQuestionById(Long.valueOf(idRelatedItem));
             var optionalQuestion = questionRepository.findById(Long.valueOf(idRelatedItem));
             if (optionalQuestion.isPresent()) {
                 var question= optionalQuestion.get();

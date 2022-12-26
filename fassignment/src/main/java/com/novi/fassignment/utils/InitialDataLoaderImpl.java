@@ -1,15 +1,15 @@
 package com.novi.fassignment.utils;
 
 
+import com.novi.fassignment.controllers.dto.AnswerInputDto;
 import com.novi.fassignment.controllers.dto.FileStoredInDataBaseInputDto;
 import com.novi.fassignment.controllers.dto.PaintingInputDto;
+import com.novi.fassignment.controllers.dto.QuestionInputDto;
 import com.novi.fassignment.exceptions.StorageException;
 import com.novi.fassignment.exceptions.UsernameNotFoundException;
 import com.novi.fassignment.models.*;
 import com.novi.fassignment.repositories.UserRepository;
-import com.novi.fassignment.services.PaintingService;
-import com.novi.fassignment.services.UserService;
-import com.novi.fassignment.services.AuthorityService;
+import com.novi.fassignment.services.*;
 import io.jsonwebtoken.Claims;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +40,12 @@ public class InitialDataLoaderImpl {
 
     @Autowired
     private PaintingService paintingService;
+
+    @Autowired
+    private QuestionService questionService;
+
+    @Autowired
+    private AnswerService answerService;
 
     @Autowired
     private UserRepository userRepository;
@@ -99,6 +105,95 @@ public class InitialDataLoaderImpl {
 
         } catch (Exception exception) {
             message = "Painting could not be submitted/uploaded!";
+            Optional<User> optionalUser = userService.getUser(username);
+            if (!optionalUser.isPresent()) {
+                throw new UsernameNotFoundException(username);}
+            else{throw new StorageException(message);}
+        }
+    }
+
+
+
+    public QuestionInputDto addQuestionToInitialProject(
+            Long projectId,
+            String username,
+            String title,
+            String content,
+            MultipartFile image,
+            MultipartFile[] files,
+            MultipartFile[] musicFiles) {
+
+        String message = "";
+        try {
+            LocalDateTime dateTimePosted = LocalDateTime.now(ZoneId.of("GMT+00:01"));
+            QuestionInputDto inputDto= new QuestionInputDto();
+            inputDto.idRelatedItem=projectId;
+            inputDto.username=username;
+            inputDto.dateTimePosted=dateTimePosted;
+            inputDto.lastUpdate=dateTimePosted;
+            if (title != null){inputDto.title=title;}
+            else{inputDto.title=null;}
+            if (content != null){inputDto.content=content;}
+            else{inputDto.content=null;}
+            if (image != null){inputDto.image=image.getBytes();}
+            else{inputDto.image=null;}
+            if (files != null){inputDto.files=files;}
+            else{inputDto.files=null;}
+            if (musicFiles != null){inputDto.musicFiles=musicFiles;}
+            else{inputDto.musicFiles=null;}
+
+            questionService.createQuestion(inputDto);
+            message = "Question submitted!";
+
+            return inputDto;
+
+        } catch (Exception exception) {
+            message = "Question could not be submitted/uploaded!";
+            Optional<User> optionalUser = userService.getUser(username);
+            if (!optionalUser.isPresent()) {
+                throw new UsernameNotFoundException(username);}
+            else{throw new StorageException(message);}
+        }
+    }
+
+
+
+
+    public AnswerInputDto addAnswerToQuestion(
+            Long questionId,
+            String username,
+            String title,
+            String content,
+            MultipartFile image,
+            MultipartFile[] files,
+            MultipartFile[] musicFiles) {
+
+        String message = "";
+        try {
+            LocalDateTime dateTimePosted = LocalDateTime.now(ZoneId.of("GMT+00:01"));
+            AnswerInputDto inputDto= new AnswerInputDto();
+            inputDto.idRelatedItem=questionId;
+            inputDto.username=username;
+            inputDto.dateTimePosted=dateTimePosted;
+            inputDto.lastUpdate=dateTimePosted;
+            if (title != null){inputDto.title=title;}
+            else{inputDto.title=null;}
+            if (content != null){inputDto.content=content;}
+            else{inputDto.content=null;}
+            if (image != null){inputDto.image=image.getBytes();}
+            else{inputDto.image=null;}
+            if (files != null){inputDto.files=files;}
+            else{inputDto.files=null;}
+            if (musicFiles != null){inputDto.musicFiles=musicFiles;}
+            else{inputDto.musicFiles=null;}
+
+            answerService.createAnswer(inputDto);
+            message = "Answer submitted!";
+
+            return inputDto;
+
+        } catch (Exception exception) {
+            message = "Question could not be submitted/uploaded!";
             Optional<User> optionalUser = userService.getUser(username);
             if (!optionalUser.isPresent()) {
                 throw new UsernameNotFoundException(username);}

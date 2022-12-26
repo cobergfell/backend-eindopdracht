@@ -1,5 +1,6 @@
 package com.novi.fassignment;
 
+import com.novi.fassignment.controllers.dto.AnswerInputDto;
 import com.novi.fassignment.controllers.dto.PaintingInputDto;
 import com.novi.fassignment.models.User;
 import com.novi.fassignment.services.NoviMethod1FileUploadServiceImpl;
@@ -91,7 +92,33 @@ public class FassignmentApplication implements CommandLineRunner {
 		MultipartFile[] files = new MultipartFile[] {demoText1,demoText2};
 		MultipartFile[] audioFiles = new MultipartFile[] {demoAudio1,demoAudio2};
 
-		initialDataLoader.createInitialProject("guest","MyFirstProject","Kandinsky","Some text",image,files,audioFiles);
+		initialDataLoader.createInitialProject(
+				"cobergfell",
+				"MyFirstProject",
+				"Kandinsky",
+				"Some text",
+				image,
+				files,
+				audioFiles);
 
-	}
+		initialDataLoader.addQuestionToInitialProject(
+				1L,
+				"cobergfell",
+				"MyFirstQuestion",
+				"Some text",
+				image,
+				files,
+				audioFiles);
+
+		initialDataLoader.addAnswerToQuestion(
+				1L,
+				"cobergfell",
+				"MyFirstAnswer",
+				"Some text",
+				image,
+				files,
+				audioFiles);
+
+
+		}
 }

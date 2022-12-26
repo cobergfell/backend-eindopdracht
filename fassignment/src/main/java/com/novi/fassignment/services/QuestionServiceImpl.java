@@ -136,7 +136,7 @@ public class QuestionServiceImpl implements QuestionService {
             question.setImage(dto.image);
             Long idRelatedItem=dto.idRelatedItem;
 
-            PaintingDto paintingDto = paintingService.getPaintingById(Long.valueOf(idRelatedItem));
+            //PaintingDto paintingDto = paintingService.getPaintingById(Long.valueOf(idRelatedItem));
             var optionalPainting = paintingRepository.findById(Long.valueOf(idRelatedItem));
             if (optionalPainting.isPresent()) {
                 var painting= optionalPainting.get();
