@@ -1,10 +1,7 @@
 package com.novi.fassignment;
 
-import com.novi.fassignment.controllers.dto.AnswerInputDto;
-import com.novi.fassignment.controllers.dto.PaintingInputDto;
-import com.novi.fassignment.models.User;
+
 import com.novi.fassignment.services.NoviMethod1FileUploadServiceImpl;
-import com.novi.fassignment.services.QuestionServiceImpl;
 import com.novi.fassignment.services.UserService;
 import com.novi.fassignment.utils.InitialDataLoaderImpl;
 import org.apache.commons.io.IOUtils;
@@ -19,11 +16,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileInputStream;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+
 
 
 @SpringBootApplication
@@ -48,20 +41,9 @@ public class FassignmentApplication implements CommandLineRunner {
 	public void run(String... arg) throws Exception {
 		storageService.deleteAll();
 		storageService.init();
-		initialDataLoader.createInitialUser("guest","superSecret","be.myguest@novi-education.nl",true,true);
+		String demoUsername = "guest";
 
-//		File imageFile = new ClassPathResource(".\\assets\\Kandinsky_Composition_VIII_1923.PNG").getFile();
-//		File file1 = new ClassPathResource(".\\assets\\blog_item_1.txt").getFile();
-//		File audiofile = new ClassPathResource(".\\assets\\rachmaninov.mp3").getFile();
-
-
-		File uploadFile = new File("D:\\Data\\NOVI\\eindopdracht\\assets\\Kandinsky_Composition_VIII_1923.PNG");
-		FileInputStream is =  new FileInputStream(uploadFile);
-		MultipartFile multipartFile0 = new MockMultipartFile("icon4.jpg", "icon4.jpg", "image/jpeg", IOUtils.toByteArray(is));
-
-
-		//D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\resources\assets
-		File image1 = new File("src\\main\\resources\\assets\\Kandinsky_Composition_VIII_1923.PNG");
+		initialDataLoader.createInitialUser(demoUsername,"superSecret","be.myguest@novi-education.nl",true,true);
 
 		String pathImageFile = new ClassPathResource("/assets/Kandinsky_Composition_VIII_1923.PNG").getFile().getAbsolutePath();
 		File imageFile = new File(pathImageFile);
@@ -93,7 +75,7 @@ public class FassignmentApplication implements CommandLineRunner {
 		MultipartFile[] audioFiles = new MultipartFile[] {demoAudio1,demoAudio2};
 
 		initialDataLoader.createInitialProject(
-				"cobergfell",
+				demoUsername,
 				"MyFirstProject",
 				"Kandinsky",
 				"Some text",
@@ -103,7 +85,7 @@ public class FassignmentApplication implements CommandLineRunner {
 
 		initialDataLoader.addQuestionToInitialProject(
 				1L,
-				"cobergfell",
+				demoUsername,
 				"MyFirstQuestion",
 				"Some text",
 				image,
@@ -112,7 +94,7 @@ public class FassignmentApplication implements CommandLineRunner {
 
 		initialDataLoader.addAnswerToQuestion(
 				1L,
-				"cobergfell",
+				demoUsername,
 				"MyFirstAnswer",
 				"Some text",
 				image,
