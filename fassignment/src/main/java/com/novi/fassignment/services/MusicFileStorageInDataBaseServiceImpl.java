@@ -60,7 +60,6 @@ public class MusicFileStorageInDataBaseServiceImpl {
         fileStoredInDataBase.setQuestion(null);
         fileStoredInDataBase.setAnswer(null);
         fileStoredInDataBase.setPainting(null);
-        fileStoredInDataBase.setBytesInDatabaseUrl(null);
         //added 13-4-22: store multipartfile also as complete blob on disc
         //fileStoredInDataBase.setFileOnDiskUrl(fileUploadService.uploadFileAndReturnStorageLocationAbsolutePath(file));
 
@@ -104,7 +103,6 @@ public class MusicFileStorageInDataBaseServiceImpl {
     public Stream<MusicFileStoredInDataBase> getAllFilesAsStream() {return fileStorageInDataBaseRepository.findAll().stream();}
     public List<MusicFileStoredInDataBase> getAllFilesAsList() { return fileStorageInDataBaseRepository.findAll(); }
     public List<MusicFileStoredInDataBase> getAllFilesByDescId() { return fileStorageInDataBaseRepository.findAll(Sort.by("fileId").descending()); }
-    public List<MusicFileStoredInDataBase> findFileStoredInDataBaseByQuestionId(Long questionId) { return fileStorageInDataBaseRepository.findByQuestionId(questionId); }
     public void deleteFileStoredInDataBaseById(Long FileId) { fileStorageInDataBaseRepository.deleteById(FileId); }
     public void deleteAllFileStoredInDataBase() { fileStorageInDataBaseRepository.deleteAll(); }
 

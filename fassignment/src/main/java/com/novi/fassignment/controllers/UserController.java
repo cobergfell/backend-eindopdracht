@@ -61,7 +61,6 @@ public class UserController {
     @PostMapping(value = "signup")
     public ResponseEntity<Object> signup(@RequestBody User user) {
 
-        String message = "";
 
         try {
             String newUsername = userService.createUser(user);
@@ -87,14 +86,13 @@ public class UserController {
             }
             if(user.getAuthorities().size()==0){new RuntimeException("Error: At least one role was not found.");}
 
-            //return ResponseEntity.created(location).build();
             return new ResponseEntity<Object>(user, HttpStatus.CREATED);
 
         }
         catch (Exception exception)
         {
-            message = "Registration failed";
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
+
         }
 
     }
@@ -104,7 +102,6 @@ public class UserController {
     @PostMapping("signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
-        String message = "";
         try {
             String username = loginRequest.getUsername();
             String password = loginRequest.getPassword();
@@ -139,8 +136,8 @@ public class UserController {
 
         }catch (Exception exception)
         {
-            message = "Registration failed";
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
+
         }
 
     }

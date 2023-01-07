@@ -63,17 +63,15 @@ public class QuestionController {
     }
 
     @PostMapping("questions/{id}")//id is the id of the painting about which the question is asked
-    public ResponseEntity<Object> sendPainting(
+    public ResponseEntity<Object> sendQuestion(
             @PathVariable("id") Long id,
             @RequestParam("username") String username,
-            @RequestParam(value="title",required=false)  String title,
-            @RequestParam(value="content",required=false)  String content,
+            @RequestParam(value="title")  String title,
+            @RequestParam(value="content")  String content,
             @RequestParam(value="image",required=false)  MultipartFile image,
             @RequestParam(value="files",required=false) MultipartFile[] files,
             @RequestParam(value="musicFiles",required=false) MultipartFile[] musicFiles) {
 
-
-        String message = "";
         try {
             LocalDateTime dateTimePosted = LocalDateTime.now(ZoneId.of("GMT+00:01"));
             QuestionInputDto inputDto= new QuestionInputDto();
@@ -81,26 +79,17 @@ public class QuestionController {
             inputDto.username=username;
             inputDto.dateTimePosted=dateTimePosted;
             inputDto.lastUpdate=dateTimePosted;
-            if (title != null){inputDto.title=title;}
-            else{inputDto.title=null;}
-            if (content != null){inputDto.content=content;}
-            else{inputDto.content=null;}
+            inputDto.title=title;
+            inputDto.content=content;
             if (image != null){inputDto.image=image.getBytes();}
             else{inputDto.image=null;}
-            if (files != null){inputDto.files=files;}
-            else{inputDto.files=null;}
-            if (musicFiles != null){inputDto.musicFiles=musicFiles;}
-            else{inputDto.musicFiles=null;}
-
-
+            inputDto.files=files;
+            inputDto.musicFiles=musicFiles;
             questionService.createQuestion(inputDto);
-            message = "question submitted!";
-            //return ResponseEntity.status(HttpStatus.CREATED).build();
             return new ResponseEntity<Object>(inputDto, HttpStatus.CREATED);
 
         } catch (Exception exception) {
-            message = "Question could not be submitted/uploaded!";
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -111,9 +100,8 @@ public class QuestionController {
                                                           @RequestParam(value="title",required=false)  String title,
                                                           @RequestParam(value="content",required=false)  String content,
                                                           @RequestParam(value="image",required=false)  MultipartFile image,
-                                                          @RequestParam(value="files",required=false) MultipartFile[] multipartFiles,
+                                                          @RequestParam(value="files",required=false) MultipartFile[] files,
                                                           @RequestParam(value="musicFiles",required=false) MultipartFile[] musicFiles) {
-        String message_painting = "";
         Optional<Question> currentQuestion = questionRepository.findById(questionId);
 
         if (currentQuestion.isPresent()) {
@@ -123,7 +111,7 @@ public class QuestionController {
                 try {
                     LocalDateTime localDateTimePosted =myLocalDateTimeParserTypeYearMonthDayHourMinSec(dateTimePosted);
                     LocalDateTime lastUpdate = LocalDateTime.now(ZoneId.of("GMT+00:01"));
-                    ZonedDateTime zonedLastUpdate = lastUpdate.atZone(ZoneId.of("GMT+00:01"));
+                    //ZonedDateTime zonedLastUpdate = lastUpdate.atZone(ZoneId.of("GMT+00:01"));
 
                     if (username != null){
                         Optional<User> user = userService.getUser(username);
@@ -139,31 +127,25 @@ public class QuestionController {
                     QuestionInputDto inputDto= new QuestionInputDto();
                     inputDto.questionId=questionId;
                     inputDto.username=username;
-                    if (title != null){inputDto.title=title;}
-                    else{inputDto.title=null;}
-                    if (content != null){inputDto.content=content;}
-                    else{inputDto.content=null;}
-                    if (image != null){inputDto.image=image.getBytes();}
-                    else{inputDto.image=null;}
-                    if (multipartFiles != null){inputDto.files=multipartFiles;}
-                    else{inputDto.files=null;}
-                    if (musicFiles != null){inputDto.musicFiles=musicFiles;}
-                    else{inputDto.musicFiles=null;}
+                    inputDto.dateTimePosted=localDateTimePosted;
+                    inputDto.lastUpdate=lastUpdate;
+                    inputDto.title=title;
+                    inputDto.content=content;
+                    inputDto.image=image.getBytes();
+                    inputDto.files=files;
+                    inputDto.musicFiles=musicFiles;
+
 
                     questionService.updateQuestion(inputDto, questionToUpdate);
-
-                    message = "Question submitted!";
-                    return ResponseEntity.noContent().build();
+                    return new ResponseEntity<Object>(inputDto, HttpStatus.CREATED);
 
                 } catch (Exception exception) {
-                    message = "Painting could not be submitted/uploaded!";
-                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
                 }
 
 
             } catch (Exception exception) {
-                message_painting = "Painting could not be submitted/uploaded!";
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
             }
 
 

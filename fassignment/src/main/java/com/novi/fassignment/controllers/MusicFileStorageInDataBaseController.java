@@ -35,7 +35,7 @@ public class MusicFileStorageInDataBaseController {
     @PostMapping("audioFilesInDatabase")
     public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
 
-        // the 3 liners below were added on 25-9-22 but have not been controlled yet
+        // the 3 liners below were added on 25-9-22
         Boolean isAudio=checks.checkIfAudio(file);
         if (isAudio!=true)
         {throw new FileStorageException("File does not appear to be a valid audio format");}
@@ -94,6 +94,7 @@ public class MusicFileStorageInDataBaseController {
         }
     }
 
+    //    Code snippet below is not used but kept for reference
     @GetMapping("audioFilesInDatabaseAsStream")
 
     public ResponseEntity<List<ResponseFile>> getListFilesAsStream() {

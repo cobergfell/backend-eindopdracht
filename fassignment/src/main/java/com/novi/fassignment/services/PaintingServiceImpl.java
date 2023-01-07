@@ -33,8 +33,6 @@ public class PaintingServiceImpl implements PaintingService {
     @Autowired
     private FileStorageInDataBaseRepository fileStorageInDataBaseRepository;
 
-    @Autowired
-    FileUploadService fileUploadService;
 
     private FileStorageInDataBaseServiceImpl fileStorageInDataBaseService;
 

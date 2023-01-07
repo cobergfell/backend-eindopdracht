@@ -16,7 +16,7 @@ public interface NoviMethod1FileUploadService {
     void save(MultipartFile file);
     void saveAs(MultipartFile file, String newName);
     //This is an alternative to save (see implementation)
-    String store(MultipartFile file);
+    //String store(MultipartFile file);
     Resource load(String filename);
     Stream<Path> loadAll();
     Iterable<NoviMethod1FileStoredOnDisk> getFiles();

@@ -22,7 +22,6 @@ public interface MusicFileStorageInDataBaseService {
     Stream<FileStoredInDataBase> getAllFilesAsStream();
     List<FileStoredInDataBase> getAllFilesAsList();
     List<FileStoredInDataBase> getAllFilesByDescId();
-    List<FileStoredInDataBase> findFileStoredInDataBaseByQuestionId(Long questionId);
     void deleteFileStoredInDataBaseById(Long FileId);
     void deleteAllFileStoredInDataBase();
 

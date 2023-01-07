@@ -18,7 +18,6 @@ public class MusicFileStoredInDataBase {
     private String name;
     private String description;
     private String type;
-    private String bytesInDatabaseUrl;//url to bytes
     private String fileOnDiskUrl;// url file stored on disc
     //private String file_on_disk_url;// url file stored on disc; Remark: fileOnDiskUrl as attribute name was not recognised in Spring boot but file_on_disk_url is recognised, do not ask me why...
     private Long fileOnDiskId;// idfile stored on disc
@@ -113,14 +112,6 @@ public class MusicFileStoredInDataBase {
 
     public void setPainting(Painting painting) {
         this.painting = painting;
-    }
-
-    public String getBytesInDatabaseUrl() {
-        return bytesInDatabaseUrl;
-    }
-
-    public void setBytesInDatabaseUrl(String bytesInDatabaseUrl) {
-        this.bytesInDatabaseUrl = bytesInDatabaseUrl;
     }
 
     public Long getFileOnDiskId() {

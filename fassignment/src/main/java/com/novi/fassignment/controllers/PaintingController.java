@@ -2,6 +2,7 @@ package com.novi.fassignment.controllers;
 
 import com.novi.fassignment.controllers.dto.PaintingDto;
 import com.novi.fassignment.controllers.dto.PaintingInputDto;
+import com.novi.fassignment.exceptions.BadRequestException;
 import com.novi.fassignment.models.FileStoredInDataBase;
 import com.novi.fassignment.models.Painting;
 import com.novi.fassignment.models.User;
@@ -15,6 +16,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.imageio.ImageIO;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -97,7 +101,7 @@ public class PaintingController {
 
         } catch (Exception exception) {
             message = "Painting could not be submitted/uploaded!";
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -119,9 +123,7 @@ public class PaintingController {
             Painting paintingToUpdate = currentPainting.get();
 
             try {
-                String message = "";
                 try {
-
 
                     LocalDateTime localDateTimePosted =myLocalDateTimeParserTypeYearMonthDayHourMinSec(dateTimePosted);
                     LocalDateTime lastUpdate = LocalDateTime.now(ZoneId.of("GMT+00:01"));
@@ -138,6 +140,17 @@ public class PaintingController {
                         paintingToUpdate.setUser(userFromCustomUser);
                     }
 
+//                    // check if iamge file is really an image
+//                    // based on https://stackoverflow.com/questions/4169713/how-to-check-a-uploaded-file-whether-it-is-an-image-or-other-file
+//                    try (InputStream input = image.getInputStream()) {
+//                        try {
+//                            ImageIO.read(input).toString();
+//                            // It's an image (only BMP, GIF, JPG and PNG are recognized).
+//                        } catch (Exception e) {
+//                            // It's not an image.
+//                        }
+//                    }
+
                     PaintingInputDto inputDto= new PaintingInputDto();
                     inputDto.paintingId=paintingId;
                     inputDto.username=username;
@@ -149,6 +162,9 @@ public class PaintingController {
                     else{inputDto.artist=paintingToUpdate.getArtist();}
                     if (description != null){inputDto.description=description;}
                     else{inputDto.description=paintingToUpdate.getDescription();}
+                    //if (inputDto.description== null){throw new BadRequestException("Missing painting description");}
+
+
                     if (image != null){inputDto.image=image.getBytes();}
                     else{inputDto.image=paintingToUpdate.getImage();}
                     if (multipartFiles != null){inputDto.files=multipartFiles;}
@@ -160,19 +176,15 @@ public class PaintingController {
 
                     paintingService.updatePainting(inputDto, paintingToUpdate);
 
-                    message = "Painting submitted!";
-                    //return ResponseEntity.status(HttpStatus.CREATED).build();
                     return new ResponseEntity<Object>(inputDto, HttpStatus.CREATED);
 
                 } catch (Exception exception) {
-                    message = "Painting could not be submitted/uploaded!";
-                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
                 }
 
 
             } catch (Exception exception) {
-                message_painting = "Painting could not be submitted/uploaded!";
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
             }
 
 

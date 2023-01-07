@@ -96,10 +96,6 @@ public class FileStorageInDataBaseServiceImpl {
         fileStoredInDataBase.setQuestion(null);
         fileStoredInDataBase.setAnswer(null);
         fileStoredInDataBase.setPainting(null);
-        //fileStoredInDataBase.setFileId(Long.valueOf(999));//test
-        fileStoredInDataBase.setBytesInDatabaseUrl(null);
-        //added 13-4-22: store multipartfile also as complete blob on disc
-        //fileStoredInDataBase.setFileOnDiskUrl(fileUploadService.uploadFileAndReturnStorageLocationAbsolutePath(file));
 
         //added 16-4-22: store multipartfile also as complete blob on disc following method Novi
         NoviMethod1FileUploadRequestDto noviMethod1FileUploadRequestDto= new NoviMethod1FileUploadRequestDto();
@@ -108,7 +104,6 @@ public class FileStorageInDataBaseServiceImpl {
         noviMethod1FileUploadRequestDto.setFile(file);
 
         Long fileOnDiskId=noviFileUploadService.uploadFile(noviMethod1FileUploadRequestDto);
-        //NoviMethod1FileUploadResponseDto noviMethod1FileUploadResponseDto=noviFileUploadService.getFileById(fileOnDiskId);
         fileStoredInDataBase.setFileOnDiskId(fileOnDiskId);
         String fileOnDiskUrl="http://localhost:8080/filesOnDisk/"+Long. toString(fileOnDiskId);
         fileStoredInDataBase.setFileOnDiskUrl(fileOnDiskUrl);
@@ -136,7 +131,6 @@ public class FileStorageInDataBaseServiceImpl {
     public Stream<FileStoredInDataBase> getAllFilesAsStream() {return fileStorageInDataBaseRepository.findAll().stream();}
     public List<FileStoredInDataBase> getAllFilesAsList() { return fileStorageInDataBaseRepository.findAll(); }
     public List<FileStoredInDataBase> getAllFilesByDescId() { return fileStorageInDataBaseRepository.findAll(Sort.by("fileId").descending()); }
-    public List<FileStoredInDataBase> findFileStoredInDataBaseByQuestionId(Long questionId) { return fileStorageInDataBaseRepository.findByQuestionId(questionId); }
     public void deleteFileStoredInDataBaseById(Long FileId) { fileStorageInDataBaseRepository.deleteById(FileId); }
     public void deleteAllFileStoredInDataBase() { fileStorageInDataBaseRepository.deleteAll(); }
 

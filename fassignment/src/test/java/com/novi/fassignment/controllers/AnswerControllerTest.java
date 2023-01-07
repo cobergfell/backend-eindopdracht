@@ -9,6 +9,7 @@ import com.novi.fassignment.repositories.AnswerRepository;
 import com.novi.fassignment.repositories.QuestionRepository;
 import com.novi.fassignment.repositories.UserRepository;
 import com.novi.fassignment.services.*;
+import com.novi.fassignment.utils.InitialDataLoaderImpl;
 import com.novi.fassignment.utils.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -106,7 +107,8 @@ public class AnswerControllerTest {
     User user;
 
 
-    //@WithMockUser(username = "cobergfell")
+    @MockBean
+    InitialDataLoaderImpl initialDataLoaderImpl;
 
     @BeforeEach
     void setup() {

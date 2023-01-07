@@ -64,19 +64,6 @@ public class FileStorageInDataBaseController {
 
 
 
-/*    @GetMapping("filesInDatabaseByIdList")
-    public ResponseEntity<List<FileStoredInDataBaseDto>> getFileListById(@RequestBody List<Integer> list) {
-        var dtos = new ArrayList<FileStoredInDataBaseDto>();
-
-        for (int i = 0; i < list.size(); i++) {
-            System.out.println(i);
-            long id= list.get(i);
-            FileStoredInDataBase fileStoredInDataBase = storageService.getFile(id);
-            dtos.add(FileStoredInDataBaseDto.fromFileStoredInDataBase(fileStoredInDataBase));
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(dtos);
-    }*/
-
 
     @DeleteMapping("filesInDatabase/{id}")
     public ResponseEntity<HttpStatus> deleteFile(@PathVariable("id") long id) {
@@ -99,13 +86,14 @@ public class FileStorageInDataBaseController {
     }
 
 
+//    Code snippet below is not used but kept for reference
 
     @GetMapping("filesInDatabaseAsStream")
     public ResponseEntity<List<ResponseFile>> getListFilesAsStream() {
         List<ResponseFile> files = storageService.getAllFilesAsStream().map(dbFile -> {
             String fileDownloadUri = ServletUriComponentsBuilder
                     .fromCurrentContextPath()
-                    .path("/files_database/")
+                    .path("/filesInDatabase/")
                     .buildAndExpand(dbFile.getFileId())
                     .toUriString();
 

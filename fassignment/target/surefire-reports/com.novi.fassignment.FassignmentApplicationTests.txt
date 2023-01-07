@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 Test set: com.novi.fassignment.FassignmentApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 2.246 s <<< FAILURE! - in com.novi.fassignment.FassignmentApplicationTests
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 2.583 s <<< FAILURE! - in com.novi.fassignment.FassignmentApplicationTests
 contextLoads  Time elapsed: 0.001 s  <<< ERROR!
 java.lang.IllegalStateException: Failed to load ApplicationContext
 Caused by: org.springframework.jdbc.datasource.init.ScriptStatementFailedException: 

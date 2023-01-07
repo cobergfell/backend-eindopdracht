@@ -86,8 +86,6 @@ public class AnswerController {
             @RequestParam(value="files",required=false) MultipartFile[] files,
             @RequestParam(value="musicFiles",required=false) MultipartFile[] musicFiles) {
 
-
-        String message = "";
         try {
             LocalDateTime dateTimePosted = LocalDateTime.now(ZoneId.of("GMT+00:01"));
 
@@ -96,26 +94,19 @@ public class AnswerController {
             inputDto.username=username;
             inputDto.dateTimePosted=dateTimePosted;
             inputDto.lastUpdate=dateTimePosted;
-            if (title != null){inputDto.title=title;}
-            else{inputDto.title=null;}
-            if (content != null){inputDto.content=content;}
-            else{inputDto.content=null;}
+            inputDto.title=title;
+            inputDto.content=content;
             if (image != null){inputDto.image=image.getBytes();}
             else{inputDto.image=null;}
-            if (files != null){inputDto.files=files;}
-            else{inputDto.files=null;}
-            if (musicFiles != null){inputDto.musicFiles=musicFiles;}
-            else{inputDto.musicFiles=null;}
+            inputDto.files=files;
+            inputDto.musicFiles=musicFiles;
 
             answerService.createAnswer(inputDto);
-            message = "question submitted!";
-            //return ResponseEntity.noContent().build();
             return new ResponseEntity<Object>(inputDto, HttpStatus.CREATED);
 
 
         } catch (Exception exception) {
-            message = "Question could not be submitted/uploaded!";
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Answer could not be submitted/uploaded!",HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -128,7 +119,7 @@ public class AnswerController {
                                                           @RequestParam(value="content",required=false)  String content,
                                                           @RequestParam("idRelatedItem")  Long questionId,
                                                           @RequestParam(value="image",required=false)  MultipartFile image,
-                                                          @RequestParam(value="files",required=false) MultipartFile[] multipartFiles,
+                                                          @RequestParam(value="files",required=false) MultipartFile[] files,
                                                           @RequestParam(value="musicFiles",required=false) MultipartFile[] musicFiles) {
         String message_painting = "";
         Optional<Answer> currentAnswer = answerRepository.findById(answerId);
@@ -157,27 +148,20 @@ public class AnswerController {
                 inputDto.answerId=answerId;
                 inputDto.username=username;
                 inputDto.idRelatedItem = questionId;
-                if (title != null){inputDto.title=title;}
-                else{inputDto.title=null;}
-                if (content != null){inputDto.content=content;}
-                else{inputDto.content=null;}
+                inputDto.title=title;
+                inputDto.content=content;
                 if (image != null){inputDto.image=image.getBytes();}
                 else{inputDto.image=null;}
-                if (multipartFiles != null){inputDto.files=multipartFiles;}
-                else{inputDto.files=null;}
-                if (musicFiles != null){inputDto.musicFiles=musicFiles;}
-                else{inputDto.musicFiles=null;}
+                inputDto.files=files;
+                inputDto.musicFiles=musicFiles;
 
                 answerService.updateAnswer(inputDto, answerToUpdate);
 
-                message = "Answer submitted!";
-                //return ResponseEntity.status(HttpStatus.CREATED).build();
                 return new ResponseEntity<Object>(inputDto, HttpStatus.CREATED);
 
 
             } catch (Exception exception) {
-                message_painting = "Painting could not be submitted/uploaded!";
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<Object>("Answer could not be submitted/uploaded!",HttpStatus.BAD_REQUEST);
             }
 
 

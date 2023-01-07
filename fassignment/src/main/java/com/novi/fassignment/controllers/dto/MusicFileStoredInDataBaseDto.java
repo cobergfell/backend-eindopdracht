@@ -92,7 +92,7 @@ public class MusicFileStoredInDataBaseDto {
         var dto = new MusicFileStoredInDataBaseDto();
         String fileDownloadUri = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/music_files_database/")
+                .path("/filesOnDisk/")
                 .path(String.valueOf(fileStoredInDataBase.getFileId()))
                 .toUriString();
 

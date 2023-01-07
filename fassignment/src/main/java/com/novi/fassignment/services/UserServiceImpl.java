@@ -3,7 +3,9 @@ package com.novi.fassignment.services;
 import com.novi.fassignment.controllers.dto.AnswerDto;
 import com.novi.fassignment.controllers.dto.PaintingDto;
 import com.novi.fassignment.controllers.dto.QuestionDto;
+import com.novi.fassignment.exceptions.EmailAlreadyExistException;
 import com.novi.fassignment.exceptions.RecordNotFoundException;
+import com.novi.fassignment.exceptions.UserAlreadyExistException;
 import com.novi.fassignment.exceptions.UsernameNotFoundException;
 import com.novi.fassignment.models.Answer;
 import com.novi.fassignment.models.Authority;
@@ -56,15 +58,13 @@ public class UserServiceImpl implements com.novi.fassignment.services.UserServic
 
     @Override
     public String createUser(User user) {
-        String errorMessage="";
-
         if(userRepository.existsById(user.getUsername())) {
-            errorMessage="This username already exists.";
-            return errorMessage;
-        }
+            throw new UserAlreadyExistException(user.getUsername());
+          }
+
+
         if(userRepository.existsByEmail(user.getEmail())) {
-            errorMessage="This email already exists.";
-            return errorMessage;
+            throw new EmailAlreadyExistException(user.getEmail());
         }
 
         String randomString = RandomStringGenerator.generateAlphaNumeric(20);

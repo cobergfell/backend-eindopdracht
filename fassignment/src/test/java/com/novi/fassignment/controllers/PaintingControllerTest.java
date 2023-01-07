@@ -9,6 +9,7 @@ import com.novi.fassignment.repositories.PaintingRepository;
 import com.novi.fassignment.repositories.QuestionRepository;
 import com.novi.fassignment.repositories.UserRepository;
 import com.novi.fassignment.services.*;
+import com.novi.fassignment.utils.InitialDataLoaderImpl;
 import com.novi.fassignment.utils.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -90,8 +91,8 @@ public class PaintingControllerTest {
     @MockBean
     CustomUserDetailsService customUserDetailsService;
 
-//    @MockBean
-//    PaintingService paintingServiceMock;
+    @MockBean
+    InitialDataLoaderImpl initialDataLoaderImpl;
 
     @MockBean
     PaintingServiceImpl paintingServiceImpl;
