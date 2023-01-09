@@ -116,7 +116,11 @@ public class PaintingController {
                                                           @RequestParam(value="image",required=false)  MultipartFile image,
                                                           @RequestParam(value="files",required=false) MultipartFile[] multipartFiles,
                                                           @RequestParam(value="audioFiles",required=false) MultipartFile[] audioFiles) {
-        String message_painting = "";
+        Boolean test = description.length()>1;
+        //if (description.equals("")){throw new BadRequestException("Description is empty"); }
+        if (description.equals("")){return new ResponseEntity<>("Error: request was incomplete, description should be filled in",HttpStatus.BAD_REQUEST); }
+
+
         Optional<Painting> currentPainting = paintingRepository.findById(paintingId);
 
         if (currentPainting.isPresent()) {
@@ -140,7 +144,7 @@ public class PaintingController {
                         paintingToUpdate.setUser(userFromCustomUser);
                     }
 
-//                    // check if iamge file is really an image
+//                    // check if image file is really an image
 //                    // based on https://stackoverflow.com/questions/4169713/how-to-check-a-uploaded-file-whether-it-is-an-image-or-other-file
 //                    try (InputStream input = image.getInputStream()) {
 //                        try {
@@ -156,15 +160,9 @@ public class PaintingController {
                     inputDto.username=username;
                     inputDto.dateTimePosted=localDateTimePosted;
                     inputDto.lastUpdate=lastUpdate;
-                    if (title != null){inputDto.title=title;}
-                    else{inputDto.title=paintingToUpdate.getTitle();}
-                    if (artist != null){inputDto.artist=artist;}
-                    else{inputDto.artist=paintingToUpdate.getArtist();}
-                    if (description != null){inputDto.description=description;}
-                    else{inputDto.description=paintingToUpdate.getDescription();}
-                    //if (inputDto.description== null){throw new BadRequestException("Missing painting description");}
-
-
+                    inputDto.title=title;
+                    inputDto.artist=artist;
+                    inputDto.description=description;
                     if (image != null){inputDto.image=image.getBytes();}
                     else{inputDto.image=paintingToUpdate.getImage();}
                     if (multipartFiles != null){inputDto.files=multipartFiles;}
