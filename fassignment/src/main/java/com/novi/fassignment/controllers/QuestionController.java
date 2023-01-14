@@ -73,6 +73,8 @@ public class QuestionController {
             @RequestParam(value="musicFiles",required=false) MultipartFile[] musicFiles) {
 
         try {
+            if (content.equals("")){return new ResponseEntity<>("Error: request was incomplete, question content should be filled in, please go back to painting page",HttpStatus.BAD_REQUEST); }
+
             LocalDateTime dateTimePosted = LocalDateTime.now(ZoneId.of("GMT+00:01"));
             QuestionInputDto inputDto= new QuestionInputDto();
             inputDto.idRelatedItem=id;
@@ -94,7 +96,7 @@ public class QuestionController {
     }
 
     @PutMapping("questions/{id}")
-    public ResponseEntity<Object> updatePaintingWithFiles(@PathVariable("id") Long questionId,
+    public ResponseEntity<Object> updateQuestion(@PathVariable("id") Long questionId,
                                                           @RequestParam(value="username",required=false) String username,
                                                           @RequestParam(value="dateTimePosted",required=false) String dateTimePosted,
                                                           @RequestParam(value="title",required=false)  String title,

@@ -55,7 +55,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().
                 antMatchers(HttpMethod.POST, "http://localhost:8080/users/signup").permitAll().
                 antMatchers(HttpMethod.POST, "http://localhost:8080/users/signin").permitAll()
-                //anyRequest().permitAll()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
