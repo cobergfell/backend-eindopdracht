@@ -1,4 +1,13 @@
 -------------------------------------------------------------------------------
 Test set: com.novi.fassignment.FassignmentApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.514 s - in com.novi.fassignment.FassignmentApplicationTests
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 2.583 s <<< FAILURE! - in com.novi.fassignment.FassignmentApplicationTests
+contextLoads  Time elapsed: 0.001 s  <<< ERROR!
+java.lang.IllegalStateException: Failed to load ApplicationContext
+Caused by: org.springframework.jdbc.datasource.init.ScriptStatementFailedException: 
+Failed to execute SQL script statement #1 of URL [file:/D:/Data/NOVI/eindopdracht/backend-eindopdracht/fassignment/target/classes/data.sql]: INSERT INTO public.users ("username","apikey","date_time_registeredgmt","email","enabled","last_update","password") VALUES ('cobergfell','JyRMaYQQVo0tsJHLXteD',(select '2022-09-09 15:45:00.559339'::timestamp),'Christophe.Obergfell@novi-education.nl',True,(select '2022-09-09 15:45:00.559339'::timestamp),'$2a$10$VyY/g4ljGj5/QoycdmVOwOWAKpeaZXqhSS7.WLeSPlVyh47YeVLHO'); nested exception is org.postgresql.util.PSQLException: ERROR: duplicate key value violates unique constraint "users_pkey"
+  Detail: Key (username)=(cobergfell) already exists.
+Caused by: org.postgresql.util.PSQLException: 
+ERROR: duplicate key value violates unique constraint "users_pkey"
+  Detail: Key (username)=(cobergfell) already exists.
+

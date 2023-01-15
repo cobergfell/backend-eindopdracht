@@ -12,17 +12,11 @@ import java.util.stream.Stream;
 
 public interface FilesStorageService {
     void init();
-
     void save(MultipartFile file);
-
     void saveAs(MultipartFile file, String newName);
-
     //This is an alternative to save (see implementation)
     String store(MultipartFile file);
-
     Resource load(String filename);
-
     void deleteAll();
-
     Stream<Path> loadAll();
 }

@@ -5,6 +5,7 @@ package com.novi.fassignment.services;
 
 import com.novi.fassignment.exceptions.StorageException;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -25,17 +26,9 @@ import java.util.stream.Stream;
 @Service
 public class FilesStorageServiceImpl implements FilesStorageService {
 
-//    @Value("${app.upload.dir:${user.home}}")
-//    public String uploadDir;
-//    Path root = uploadDir;
-//    Path path = dir.resolve("file");
-//    Path root = Paths.get(uploadDir);
-
-    //Path root = Paths.get(uploadDir + File.separator + "test_upload_services_version_bezkoder");
+    @Value("${app.upload.dir:${user.home}}")
+    public String uploadDir;
     Path root = Paths.get("C:\\Users", "Gebruiker\\Postman\\files");
-    //Path root = Paths.get("D:\\Users\\Gebruiker");
-    //private final Path root = Paths.get("test_upload_services_version_bezkoder");
-
 
     @Override
     public void init() {
@@ -90,7 +83,6 @@ public class FilesStorageServiceImpl implements FilesStorageService {
                         ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
 
                 return baseUrl+"/fileUpload/files/"+uploadedFileName;
-                //return "bla";
             }
         }
         catch (IOException e) {
@@ -109,10 +101,7 @@ public class FilesStorageServiceImpl implements FilesStorageService {
         catch (IOException e) {
             throw new StorageException("Failed to read stored files", e);
         }
-
     }
-
-
 
 
     @Override
@@ -136,12 +125,5 @@ public class FilesStorageServiceImpl implements FilesStorageService {
         FileSystemUtils.deleteRecursively(root.toFile());
     }
 
-/*    @Override
-    public Stream<Path> loadAll() {
-        try {
-            return Files.walk(this.root, 1).filter(path -> !path.equals(this.root)).map(this.root::relativize);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not load the files!");
-        }
-    }*/
+
 }

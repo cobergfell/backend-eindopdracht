@@ -10,7 +10,7 @@ import java.util.Set;
 
 public interface AuthorityService {
     Set<Authority> getAuthorities(String username);
-    public  void addAuthority(String username, String authority);
-    public  void removeAuthority(String username, String authority);
-    public  void removeAllAuthorities(String username);
+    void addAuthority(String username, String authority);
+    void removeAuthority(String username, String authority);
+    void removeAllAuthorities(String username);
 }

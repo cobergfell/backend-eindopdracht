@@ -35,25 +35,14 @@ public class MusicFileStorageInDataBaseServiceImpl {
     @Autowired
     private MusicFileStorageInDataBaseRepository fileStorageInDataBaseRepository;
 
-    @Autowired
-    //private FilesStorageServiceImpl fileStorageOnDiscService;//we use it to temporary copy files om disc to change files names
-    FilesStorageService fileStorageOnDiscService;//we use it to temporary copy files om disc to change files names
-
-    @Autowired
-    FileUploadService fileUploadService;
 
     @Autowired
     NoviMethod1FileUploadService noviFileUploadService;
 
-    @Autowired
-    BezkoderMethod1FileUploadService bezkoderFileUploadService;
-
-
-
 
     public Resource changeName(MultipartFile multipartFile, String newFileName){
-        fileStorageOnDiscService.saveAs(multipartFile, newFileName);
-        Resource resource=fileStorageOnDiscService.load(newFileName);
+        noviFileUploadService.saveAs(multipartFile, newFileName);
+        Resource resource=noviFileUploadService.load(newFileName);
         return resource;
     };
 
@@ -71,7 +60,6 @@ public class MusicFileStorageInDataBaseServiceImpl {
         fileStoredInDataBase.setQuestion(null);
         fileStoredInDataBase.setAnswer(null);
         fileStoredInDataBase.setPainting(null);
-        fileStoredInDataBase.setBytesInDatabaseUrl(null);
         //added 13-4-22: store multipartfile also as complete blob on disc
         //fileStoredInDataBase.setFileOnDiskUrl(fileUploadService.uploadFileAndReturnStorageLocationAbsolutePath(file));
 
@@ -87,7 +75,7 @@ public class MusicFileStorageInDataBaseServiceImpl {
             Long fileOnDiskId=noviFileUploadService.uploadFile(noviMethod1FileUploadRequestDto);
             //Long fileOnDiskId=Long.valueOf(999);
             fileStoredInDataBase.setFileOnDiskId(fileOnDiskId);
-            String fileOnDiskUrl="http://localhost:8080/api/user/download-file-from-disk/"+Long. toString(fileOnDiskId);
+            String fileOnDiskUrl="http://localhost:8080/filesOnDisk/"+Long. toString(fileOnDiskId);
             //fileStoredInDataBase.setFile_on_disk_url(fileOnDiskUrl);
             fileStoredInDataBase.setFileOnDiskUrl(fileOnDiskUrl);
 
@@ -115,63 +103,7 @@ public class MusicFileStorageInDataBaseServiceImpl {
     public Stream<MusicFileStoredInDataBase> getAllFilesAsStream() {return fileStorageInDataBaseRepository.findAll().stream();}
     public List<MusicFileStoredInDataBase> getAllFilesAsList() { return fileStorageInDataBaseRepository.findAll(); }
     public List<MusicFileStoredInDataBase> getAllFilesByDescId() { return fileStorageInDataBaseRepository.findAll(Sort.by("fileId").descending()); }
-    public List<MusicFileStoredInDataBase> findFileStoredInDataBaseByQuestionId(Long questionId) { return fileStorageInDataBaseRepository.findByQuestionId(questionId); }
     public void deleteFileStoredInDataBaseById(Long FileId) { fileStorageInDataBaseRepository.deleteById(FileId); }
     public void deleteAllFileStoredInDataBase() { fileStorageInDataBaseRepository.deleteAll(); }
-
-/*    public FileStoredInDataBase storeQuestionFile(MultipartFile file, Question question) throws IOException {
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        FileStoredInDataBase fileStoredInDataBase = new FileStoredInDataBase(fileName, file.getContentType(), file.getBytes());
-        //fileStorageInDataBaseRepository.save(fileStoredInDataBase);
-        //fileStoredInDataBase.setQuestion(question);
-        List<FileStoredInDataBase> sortedFiles = getAllFilesByDescId();
-        FileStoredInDataBase mostRecentFile = sortedFiles.get(0);
-        mostRecentFile.setQuestion(question);
-        return fileStorageInDataBaseRepository.save(fileStoredInDataBase);
-    }*/
-
-
-/*    public void storeQuestionFile(MultipartFile file, Question question) throws IOException {
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        FileStoredInDataBase fileStoredInDataBase = new FileStoredInDataBase(fileName, file.getContentType(), file.getBytes());
-        fileStorageInDataBaseRepository.save(fileStoredInDataBase);
-        //fileStoredInDataBase.setQuestion(question);
-        List<FileStoredInDataBase> sortedFiles = getAllFilesByDescId();
-        FileStoredInDataBase mostRecentFile = sortedFiles.get(0);
-        mostRecentFile.setQuestion(question);
-        //return fileStorageInDataBaseRepository.save(fileStoredInDataBase);
-    }*/
-
-/*    public FileStoredInDataBase storeAnswerFile(MultipartFile file, Answer answer) throws IOException {
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        FileStoredInDataBase fileStoredInDataBase = new FileStoredInDataBase(fileName, file.getContentType(), file.getBytes());
-        //fileStorageInDataBaseRepository.save(fileStoredInDataBase);
-        //fileStoredInDataBase.setAnswer(answer);
-        List<FileStoredInDataBase> sortedFiles = getAllFilesByDescId();
-        FileStoredInDataBase mostRecentFile = sortedFiles.get(0);
-        mostRecentFile.setAnswer(answer);
-
-        return fileStorageInDataBaseRepository.save(fileStoredInDataBase);
-    }*/
-
-
-/*    public void storeAnswerFile(MultipartFile file, Answer answer) throws IOException {
-        String message = "";
-        try {
-            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-            FileStoredInDataBase fileStoredInDataBase = new FileStoredInDataBase(fileName, file.getContentType(), file.getBytes());
-            fileStorageInDataBaseRepository.save(file);
-            List<FileStoredInDataBase> sortedFiles = getAllFilesByDescId();
-            FileStoredInDataBase mostRecentFile = sortedFiles.get(0);
-            mostRecentFile.setAnswer(answer);
-
-            message = "Uploaded the files successfully: ";
-        } catch (Exception e) {
-            message = "Fail to upload files!";
-        }
-
-    }*/
-
-
 
 }

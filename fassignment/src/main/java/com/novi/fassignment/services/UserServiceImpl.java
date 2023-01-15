@@ -1,8 +1,15 @@
 package com.novi.fassignment.services;
 
+import com.novi.fassignment.controllers.dto.AnswerDto;
+import com.novi.fassignment.controllers.dto.PaintingDto;
+import com.novi.fassignment.controllers.dto.QuestionDto;
+import com.novi.fassignment.exceptions.EmailAlreadyExistException;
 import com.novi.fassignment.exceptions.RecordNotFoundException;
+import com.novi.fassignment.exceptions.UserAlreadyExistException;
 import com.novi.fassignment.exceptions.UsernameNotFoundException;
+import com.novi.fassignment.models.Answer;
 import com.novi.fassignment.models.Authority;
+import com.novi.fassignment.models.FileStoredInDataBase;
 import com.novi.fassignment.models.User;
 import com.novi.fassignment.repositories.UserRepository;
 import com.novi.fassignment.utils.RandomStringGenerator;
@@ -11,9 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements com.novi.fassignment.services.UserService {
@@ -21,6 +26,14 @@ public class UserServiceImpl implements com.novi.fassignment.services.UserServic
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private AnswerService answerService;
+
+    @Autowired
+    private QuestionService questionService;
+
+    @Autowired
+    private PaintingService paintingService;
 
     @Autowired//added 18-7-21
     private PasswordEncoder passwordEncoder;
@@ -45,15 +58,13 @@ public class UserServiceImpl implements com.novi.fassignment.services.UserServic
 
     @Override
     public String createUser(User user) {
-        String errorMessage="bla";
-
         if(userRepository.existsById(user.getUsername())) {
-            errorMessage="This username already exists.";
-            return errorMessage;
-        }
+            throw new UserAlreadyExistException(user.getUsername());
+          }
+
+
         if(userRepository.existsByEmail(user.getEmail())) {
-            errorMessage="This email already exists.";
-            return errorMessage;
+            throw new EmailAlreadyExistException(user.getEmail());
         }
 
         String randomString = RandomStringGenerator.generateAlphaNumeric(20);
@@ -66,6 +77,34 @@ public class UserServiceImpl implements com.novi.fassignment.services.UserServic
 
     @Override
     public void deleteUser(String username) {
+        Optional<User> optionalUser=userRepository.findById(username);
+        if (optionalUser.isPresent()) {
+                User user =optionalUser.get();
+            List<AnswerDto> allAnswerDtos=answerService.getAllAnswers();
+            for (int i = 0; i < allAnswerDtos.size(); i++) {
+                AnswerDto answerDto = allAnswerDtos.get(i);
+                if (answerDto.getUsername()==username){
+                    Long id = answerDto.getAnswerId();
+                    answerService.deleteAnswerById(id);
+                }
+            };
+            List<QuestionDto> allQuestionDtos=questionService.getAllQuestions();
+            for (int i = 0; i < allQuestionDtos.size(); i++) {
+                QuestionDto questionDto = allQuestionDtos.get(i);
+                if (questionDto.getUsername()==username){
+                    Long id = questionDto.getQuestionId();
+                    questionService.deleteQuestionById(id);
+                }
+            };
+            List<PaintingDto> allPaintingsDtos=paintingService.getAllPaintings();
+            for (int i = 0; i < allPaintingsDtos.size(); i++) {
+                PaintingDto paintingDto = allPaintingsDtos.get(i);
+                if (paintingDto.getUsername()==username){
+                    Long id = paintingDto.getPaintingId();
+                    paintingService.deletePaintingById(id);
+                }
+            };
+        };
         userRepository.deleteById(username);
     }
 

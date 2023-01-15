@@ -6,8 +6,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,14 +20,6 @@ public class Question  {
     //@Lob
     private String content;
     private byte[] image;
-    //private String tags;
-
-//    @CreationTimestamp
-//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
-//    private ZonedDateTime dateTimePosted;
-//    @UpdateTimestamp
-//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
-//    private ZonedDateTime lastUpdate;
 
     @CreationTimestamp
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
@@ -38,17 +28,6 @@ public class Question  {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     public LocalDateTime lastUpdate;
 
-/*    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
-    @Column(name = "create_date")
-    private Date dateTimePosted;
-
-    @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
-    @Column(name = "modify_date")
-    private Date lastUpdate;*/
 
     @OneToMany(
             targetEntity = com.novi.fassignment.models.FileStoredInDataBase.class,
@@ -76,12 +55,6 @@ public class Question  {
             fetch = FetchType.EAGER)
     private Set<com.novi.fassignment.models.Answer> answers = new HashSet<>();
 
-/*    @ManyToMany
-    @JoinTable(
-            name = "question_files_join_table",
-            joinColumns = @JoinColumn(name = "questionId"),
-            inverseJoinColumns = @JoinColumn(name = "filesId"))
-    private List<FileStoredInDataBase> files = new ArrayList<FileStoredInDataBase>();*/
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "paintingId")

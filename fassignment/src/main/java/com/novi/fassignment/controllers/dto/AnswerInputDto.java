@@ -22,12 +22,6 @@ public class AnswerInputDto {
     public MultipartFile[] musicFiles;
     public MultipartFile[] files;
 
-//    @CreationTimestamp
-//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:01")
-//    public ZonedDateTime dateTimePosted;
-//    @UpdateTimestamp
-//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:01")
-//    public ZonedDateTime lastUpdate;
 
     @CreationTimestamp
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")

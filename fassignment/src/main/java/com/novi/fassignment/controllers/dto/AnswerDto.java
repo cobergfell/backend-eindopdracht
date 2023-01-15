@@ -21,15 +21,6 @@ public class AnswerDto
     public String username;
     public byte[] image;
     public Long questionId;
-//    public Long paintingId;
-//    public Long musicPieceId;
-
-//    @CreationTimestamp
-//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:01")
-//    public ZonedDateTime dateTimePosted;
-//    @UpdateTimestamp
-//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:01")
-//    public ZonedDateTime lastUpdate;
 
     @CreationTimestamp
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
@@ -127,13 +118,6 @@ public class AnswerDto
     public  static AnswerDto fromAnswerToDto(Answer answer) {
         var dto = new AnswerDto();
 
-/*        String s=String.valueOf(dto.id);
-        String audioStorageUrl = ServletUriComponentsBuilder
-                .fromCurrentContextPath()
-                .path("/files/")
-                .path(s)
-                .toUriString();*/
-
         dto.answerId = answer.getAnswerId();
         dto.title = answer.getTitle();
         dto.content = answer.getContent();
@@ -143,32 +127,7 @@ public class AnswerDto
         dto.username = answer.getUser().getUsername();
         try{dto.questionId = answer.getQuestion().getQuestionId();}
         catch (Exception exception) {dto.questionId =null;}
-//        try{dto.paintingId= answer.getPainting().getPaintingId();}
-//        catch (Exception exception) {dto.paintingId =null;}
 
-        //How to filter a map, example 1 by converting a list into stream and apply the stream filter method
-        //see https://mkyong.com/java8/java-8-streams-filter-examples/
-        //List<FileStoredInDataBase> filteredFiles_example1=filesStoredInDataBase.stream()
-        //.filter(dbFile -> dbFile.getQuestion().getQuestionId().equals(question.getQuestionId()))
-        //.collect(Collectors.toList());
-
-        //How to filter a map, example 2, older method before java 8,  using the list only
-        //see https://mkyong.com/java8/java-8-streams-filter-examples/
-        //List<FileStoredInDataBase> filteredFiles_example2 = new ArrayList<>();
-        //for (FileStoredInDataBase fileStoredInDataBase : filteredFiles_example2) {
-        //if (fileStoredInDataBase.getQuestion().getQuestionId().equals(question.getQuestionId())) {
-        //filteredFiles_example2.add(fileStoredInDataBase);
-        //}
-        //}
-
-        //Finally, we do it this way (here, we also directly map the filtered files into the files Dto's
-        //List<ResponseFileDto> filteredFiles = filesStoredInDataBase.stream()
-        //.filter(dbFile -> dbFile.getQuestion().getQuestionId().equals(question.getQuestionId()))
-        //.map(dbFile -> ResponseFileDto.fromFileStoredInDataBase(dbFile))
-        //.collect(Collectors.toList());
-/*        for (FileStoredInDataBase fileStoredInDataBase : question.getFiles()) {
-            dto.responseFileDtos.add(ResponseFileDto.fromFileStoredInDataBase(fileStoredInDataBase));
-        }*/
 
         for (FileStoredInDataBase fileStoredInDataBase : answer.getFiles()) {
             FileStoredInDataBaseDto responseFileDto=FileStoredInDataBaseDto.fromFileStoredInDataBase(fileStoredInDataBase);

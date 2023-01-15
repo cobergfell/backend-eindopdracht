@@ -70,25 +70,4 @@ class UserServiceImplTest {
     }*/
 
 
-/*    @Test
-    void whenSavedFromRepositoryThenFindsById() {
-        User newUser = new User();
-        newUser.setUserId(1L);
-        userRepositoryMock.save(newUser);
-        Assertions.assertNotNull(userRepositoryMock.findById(newUser.getUserId()));
-    }*/
-
-
-/*    @Test
-    void whenSavedFromServiceThenFindsById() {
-        //User user = new User();
-        //user.setUsername("myUsernameIsAlsoMyUniqueId");
-        userService.createUser(user);
-        Assertions.assertNotNull(userService.userExists("cobergfell"));
-    }*/
-
-
-
-
-
 }

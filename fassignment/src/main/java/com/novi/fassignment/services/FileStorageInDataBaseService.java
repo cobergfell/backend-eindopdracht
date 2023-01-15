@@ -21,9 +21,8 @@ public interface FileStorageInDataBaseService {
     FileStoredInDataBase getFile(Long id);
     Stream<FileStoredInDataBase> getAllFilesAsStream();
     List<FileStoredInDataBase> getAllFilesAsList();
-    public List<FileStoredInDataBase> getAllFilesByDescId();
-    public List<FileStoredInDataBase> findFileStoredInDataBaseByQuestionId(Long questionId);
-    public void deleteFileStoredInDataBaseById(Long FileId);
-    public void deleteAllFileStoredInDataBase();
+    List<FileStoredInDataBase> getAllFilesByDescId();
+    void deleteFileStoredInDataBaseById(Long FileId);
+    void deleteAllFileStoredInDataBase();
 
 }

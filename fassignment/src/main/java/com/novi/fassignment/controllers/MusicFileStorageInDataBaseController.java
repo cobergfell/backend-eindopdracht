@@ -22,9 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-//@CrossOrigin("http://localhost:8080")
 @CrossOrigin("*")
-//@CrossOrigin(origins = "http://localhost:3000")
 public class MusicFileStorageInDataBaseController {
 
     @Autowired
@@ -34,10 +32,10 @@ public class MusicFileStorageInDataBaseController {
      private Checks checks;
 
 
-    @PostMapping("api/user/upload-audio-file-to-database")
+    @PostMapping("audioFilesInDatabase")
     public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
 
-        // the 3 liners below were added on 25-9-22 but have not been controlled yet
+        // the 3 liners below were added on 25-9-22
         Boolean isAudio=checks.checkIfAudio(file);
         if (isAudio!=true)
         {throw new FileStorageException("File does not appear to be a valid audio format");}
@@ -54,18 +52,56 @@ public class MusicFileStorageInDataBaseController {
         }
     }
 
-/*    @GetMapping("/files_database")
-    public Stream<FileStoredInDataBase> getAllQuestions() {
-        return storageService.getAllFiles();
-    }*/
 
-    @GetMapping("api/user/audio-files-database-as-stream")
+
+    @GetMapping("audioFilesInDatabase")
+    public ResponseEntity<List<MusicFileStoredInDataBaseDto>> getResponseFilesAsList() {
+        var dtos = new ArrayList<MusicFileStoredInDataBaseDto>();
+        var filesStoredInDataBase = storageService.getAllFilesAsList();
+
+        for (MusicFileStoredInDataBase fileStoredInDataBase : filesStoredInDataBase) {
+            dtos.add(MusicFileStoredInDataBaseDto.fromFileStoredInDataBase(fileStoredInDataBase));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(dtos);
+    }
+
+    @GetMapping("audioFilesInDatabase/{id}")
+    public ResponseEntity<byte[]> getFile(@PathVariable("id") Long id) {
+        MusicFileStoredInDataBase fileDB = storageService.getFile(id);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+fileDB.getName())
+                .body(fileDB.getData());
+    }
+
+
+    @DeleteMapping("audioFilesInDatabase/{id}")
+    public ResponseEntity<HttpStatus> deleteFile(@PathVariable("id") long id) {
+        try {
+            storageService.deleteFileStoredInDataBaseById(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("audioFilesInDatabase")
+    public ResponseEntity<HttpStatus> deleteAllFiles() {
+        try {
+            storageService. deleteAllFileStoredInDataBase();
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    //    Code snippet below is not used but kept for reference
+    @GetMapping("audioFilesInDatabaseAsStream")
+
     public ResponseEntity<List<ResponseFile>> getListFilesAsStream() {
         List<ResponseFile> files = storageService.getAllFilesAsStream().map(dbFile -> {
             String fileDownloadUri = ServletUriComponentsBuilder
                     .fromCurrentContextPath()
-                    .path("/audio-files-database/")
-                    //.path(dbFile.getFileId().toString())
+                    .path("/audioFilesInDatabase/")
                     .buildAndExpand(dbFile.getFileId())
                     .toUriString();
 
@@ -78,98 +114,4 @@ public class MusicFileStorageInDataBaseController {
 
         return ResponseEntity.status(HttpStatus.OK).body(files);
     }
-
-
-/*    @GetMapping("/files_database")
-    @ResponseBody
-    public List<ResponseFileDto> getResponseFilesAsList() {
-
-        var dtos = new ArrayList<ResponseFileDto>();
-        var filesStoredInDataBase = storageService.getAllFilesAsList();
-
-        for (FileStoredInDataBase fileStoredInDataBase : filesStoredInDataBase) {
-            dtos.add(ResponseFileDto.fromFileStoredInDataBase(fileStoredInDataBase));
-        }
-
-        return dtos;
-    }*/
-
-
-    @GetMapping("api/user/audio-files-database")
-    public ResponseEntity<List<MusicFileStoredInDataBaseDto>> getResponseFilesAsList() {
-        var dtos = new ArrayList<MusicFileStoredInDataBaseDto>();
-        var filesStoredInDataBase = storageService.getAllFilesAsList();
-
-        for (MusicFileStoredInDataBase fileStoredInDataBase : filesStoredInDataBase) {
-            dtos.add(MusicFileStoredInDataBaseDto.fromFileStoredInDataBase(fileStoredInDataBase));
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).body(dtos);
-    }
-
-    @GetMapping("api/user/audio-files-database/{id}")
-    public ResponseEntity<byte[]> getFile(@PathVariable("id") Long id) {
-        MusicFileStoredInDataBase fileDB = storageService.getFile(id);
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+fileDB.getName())
-                .body(fileDB.getData());
-    }
-
-
-
-
-
-/*    @GetMapping("api/user/question_files_from_database")
-    public ResponseEntity<List<FileStoredInDataBaseDto>> getFileListById(@RequestBody List<Integer> list) {
-        var dtos = new ArrayList<FileStoredInDataBaseDto>();
-
-        for (int i = 0; i < list.size(); i++) {
-            System.out.println(i);
-            long id= list.get(i);
-            FileStoredInDataBase fileStoredInDataBase = storageService.getFile(id);
-            dtos.add(FileStoredInDataBaseDto.fromFileStoredInDataBase(fileStoredInDataBase));
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(dtos);
-    }*/
-
-
-
-/*    @GetMapping("/download_version_dev/files")
-    public ResponseEntity<List<FileInfo>> getListFiles() {
-        List<FileInfo> fileInfos = storageService.loadAll().map(path -> {
-            String filename = path.getFileName().toString();
-            String url = MvcUriComponentsBuilder
-                    .fromMethodName(FilesController.class, "getFile", path.getFileName().toString()).build().toString();
-
-            return new FileInfo(filename, url);
-        }).collect(Collectors.toList());
-
-        Stream<Path> pathStream = storageService.loadAll();
-        return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
-    }*/
-
-
-
-    @DeleteMapping("api/user/audio-files-database/{id}")
-    public ResponseEntity<HttpStatus> deleteFile(@PathVariable("id") long id) {
-        try {
-            storageService.deleteFileStoredInDataBaseById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @DeleteMapping("api/user/audio-files-database")
-    public ResponseEntity<HttpStatus> deleteAllFiles() {
-        try {
-            storageService. deleteAllFileStoredInDataBase();
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-
 }

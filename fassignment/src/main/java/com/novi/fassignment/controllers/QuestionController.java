@@ -1,33 +1,28 @@
 package com.novi.fassignment.controllers;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.novi.fassignment.controllers.dto.*;
 import com.novi.fassignment.models.*;
 import com.novi.fassignment.repositories.QuestionRepository;
 import com.novi.fassignment.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static com.novi.fassignment.utils.Parsers.myLocalDateTimeParserTypeYearMonthDayHourMinSec;
 
 @RestController
-//@CrossOrigin("http://localhost:8080")
 @CrossOrigin("*")
 public class QuestionController {
 
-    //@Autowired
-    //private FileStorageInDataBaseService storageService;
 
     @Autowired
     private QuestionServiceImpl questionService;
@@ -41,135 +36,84 @@ public class QuestionController {
     @Autowired
     private PaintingServiceImpl paintingService;
 
-    @GetMapping("api/user/questions")
-    public List<QuestionDto> getQuestions() {
-        var dtos = new ArrayList<QuestionDto>();
-        var questions = questionService.getAllQuestions();
-        //List<FileStoredInDataBase> filesStoredInDataBase = storageService.getAllFilesAsList();
 
-        for (Question question : questions) {
-            //questionService.getFiles(question);
-            dtos.add(QuestionDto.fromQuestionToDto(question));
-        }
-        return dtos;
+    @GetMapping("questions")
+    public ResponseEntity<List<QuestionDto>> getQuestions()
+    {    List<QuestionDto> questionDtos = questionService.getAllQuestions();
+        return ResponseEntity.ok(questionDtos);
     }
 
-    @GetMapping("api/user/questions/{questionId}")
-    public QuestionDto getQuestion(@PathVariable("questionId") Long questionId) {
-        var dto = new QuestionDto();
-        var question = questionService.getQuestionById(questionId);
-        dto=QuestionDto.fromQuestionToDto(question);
-        return dto;
+    @GetMapping("questions/{questionId}")
+    public ResponseEntity<QuestionDto> getQuestion(@PathVariable("questionId") Long questionId)
+    {    QuestionDto questionDto = questionService.getQuestionById(questionId);
+        return ResponseEntity.ok(questionDto);
     }
 
-    @GetMapping("api/user/questions-by-paintingId/{paintingId}")
-    public List<QuestionDto>  getQuestionsByPaintingId(@PathVariable("paintingId") Long paintingId) {
-        var dtos = new ArrayList<QuestionDto>();
-        var painting = paintingService.getPaintingById(paintingId);
-        var questions= painting.getQuestions();
-        for (Question question : questions) {
-            //answerService.getFiles(answer);
-            dtos.add(QuestionDto.fromQuestionToDto(question));
-        }
-        return dtos;
+    @GetMapping("questions/byPainting/{id}")
+    public ResponseEntity<List<QuestionDto>> getQuestionsByPaintingId(@PathVariable("id") Long paintingId)
+    {    List<QuestionDto> questionDtos = questionService.getQuestionsByPaintingId(paintingId);
+        return ResponseEntity.ok(questionDtos);
     }
 
-
-
-    @DeleteMapping("api/user/questions/{questionId}")
-    public ResponseEntity<HttpStatus> deleteQuestion(@PathVariable("questionId") long questionId) {
-        try {
-            questionService.deleteQuestionById(questionId);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @GetMapping(value = "questions/{id}/image")
+    public ResponseEntity<byte[]> getImage(@PathVariable("id") Long id) {
+        var dto = questionService.getQuestionById(id);
+        byte[] image = dto.getImage();
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
     }
 
-    @DeleteMapping("api/user/questions")
-    public ResponseEntity<HttpStatus> deleteAllQuestions() {
-        try {
-            questionService.deleteAllQuestions();
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-    }
-
-    @PostMapping("api/user/question-upload/{id}")//id is the id of the project about which the question is asked
-    public ResponseEntity<Object> sendPainting(
+    @PostMapping("questions/{id}")//id is the id of the painting about which the question is asked
+    public ResponseEntity<Object> sendQuestion(
             @PathVariable("id") Long id,
             @RequestParam("username") String username,
-            @RequestParam(value="title",required=false)  String title,
-            @RequestParam(value="content",required=false)  String content,
-            //@RequestParam("questionRelatedTo")  String questionRelatedTo,
+            @RequestParam(value="title")  String title,
+            @RequestParam(value="content")  String content,
             @RequestParam(value="image",required=false)  MultipartFile image,
             @RequestParam(value="files",required=false) MultipartFile[] files,
             @RequestParam(value="musicFiles",required=false) MultipartFile[] musicFiles) {
 
-
-        String message = "";
         try {
-            LocalDateTime dateTimePosted = LocalDateTime.now(ZoneId.of("GMT+00:01"));
-//            ZonedDateTime zonedDateTimePosted = dateTimePosted.atZone(ZoneId.of("GMT+00:01"));
-//            DateTimeFormatter formatter = DateTimeFormatter.ISO_ZONED_DATE_TIME;
-//            formatter.format(zonedDateTimePosted);
+            if (content.equals("")){return new ResponseEntity<>("Error: request was incomplete, question content should be filled in, please go back to painting page",HttpStatus.BAD_REQUEST); }
 
+            LocalDateTime dateTimePosted = LocalDateTime.now(ZoneId.of("GMT+00:01"));
             QuestionInputDto inputDto= new QuestionInputDto();
             inputDto.idRelatedItem=id;
             inputDto.username=username;
             inputDto.dateTimePosted=dateTimePosted;
             inputDto.lastUpdate=dateTimePosted;
-            if (title != null){inputDto.title=title;}
-            else{inputDto.title=null;}
-            if (content != null){inputDto.content=content;}
-            else{inputDto.content=null;}
+            inputDto.title=title;
+            inputDto.content=content;
             if (image != null){inputDto.image=image.getBytes();}
             else{inputDto.image=null;}
-            if (files != null){inputDto.files=files;}
-            else{inputDto.files=null;}
-            if (musicFiles != null){inputDto.musicFiles=musicFiles;}
-            else{inputDto.musicFiles=null;}
-
-
-
+            inputDto.files=files;
+            inputDto.musicFiles=musicFiles;
             questionService.createQuestion(inputDto);
-            message = "question submitted!";
-            return ResponseEntity.noContent().build();
+            return new ResponseEntity<Object>(inputDto, HttpStatus.CREATED);
 
         } catch (Exception exception) {
-            message = "Question could not be submitted/uploaded!";
-            return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+            return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
 
-    @PostMapping("api/user/update-question/{id}")
-    public ResponseEntity<Object> updatePaintingWithFiles(@PathVariable("questionId") Long questionId,
+    @PutMapping("questions/{id}")
+    public ResponseEntity<Object> updateQuestion(@PathVariable("id") Long questionId,
                                                           @RequestParam(value="username",required=false) String username,
                                                           @RequestParam(value="dateTimePosted",required=false) String dateTimePosted,
                                                           @RequestParam(value="title",required=false)  String title,
                                                           @RequestParam(value="content",required=false)  String content,
                                                           @RequestParam(value="image",required=false)  MultipartFile image,
-                                                          @RequestParam(value="files",required=false) MultipartFile[] multipartFiles,
+                                                          @RequestParam(value="files",required=false) MultipartFile[] files,
                                                           @RequestParam(value="musicFiles",required=false) MultipartFile[] musicFiles) {
-        String message_painting = "";
         Optional<Question> currentQuestion = questionRepository.findById(questionId);
-//        System.out.println( formatter.format(zdt) );
 
         if (currentQuestion.isPresent()) {
-            //paintingService.deletePaintingById(id);
             Question questionToUpdate = currentQuestion.get();
-            ///paintingService.createPainting(updatedPainting);
             try {
-                //LocalDate datePosted = LocalDate.now(ZoneId.of("GMT+00:00"));
                 String message = "";
                 try {
                     LocalDateTime localDateTimePosted =myLocalDateTimeParserTypeYearMonthDayHourMinSec(dateTimePosted);
                     LocalDateTime lastUpdate = LocalDateTime.now(ZoneId.of("GMT+00:01"));
-                    ZonedDateTime zonedLastUpdate = lastUpdate.atZone(ZoneId.of("GMT+00:01"));
-                    //formatter.format(zonedLastUpdate);
-
+                    //ZonedDateTime zonedLastUpdate = lastUpdate.atZone(ZoneId.of("GMT+00:01"));
 
                     if (username != null){
                         Optional<User> user = userService.getUser(username);
@@ -185,31 +129,25 @@ public class QuestionController {
                     QuestionInputDto inputDto= new QuestionInputDto();
                     inputDto.questionId=questionId;
                     inputDto.username=username;
-                    if (title != null){inputDto.title=title;}
-                    else{inputDto.title=null;}
-                    if (content != null){inputDto.content=content;}
-                    else{inputDto.content=null;}
-                    if (image != null){inputDto.image=image.getBytes();}
-                    else{inputDto.image=null;}
-                    if (multipartFiles != null){inputDto.files=multipartFiles;}
-                    else{inputDto.files=null;}
-                    if (musicFiles != null){inputDto.musicFiles=musicFiles;}
-                    else{inputDto.musicFiles=null;}
+                    inputDto.dateTimePosted=localDateTimePosted;
+                    inputDto.lastUpdate=lastUpdate;
+                    inputDto.title=title;
+                    inputDto.content=content;
+                    inputDto.image=image.getBytes();
+                    inputDto.files=files;
+                    inputDto.musicFiles=musicFiles;
+
 
                     questionService.updateQuestion(inputDto, questionToUpdate);
-
-                    message = "Question submitted!";
-                    return ResponseEntity.noContent().build();
+                    return new ResponseEntity<Object>(inputDto, HttpStatus.CREATED);
 
                 } catch (Exception exception) {
-                    message = "Painting could not be submitted/uploaded!";
-                    return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+                    return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
                 }
 
 
             } catch (Exception exception) {
-                message_painting = "Painting could not be submitted/uploaded!";
-                return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+                return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
             }
 
 
@@ -218,66 +156,24 @@ public class QuestionController {
         }
     }
 
-/*    @PostMapping("api/user/create-or-update-question/{id}")
-    public ResponseEntity<Object> createOrUpdateQuestion(
-            @PathVariable("id") Long id,
-            @RequestParam("username") String username,
-            @RequestParam("title")  String title,
-            @RequestParam("content") String content,
-            @RequestParam("questionRelatedTo")  String questionRelatedTo,
-            @RequestParam(value="image",required=false)  MultipartFile image,
-            @RequestParam(value="files",required=false) MultipartFile[] multipartFiles,
-            @RequestParam(value="musicFiles",required=false) MultipartFile[] musicFiles) {
-        String message = "";
-        LocalDateTime dateTimePosted = LocalDateTime.now(ZoneId.of("GMT+00:00"));
-        //ZonedDateTime zonedDateTimePosted = dateTimePosted.atZone(ZoneId.of("GMT+00:00"));
-
-        Question question = new Question();
-        Painting painting = new Painting();
-        if (questionRelatedTo.equals("painting")) {
-            try {
-                painting = paintingService.getPaintingById(id);
-            } catch (Exception exception) {
-                message = "Painting Id not found";
-                id = Long.valueOf(-1);
-            }
-        } else if (questionRelatedTo.equals("question")) {   //in that case we edit question
-                try {
-                    question =questionService.getQuestionById(id);
-
-                } catch (Exception exception) {
-                    message = "question Id not found";
-                    id = Long.valueOf(-1);
-                }
-
-        } else {
-            id = Long.valueOf(-1);
-        }
+    @DeleteMapping("questions/{id}")
+    public ResponseEntity<HttpStatus> deleteQuestion(@PathVariable("id") long id) {
         try {
-            QuestionInputDto inputDto = new QuestionInputDto();
-            inputDto.username = username;
-            inputDto.title = title;
-            inputDto.content = content;
-            inputDto.dateTimePosted = dateTimePosted;
-            inputDto.lastUpdate = dateTimePosted;
-            inputDto.questionRelatedTo = questionRelatedTo;
-            inputDto.idRelatedItem = id;
-            inputDto.files = multipartFiles;
+            questionService.deleteQuestionById(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-            if (questionRelatedTo.equals("question")){//in that case we edit question
-                inputDto.questionId = id;
-                questionService.updateQuestion(inputDto,question);
-            }
-            else{questionService.createQuestion(inputDto);}
-
-
-            message = "Question submitted!";
-            return ResponseEntity.noContent().build();
-        } catch (Exception exception) {
-            message = "Question could not be submitted";
-            return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+    @DeleteMapping("questions")
+    public ResponseEntity<HttpStatus> deleteAllQuestions() {
+        try {
+            questionService.deleteAllQuestions();
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-    }*/
-
+    }
 }
