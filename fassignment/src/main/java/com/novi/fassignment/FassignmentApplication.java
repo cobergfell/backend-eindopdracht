@@ -112,9 +112,36 @@ public class FassignmentApplication implements CommandLineRunner {
 		FileInputStream inputStreamDemoAudio3 =  new FileInputStream(demoAudio3File);
 		MultipartFile demoAudio3 = new MockMultipartFile("Gurdjieff_by_Jeroen_van_Veen.mp3", "Gurdjieff_by_Jeroen_van_Veen.mp3","audio/mp3",IOUtils.toByteArray(inputStreamDemoAudio3));
 
+
+		String pathDemoAudioLeraAuerbachTrack1 = new ClassPathResource("/assets/01_Lera_Auerbach_plays_her_preludes_and_dreams_1.mp3").getFile().getAbsolutePath();
+		File demoAudioLeraAuerbachTrack1File = new File(pathDemoAudioLeraAuerbachTrack1);
+		FileInputStream inputStreamDemoLeraAuerbachTrack1 =  new FileInputStream(demoAudioLeraAuerbachTrack1File);
+		MultipartFile demoAudioLeraAuerbachTrack1 = new MockMultipartFile("01_Lera_Auerbach_plays_her_preludes_and_dreams_1.mp3", "01_Lera_Auerbach_plays_her_preludes_and_dreams_1.mp3","audio/mp3",IOUtils.toByteArray(inputStreamDemoLeraAuerbachTrack1));
+
+		String pathDemoAudioLeraAuerbachTrack2 = new ClassPathResource("/assets/02_Lera_Auerbach_plays_her_preludes_and_dreams_2.mp3").getFile().getAbsolutePath();
+		File demoAudioLeraAuerbachTrack2File = new File(pathDemoAudioLeraAuerbachTrack2);
+		FileInputStream inputStreamDemoLeraAuerbachTrack2 =  new FileInputStream(demoAudioLeraAuerbachTrack2File);
+		MultipartFile demoAudioLeraAuerbachTrack2 = new MockMultipartFile("02_Lera_Auerbach_plays_her_preludes_and_dreams_2.mp3", "02_Lera_Auerbach_plays_her_preludes_and_dreams_2.mp3","audio/mp3",IOUtils.toByteArray(inputStreamDemoLeraAuerbachTrack2));
+
+		String pathDemoAudioLeraAuerbachTrack3 = new ClassPathResource("/assets/03_Lera_Auerbach_plays_her_preludes_and_dreams_3.mp3").getFile().getAbsolutePath();
+		File demoAudioLeraAuerbachTrack3File = new File(pathDemoAudioLeraAuerbachTrack3);
+		FileInputStream inputStreamDemoLeraAuerbachTrack3 =  new FileInputStream(demoAudioLeraAuerbachTrack3File);
+		MultipartFile demoAudioLeraAuerbachTrack3 = new MockMultipartFile("03_Lera_Auerbach_plays_her_preludes_and_dreams_3.mp3", "03_Lera_Auerbach_plays_her_preludes_and_dreams_3.mp3","audio/mp3",IOUtils.toByteArray(inputStreamDemoLeraAuerbachTrack3));
+
+		String pathDemoAudioLeraAuerbachTrack4 = new ClassPathResource("/assets/04_Lera_Auerbach_plays_her_preludes_and_dreams_4.mp3").getFile().getAbsolutePath();
+		File demoAudioLeraAuerbachTrack4File = new File(pathDemoAudioLeraAuerbachTrack4);
+		FileInputStream inputStreamDemoLeraAuerbachTrack4 =  new FileInputStream(demoAudioLeraAuerbachTrack4File);
+		MultipartFile demoAudioLeraAuerbachTrack4 = new MockMultipartFile("04_Lera_Auerbach_plays_her_preludes_and_dreams_4.mp3", "03_Lera_Auerbach_plays_her_preludes_and_dreams_3.mp3","audio/mp3",IOUtils.toByteArray(inputStreamDemoLeraAuerbachTrack4));
+
+
+
 		MultipartFile[] files = new MultipartFile[] {demoText1,demoText2};
 		MultipartFile[] audioFiles1 = new MultipartFile[] {demoAudio1,demoAudio2};
 		MultipartFile[] audioFiles2 = new MultipartFile[] {demoAudio2,demoAudio3};
+		MultipartFile[] audioFilesDemoAudioLeraAuerbachTrack12 = new MultipartFile[] {demoAudioLeraAuerbachTrack1,demoAudioLeraAuerbachTrack2};
+		MultipartFile[] audioFilesDemoAudioLeraAuerbachTrack3 = new MultipartFile[] {demoAudioLeraAuerbachTrack3};
+		MultipartFile[] audioFilesDemoAudioLeraAuerbachTrack4 = new MultipartFile[] {demoAudioLeraAuerbachTrack4};
+
 
 		String pathStringDemoKandinskyVII1913 = new ClassPathResource("/assets/demo_text_Kandinsky_VII_1913.txt").getFile().getAbsolutePath();
 		Path pathDemoKandinskyVII1913 = Paths.get(pathStringDemoKandinskyVII1913);
@@ -152,25 +179,25 @@ public class FassignmentApplication implements CommandLineRunner {
 				descriptionKandinskyVII1913,
 				imageKandinskyVII1913,
 				files,
-				audioFiles1);
+				audioFilesDemoAudioLeraAuerbachTrack12);
 
 		initialDataLoader.addQuestionToInitialProject(
 				1L,
 				demoUsername,
 				"Question_about_Kandinsky_VII_1913",
-				"Some text",
+				"Is the tone colour of the attached music file not a bit more suited than the ones initially sent? At least they fit quite well the painting attached with this question",
 				imageKandinskyVIII1923,
 				files,
-				audioFiles2);
+				audioFilesDemoAudioLeraAuerbachTrack3);
 
 		initialDataLoader.addAnswerToQuestion(
 				1L,
 				demoUsername,
 				"Answer_about_Kandinsky_VII_1913",
-				"Some text",
+				"Very good suggestion, thanks! Please find attached another interesting match between the attached painting and the attached music",
 				imageKandinskyIX1936,
 				files,
-				audioFiles1);
+				audioFilesDemoAudioLeraAuerbachTrack4);
 
 
 		initialDataLoader.createInitialProject(
@@ -186,7 +213,7 @@ public class FassignmentApplication implements CommandLineRunner {
 				2L,
 				demoUsername,
 				"Question_about_Kandinsky_VIII_1923",
-				"Some text",
+				"Is the tone colour of the attached music file not a bit more suited than the ones initially sent? At least they fit quite well the painting attached with this question",
 				imageKandinskyIX1936,
 				files,
 				audioFiles2);
@@ -195,7 +222,7 @@ public class FassignmentApplication implements CommandLineRunner {
 				2L,
 				demoUsername,
 				"Answer_about_Kandinsky_VIII_1923",
-				"Some text",
+				"Very good suggestion, thanks! Please find attached another interesting match between the attached painting and the attached music",
 				imageKandinskyVIII1923,
 				files,
 				audioFiles1);
@@ -214,7 +241,7 @@ public class FassignmentApplication implements CommandLineRunner {
 				3L,
 				demoUsername,
 				"Question_about_Kandinsky_VIII_1923",
-				"Some text",
+				"Is the tone colour of the attached music file not a bit more suited than the ones initially sent? At least they fit quite well the painting attached with this question",
 				imageKandinskyIX1936,
 				files,
 				audioFiles2);
@@ -223,7 +250,7 @@ public class FassignmentApplication implements CommandLineRunner {
 				3L,
 				demoUsername,
 				"Answer_about_Kandinsky_VIII_1923",
-				"Some text",
+				"Very good suggestion, thanks! Please find attached another interesting match between the attached painting and the attached music",
 				imageKandinskyVIII1923,
 				files,
 				audioFiles1);
@@ -241,7 +268,7 @@ public class FassignmentApplication implements CommandLineRunner {
 				4L,
 				demoUsername,
 				"Question_about_Kandinsky_IV_1911",
-				"Some text",
+				"Is the tone colour of the attached music file not a bit more suited than the ones initially sent? At least they fit quite well the painting attached with this question",
 				imageKandinskyIX1936,
 				files,
 				audioFiles2);
@@ -250,7 +277,7 @@ public class FassignmentApplication implements CommandLineRunner {
 				4L,
 				demoUsername,
 				"Answer_about_Kandinsky_IV_1911",
-				"Some text",
+				"Very good suggestion, thanks! Please find attached another interesting match between the attached painting and the attached music",
 				imageKandinskyVIII1923,
 				files,
 				audioFiles1);
@@ -268,7 +295,7 @@ public class FassignmentApplication implements CommandLineRunner {
 				5L,
 				demoUsername,
 				"Question_about_Kandinsky_V_1911",
-				"Some text",
+				"Is the tone colour of the attached music file not a bit more suited than the ones initially sent? At least they fit quite well the painting attached with this question",
 				imageKandinskyIX1936,
 				files,
 				audioFiles2);
@@ -277,7 +304,7 @@ public class FassignmentApplication implements CommandLineRunner {
 				5L,
 				demoUsername,
 				"Answer_about_Kandinsky_V_1911",
-				"Some text",
+				"Very good suggestion, thanks! Please find attached another interesting match between the attached painting and the attached music",
 				imageKandinskyVIII1923,
 				files,
 				audioFiles1);
@@ -295,7 +322,7 @@ public class FassignmentApplication implements CommandLineRunner {
 				6L,
 				demoUsername,
 				"Question_about_Kandinsky_VI_1913",
-				"Some text",
+				"Is the tone colour of the attached music file not a bit more suited than the ones initially sent? At least they fit quite well the painting attached with this question",
 				imageKandinskyVI1913,
 				files,
 				audioFiles2);
@@ -304,7 +331,7 @@ public class FassignmentApplication implements CommandLineRunner {
 				6L,
 				demoUsername,
 				"Answer_about_Kandinsky_V_1911",
-				"Some text",
+				"Very good suggestion, thanks! Please find attached another interesting match between the attached painting and the attached music",
 				imageKandinskyVIII1923,
 				files,
 				audioFiles1);
@@ -322,7 +349,7 @@ public class FassignmentApplication implements CommandLineRunner {
 				7L,
 				demoUsername,
 				"Question_about_Kandinsky_VI_1913",
-				"Some text",
+				"Is the tone colour of the attached music file not a bit more suited than the ones initially sent? At least they fit quite well the painting attached with this question",
 				imageKandinskyVI1913,
 				files,
 				audioFiles2);
@@ -331,7 +358,7 @@ public class FassignmentApplication implements CommandLineRunner {
 				7L,
 				demoUsername,
 				"Answer_about_Kandinsky_V_1911",
-				"Some text",
+				"Very good suggestion, thanks! Please find attached another interesting match between the attached painting and the attached music",
 				imageKandinskyVIII1923,
 				files,
 				audioFiles1);
