@@ -1,4 +1,3 @@
-com\novi\fassignment\models\FileInfo.class
 com\novi\fassignment\exceptions\UsernameNotFoundException.class
 com\novi\fassignment\exceptions\RecordNotFoundException.class
 com\novi\fassignment\services\QuestionService.class

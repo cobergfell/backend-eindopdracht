@@ -144,17 +144,6 @@ public class PaintingController {
                         paintingToUpdate.setUser(userFromCustomUser);
                     }
 
-//                    // check if image file is really an image
-//                    // based on https://stackoverflow.com/questions/4169713/how-to-check-a-uploaded-file-whether-it-is-an-image-or-other-file
-//                    try (InputStream input = image.getInputStream()) {
-//                        try {
-//                            ImageIO.read(input).toString();
-//                            // It's an image (only BMP, GIF, JPG and PNG are recognized).
-//                        } catch (Exception e) {
-//                            // It's not an image.
-//                        }
-//                    }
-
                     PaintingInputDto inputDto= new PaintingInputDto();
                     inputDto.paintingId=paintingId;
                     inputDto.username=username;

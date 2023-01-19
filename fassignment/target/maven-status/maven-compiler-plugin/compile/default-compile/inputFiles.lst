@@ -6,7 +6,6 @@ D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\nov
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\FassignmentApplication.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\controllers\dto\AnswerInputDto.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\controllers\dto\PaintingDto.java
-D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\models\FileInfo.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\exceptions\UsernameNotFoundException.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\models\Question.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\services\NoviMethod1FileUploadService.java
@@ -46,14 +45,12 @@ D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\nov
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\controllers\NoviMethod1FileUploadController.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\payload\LoginRequest.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\controllers\dto\QuestionDto.java
-D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\models\FormSender.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\repositories\NoviMethod1FileUploadRepository.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\services\MusicFileStorageInDataBaseService.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\repositories\QuestionRepository.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\models\ERole.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\models\NoviMethod1FileStoredOnDisk.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\messages\ResponseMessage.java
-D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\models\MailProperties.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\services\UserService.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\controllers\dto\NoviMethod1FileUploadRequestDto.java
 D:\Data\NOVI\eindopdracht\backend-eindopdracht\fassignment\src\main\java\com\novi\fassignment\exceptions\BadRequestException.java

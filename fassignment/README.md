@@ -1,7 +1,7 @@
 # Final assignment Bootcamp Full Stack Developer 2021-03 Backend
 ##‘The Visual Arts and Conservatorium blogging website’
 ###Christophe Obergfell
-####November 2022
+####January 2023
 
 ## Introduction
 This [Spring Boot](https://spring.io/projects/spring-boot) project is the backend of the web app developed as final assignment
@@ -9,57 +9,52 @@ of the Full Stack Developer bootcamp taught at the Dutch graduate educational in
 The app developed can be seen as a basic webblog application intended for students
 of conservatoria and art school to exchange ideas, images, audio and other documents.
 
+## Install the database management system PostgreSQL
+The app needs to be coupled with a relational database. Among the different available database management systems, [PostgreSQL](https://www.postgresql.org) is the one selected for this app to handle the data that need to be stored.
+PostgreSQL can be downloaded from [https://www.postgresql.org](https://www.postgresql.org/download/).
+For the installation, chose version 11 or higher, host = localhost, port number = 5432,
+and create a new database named "abc".
 
-## Installation
-There are several options to build and run Spring Boot applications while still developing the application:
-(adapted from the book: Spring in Action , Fifth Edition, by Craig Walls, ©2019 by Manning Publications Co)
-* Running the application directly in the IDE with either Spring Tool Suite or IntelliJ
-IDEA
-* Running the application from the command line using the Maven spring-boot:run
-goal or Gradle bootRun task
+## Install the database graphical administration tool pgAdmin
+Together with PostgreSQL, installing the PostgreSQL graphical administration tool [pgAdmin](https://www.pgadmin.org)
+will allow getting insight into the database for inspection of the data.  pgAdmin can be downloaded from
+[https://www.pgadmin.org](https://www.pgadmin.org/download) (choose the latest version).
+
+## Install the build automation tool Apache Maven  (while app is still in development)
+To manage the life cycle of the app (write source code, validate, compile, test, deploy), a 'build automation tool' is needed. For a Spring Boot application, two candidates are available: [Gradle](https://www.gradle.org) or
+[Apache Maven](https://maven.apache.org). For the development of this app, the second build automation tool was used,
+it can be downloaded from [https://maven.apache.org/install.html](https://maven.apache.org/install.html).
+
+## Install the IDE (while still in development)
+This application was developed using [IntelliJ](https://www.jetbrains.com/idea/) as IDE (Interactive Development Environment).
+It is recommended to use the same IDE to run the app while still in development.
+Note that alternative and free IDE's are available such as [Eclipse](https://www.eclipse.org/community/eclipse_newsletter/2018/february/springboot.php),
+[Visual Studio Code](https://code.visualstudio.com/docs/java/java-spring-boot) or [Theia](https://theia-ide.org/).
+
+It is also possible to run the app from the command line using the Maven command 'spring-boot:run
+goal' (for more details, see for example: 'Spring in Action' , Fifth Edition, by Craig Walls, ©2019 by Manning Publications Co)
+
+## Run the app
+Once all above mentioned programs are installed, the app can be run by running
+the code main class 'FassignmentApplication.java'. A demo should load automatically when running the main file, to be viewed from the frontend.
+
+## Install the app in production phase
+For information only , this is how to install the app in production phase (not tested yet)
 * Using Maven or Gradle to produce an executable JAR file that can be run at the
-command line or deployed in the cloud (for deployment on a Platform as a Service Cloud)
+  command line or deployed in the cloud (for deployment on a Platform as a Service Cloud)
 * Using Maven or Gradle to produce a WAR file that can be deployed to a traditional Java
-application server (such as Tomcat, WebSphere, WebLogic, or any other traditional Java application server
+  application server (such as Tomcat, WebSphere, WebLogic, or any other traditional Java application server
 * Using Maven or Gradle to produce a container image that can be deployed anywhere that
-containers are supported, including Kubernetes-based environments (modern cloud platforms are increasingly based on Kubernetes)
-
-The two first options are only applicable while still developing the application.
-To deploy the application for production, only the third and fourth options can be 
-considered.
+  containers are supported, including Kubernetes-based environments (modern cloud platforms are increasingly based on Kubernetes)
 
 
-### If still in development phase 
-Note: this one option is what is needed for the NOVI final assessment)
-  * Install PostgreSQL version 11 or higher, host = localhost, port number = 5432, 
-    and create a new database named "abc" with the query CREATE DATABASE 'abc';
-  * Install [Apache Maven](https://maven.apache.org/install.html)
-  * Run the application directly in the IDE
-  * Or alternatively Execute the mvn command line <em>spring-boot:run </em> which triggers the download of Apache Tomcat and initializes the startup of Tomcat
+If a JAR archive has been generated, run the app as a stand-alone JAR Packaged Application (command line or deployed in the cloud)
+*mvn clean package spring-boot:repackage* and 
+*java -jar target/fassignment-0.0.1-SNAPSHOT.jar*
+If a WAR archive has been generated,run the app as a stand-alone WAR Packaged Application
+*mvn clean package spring-boot:repackage* and *java -jar target/fassignment-0.0.1-SNAPSHOT.war*
 
-
-## Upload a first example
-* First make sure to be in the right schema with the query: set schema 'public';
-* In a text editor, edit the SQL query that is given in the resources directory
-  [insert_demo_into_database.sql](src\main\resources\insert_demo_into_database.sql)
-  by replacing 'D:\your\path' by your own path to the app
-* Run the query in PostgreSQL query tool
-
-
-#### Running the Code as a Stand-Alone JAR Packaged Application (command line or deployed in the cloud)
-Attention: this option still need to be tested
-
-Running the Application:
-[comment]: <> (* mvn clean package spring-boot:repackage)
-* java -jar target/fassignment-0.0.1-SNAPSHOT.jar
-
-#### Running the Code as a Stand-Alone WAR Packaged Application
-Attention: this option is given as indication on how it should be implemented
-but is not tested yet and the war archive is not available yet
-
-The following is based on [https://www.baeldung.com/spring-boot-run-maven-vs-executable-jar](https://www.baeldung.com/spring-boot-run-maven-vs-executable-jar)
-
-First tell Java which class to run, either by configuring the plugin:
+Attention, for generating JAR or WAR archives, first tell Java which class to run, either by configuring the plugin:
 
 ```xml
 <plugin>
@@ -81,7 +76,3 @@ or setting the start-class property:
     <start-class>com.novi.fassignment.FassignmentApplication.java</start-class>
 </properties>
 ```
-Then run the war file with these two commands:
-
-mvn clean package spring-boot:repackage
-java -jar target/fassignment-0.0.1-SNAPSHOT.war
