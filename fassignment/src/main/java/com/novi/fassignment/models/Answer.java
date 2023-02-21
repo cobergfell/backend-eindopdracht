@@ -20,14 +20,6 @@ public class Answer  {
     //@Lob
     private String content;
     private byte[] image;
-    //private String tags;
-
-//    @CreationTimestamp
-//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
-//    private ZonedDateTime dateTimePosted;
-//    @UpdateTimestamp
-//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")
-//    private ZonedDateTime lastUpdate;
 
     @CreationTimestamp
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")

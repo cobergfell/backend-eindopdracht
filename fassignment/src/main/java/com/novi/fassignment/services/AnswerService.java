@@ -13,7 +13,7 @@ public interface AnswerService {
     AnswerDto getAnswerById(Long id);
     List<AnswerDto> getAnswersByQuestionId(Long questionId);
     Answer createAnswerWithoutAttachment(Answer answer);
-    void updateAnswer(AnswerInputDto dto, Answer question);
+    void updateAnswer(AnswerInputDto dto);
     void createAnswer(AnswerInputDto dto);
     void deleteAnswerById(Long id);
     void deleteAllAnswers();

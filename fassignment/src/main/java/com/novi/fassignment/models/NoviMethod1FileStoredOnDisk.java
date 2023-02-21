@@ -28,12 +28,6 @@ public class NoviMethod1FileStoredOnDisk {
     @Column(name = "location")
     private String location;
 
-    @Column(name = "uploaded_timestamp")
-    private Date uploadedTimestamp;
-
-    @Column(name = "uploaded_by_username")
-    private String uploadedByUsername;
-
     public Long getId() {
         return id;
     }
@@ -82,19 +76,4 @@ public class NoviMethod1FileStoredOnDisk {
         this.location = location;
     }
 
-    public Date getUploadedTimestamp() {
-        return uploadedTimestamp;
-    }
-
-    public void setUploadedTimestamp(Date uploadedTimestamp) {
-        this.uploadedTimestamp = uploadedTimestamp;
-    }
-
-    public String getUploadedByUsername() {
-        return uploadedByUsername;
-    }
-
-    public void setUploadedByUsername(String uploadedByUsername) {
-        this.uploadedByUsername = uploadedByUsername;
-    }
 }

@@ -2,9 +2,9 @@ package com.novi.fassignment.controllers;
 
 import com.novi.fassignment.controllers.dto.AnswerDto;
 import com.novi.fassignment.controllers.dto.AnswerInputDto;
+import com.novi.fassignment.exceptions.RecordNotFoundException;
 import com.novi.fassignment.models.Answer;
 import com.novi.fassignment.models.User;
-import com.novi.fassignment.repositories.AnswerRepository;
 import com.novi.fassignment.services.QuestionServiceImpl;
 import com.novi.fassignment.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Optional;
 import static com.novi.fassignment.utils.Parsers.myLocalDateTimeParserTypeYearMonthDayHourMinSec;
 
 
@@ -30,9 +29,6 @@ public class AnswerController {
 
     @Autowired
     QuestionServiceImpl questionService;
-
-    @Autowired
-    AnswerRepository answerRepository;
 
     @Autowired
     UserService userService;
@@ -86,8 +82,10 @@ public class AnswerController {
             @RequestParam(value="files",required=false) MultipartFile[] files,
             @RequestParam(value="musicFiles",required=false) MultipartFile[] musicFiles) {
 
+
+        if (content.equals("")){
+            return new ResponseEntity<>("Error: request was incomplete, answer content should be filled in, please go back to painting page",HttpStatus.BAD_REQUEST); }
         try {
-            if (content.equals("")){return new ResponseEntity<>("Error: request was incomplete, answer content should be filled in, please go back to painting page",HttpStatus.BAD_REQUEST); }
             LocalDateTime dateTimePosted = LocalDateTime.now(ZoneId.of("GMT+00:01"));
             AnswerInputDto inputDto= new AnswerInputDto();
             inputDto.idRelatedItem = questionId;
@@ -113,60 +111,38 @@ public class AnswerController {
 
     @PutMapping("answers/{id}")
     public ResponseEntity<Object> updateAnswer(@PathVariable("id") Long answerId,
-                                                          @RequestParam(value="username",required=false) String username,
-                                                          @RequestParam(value="dateTimePosted",required=false) String dateTimePosted,
-                                                          @RequestParam(value="title",required=false)  String title,
-                                                          @RequestParam(value="content",required=false)  String content,
-                                                          @RequestParam("idRelatedItem")  Long questionId,
-                                                          @RequestParam(value="image",required=false)  MultipartFile image,
-                                                          @RequestParam(value="files",required=false) MultipartFile[] files,
-                                                          @RequestParam(value="musicFiles",required=false) MultipartFile[] musicFiles) {
-        String message_painting = "";
-        Optional<Answer> currentAnswer = answerRepository.findById(answerId);
+                                               @RequestParam(value="username",required=false) String username,
+                                               @RequestParam(value="dateTimePosted",required=false) String dateTimePosted,
+                                               @RequestParam(value="title",required=false)  String title,
+                                               @RequestParam(value="content",required=false)  String content,
+                                               @RequestParam("idRelatedItem")  Long questionId,
+                                               @RequestParam(value="image",required=false)  MultipartFile image,
+                                               @RequestParam(value="files",required=false) MultipartFile[] files,
+                                               @RequestParam(value="musicFiles",required=false) MultipartFile[] musicFiles) {
 
+        try {
+            LocalDateTime localDateTimePosted = myLocalDateTimeParserTypeYearMonthDayHourMinSec(dateTimePosted);
+            LocalDateTime lastUpdate = LocalDateTime.now(ZoneId.of("GMT+00:01"));
+            ZonedDateTime zonedLastUpdate = lastUpdate.atZone(ZoneId.of("GMT+00:01"));
 
-        if (currentAnswer.isPresent()) {
-            Answer answerToUpdate = currentAnswer.get();
-            try {
-                String message = "";
-                LocalDateTime localDateTimePosted =myLocalDateTimeParserTypeYearMonthDayHourMinSec(dateTimePosted);
-                LocalDateTime lastUpdate = LocalDateTime.now(ZoneId.of("GMT+00:01"));
-                ZonedDateTime zonedLastUpdate = lastUpdate.atZone(ZoneId.of("GMT+00:01"));
+            AnswerInputDto inputDto = new AnswerInputDto();
+            inputDto.answerId = answerId;
+            inputDto.idRelatedItem = questionId;
+            inputDto.username = username;
+            inputDto.title = title;
+            inputDto.content = content;
+            inputDto.image = image.getBytes();
+            inputDto.dateTimePosted = localDateTimePosted;
+            inputDto.lastUpdate = lastUpdate;
 
-                if (username != null){
-                    Optional<User> user = userService.getUser(username);
-                    String password = user.get().getPassword();
-                    String email = user.get().getEmail();
-                    User userFromCustomUser = new User();
-                    userFromCustomUser.setUsername(username);
-                    userFromCustomUser.setPassword(password);
-                    userFromCustomUser.setEmail(email);
-                    answerToUpdate.setUser(userFromCustomUser);
-                }
+            inputDto.files = files;
+            inputDto.musicFiles = musicFiles;
 
-                AnswerInputDto inputDto= new AnswerInputDto();
-                inputDto.answerId=answerId;
-                inputDto.username=username;
-                inputDto.idRelatedItem = questionId;
-                inputDto.title=title;
-                inputDto.content=content;
-                if (image != null){inputDto.image=image.getBytes();}
-                else{inputDto.image=null;}
-                inputDto.files=files;
-                inputDto.musicFiles=musicFiles;
+            answerService.updateAnswer(inputDto);
+            return new ResponseEntity<Object>(inputDto, HttpStatus.CREATED);
 
-                answerService.updateAnswer(inputDto, answerToUpdate);
-
-                return new ResponseEntity<Object>(inputDto, HttpStatus.CREATED);
-
-
-            } catch (Exception exception) {
-                return new ResponseEntity<Object>("Answer could not be submitted/uploaded!",HttpStatus.BAD_REQUEST);
-            }
-
-
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception exception) {
+            return new ResponseEntity<Object>("Answer could not be submitted/uploaded!", HttpStatus.BAD_REQUEST);
         }
     }
 

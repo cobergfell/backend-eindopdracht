@@ -4,7 +4,7 @@ import com.novi.fassignment.controllers.dto.*;
 import com.novi.fassignment.exceptions.RecordNotFoundException;
 import com.novi.fassignment.models.*;
 import com.novi.fassignment.repositories.AnswerRepository;
-import com.novi.fassignment.repositories.PaintingRepository;
+import com.novi.fassignment.repositories.UserRepository;
 import com.novi.fassignment.repositories.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -23,7 +23,7 @@ public class AnswerServiceImpl implements AnswerService {
     private QuestionRepository questionRepository;
 
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @Autowired
     private QuestionServiceImpl questionService;
@@ -191,97 +191,105 @@ public class AnswerServiceImpl implements AnswerService {
 
 
 
-}
+    }
 
     @Override
-    public void updateAnswer(AnswerInputDto dto, Answer answer) {
+    public void updateAnswer(AnswerInputDto dto) {
 
-        Optional<User> optionalUser = userService.getUser(dto.username);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            String password = user.getPassword();
-            String email = user.getEmail();
-            User userFromCustomUser = new User();
-            userFromCustomUser.setUsername(dto.username);
-            userFromCustomUser.setPassword(password);
-            userFromCustomUser.setEmail(email);
-            answer.setUser(userFromCustomUser);
-            answer.setTitle(dto.title);
-            // answer.setDatePosted(datePosted.toString());
-            answer.setContent(dto.content);
-            answer.setImage(dto.image);
-            //answer.setId(dto.id);
+        Optional<Answer> currentAnswer = answerRepository.findById(dto.answerId);
 
-            answerRepository.save(answer);
+        if (currentAnswer.isPresent()) {
+            Answer answer = currentAnswer.get();
+            Optional<User> optionalUser = userService.getUser(dto.username);
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                String password = user.getPassword();
+                String email = user.getEmail();
+                User userFromCustomUser = new User();
+                userFromCustomUser.setUsername(dto.username);
+                userFromCustomUser.setPassword(password);
+                userFromCustomUser.setEmail(email);
+                answer.setUser(userFromCustomUser);
+                answer.setTitle(dto.title);
+                // answer.setDatePosted(datePosted.toString());
+                answer.setContent(dto.content);
+                answer.setImage(dto.image);
+                //answer.setId(dto.id);
 
-            if(dto.files!=null){
-                List<String> fileNames = new ArrayList<>();
-                Arrays.asList(dto.files).stream().forEach(file -> {
-                    String message = "";
-                    try {
-                        //storageService.store(file);
-                        //storageService.storeAnswerFile(file, answer);
-                        FileStoredInDataBaseInputDto fileStoredInDataBaseInputDto = new FileStoredInDataBaseInputDto();
-                        fileStoredInDataBaseInputDto.setFile(file);
-                        fileStoredInDataBaseInputDto.setAnswer(answer);
-                        FileStoredInDataBase fileStoredInDataBase=storageService.storeAttachedFile(fileStoredInDataBaseInputDto);
+                answerRepository.save(answer);
+
+                if(dto.files!=null){
+                    List<String> fileNames = new ArrayList<>();
+                    Arrays.asList(dto.files).stream().forEach(file -> {
+                        String message = "";
+                        try {
+                            //storageService.store(file);
+                            //storageService.storeAnswerFile(file, answer);
+                            FileStoredInDataBaseInputDto fileStoredInDataBaseInputDto = new FileStoredInDataBaseInputDto();
+                            fileStoredInDataBaseInputDto.setFile(file);
+                            fileStoredInDataBaseInputDto.setAnswer(answer);
+                            FileStoredInDataBase fileStoredInDataBase=storageService.storeAttachedFile(fileStoredInDataBaseInputDto);
 
 
 
-                        fileNames.add(file.getOriginalFilename());
-                        message = "Uploaded the files successfully: " + fileNames;
-                    } catch (Exception e) {
-                        message = "Fail to upload files!";
+                            fileNames.add(file.getOriginalFilename());
+                            message = "Uploaded the files successfully: " + fileNames;
+                        } catch (Exception e) {
+                            message = "Fail to upload files!";
+                        }
+                    });
+
+                    Set<FileStoredInDataBase> attachedFiles = new HashSet<>();
+                    List<FileStoredInDataBase> sortedFiles = storageService.getAllFilesByDescId();
+                    //FileStoredInDataBase[] sortedFilesArray= (FileStoredInDataBase[]) sortedAnswers.toArray();//cast array of objects into array of answers
+                    for (int i = 0; i < fileNames.size(); i++) {
+                        FileStoredInDataBase mostRecentFile = sortedFiles.get(i);
+                        attachedFiles.add(mostRecentFile);
                     }
-                });
+                    answer.setFiles(attachedFiles);
 
-                Set<FileStoredInDataBase> attachedFiles = new HashSet<>();
-                List<FileStoredInDataBase> sortedFiles = storageService.getAllFilesByDescId();
-                //FileStoredInDataBase[] sortedFilesArray= (FileStoredInDataBase[]) sortedAnswers.toArray();//cast array of objects into array of answers
-                for (int i = 0; i < fileNames.size(); i++) {
-                    FileStoredInDataBase mostRecentFile = sortedFiles.get(i);
-                    attachedFiles.add(mostRecentFile);
                 }
-                answer.setFiles(attachedFiles);
-
-            }
 
 
-            if(dto.musicFiles!=null){
-                List<String> fileNames = new ArrayList<>();
-                Arrays.asList(dto.musicFiles).stream().forEach(file -> {
-                    String message = "";
-                    try {
-                        //storageService.store(file);
-                        //storageService.storeAnswerFile(file, answer);
-                        MusicFileStoredInDataBaseInputDto fileStoredInDataBaseInputDto = new MusicFileStoredInDataBaseInputDto();
-                        fileStoredInDataBaseInputDto.setFile(file);
-                        fileStoredInDataBaseInputDto.setAnswer(answer);
-                        MusicFileStoredInDataBase fileStoredInDataBase=musicStorageService.storeAttachedFile(fileStoredInDataBaseInputDto);
+                if(dto.musicFiles!=null){
+                    List<String> fileNames = new ArrayList<>();
+                    Arrays.asList(dto.musicFiles).stream().forEach(file -> {
+                        String message = "";
+                        try {
+                            //storageService.store(file);
+                            //storageService.storeAnswerFile(file, answer);
+                            MusicFileStoredInDataBaseInputDto fileStoredInDataBaseInputDto = new MusicFileStoredInDataBaseInputDto();
+                            fileStoredInDataBaseInputDto.setFile(file);
+                            fileStoredInDataBaseInputDto.setAnswer(answer);
+                            MusicFileStoredInDataBase fileStoredInDataBase=musicStorageService.storeAttachedFile(fileStoredInDataBaseInputDto);
 
 
 
-                        fileNames.add(file.getOriginalFilename());
-                        message = "Uploaded the files successfully: " + fileNames;
-                    } catch (Exception e) {
-                        message = "Fail to upload files!";
+                            fileNames.add(file.getOriginalFilename());
+                            message = "Uploaded the files successfully: " + fileNames;
+                        } catch (Exception e) {
+                            message = "Fail to upload files!";
+                        }
+                    });
+
+                    Set<MusicFileStoredInDataBase> attachedFiles = new HashSet<>();
+                    List<MusicFileStoredInDataBase> sortedFiles = musicStorageService.getAllFilesByDescId();
+                    //FileStoredInDataBase[] sortedFilesArray= (FileStoredInDataBase[]) sortedAnswers.toArray();//cast array of objects into array of answers
+                    for (int i = 0; i < fileNames.size(); i++) {
+                        MusicFileStoredInDataBase mostRecentFile = sortedFiles.get(i);
+                        attachedFiles.add(mostRecentFile);
                     }
-                });
+                    answer.setMusicFiles(attachedFiles);
 
-                Set<MusicFileStoredInDataBase> attachedFiles = new HashSet<>();
-                List<MusicFileStoredInDataBase> sortedFiles = musicStorageService.getAllFilesByDescId();
-                //FileStoredInDataBase[] sortedFilesArray= (FileStoredInDataBase[]) sortedAnswers.toArray();//cast array of objects into array of answers
-                for (int i = 0; i < fileNames.size(); i++) {
-                    MusicFileStoredInDataBase mostRecentFile = sortedFiles.get(i);
-                    attachedFiles.add(mostRecentFile);
                 }
-                answer.setMusicFiles(attachedFiles);
 
+            } else {
+                throw new RecordNotFoundException("User id does not exist");
             }
-
         } else {
-            throw new RecordNotFoundException("User id does not exist");
+            throw new RecordNotFoundException("Answer does not exist");
         }
+
     }
 
     @Override

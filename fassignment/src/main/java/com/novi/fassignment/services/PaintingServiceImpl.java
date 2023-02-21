@@ -136,13 +136,7 @@ public class PaintingServiceImpl implements PaintingService {
 
             if (dto.files!=null){
                 Arrays.asList(dto.files).stream().forEach(theFile -> multipartFiles.add(theFile));
-                //MultipartFile extra=multipartFiles.get(multipartFiles.size()-1);
-                //multipartFiles.add(extra);//this is a trick because of a bug part 1: you have to repeat the last element and remove it later in order to have setPainting work, I still don't get why
-                // solution of the bug was:    in FileStorageInDataBaseServiceImpl.java, public FileStoredInDataBase storeAttachedFile I returnred return fileStoredInDataBase;
-                // instead of  return fileStorageInDataBaseRepository.save(fileStoredInDataBase);
 
-
-                //Arrays.asList(dto.files).stream().forEach(file -> {
                 multipartFiles.stream().forEach(file -> {
                             String message3 = "";
                             try {
@@ -150,11 +144,7 @@ public class PaintingServiceImpl implements PaintingService {
                                 fileStoredInDataBaseInputDto.setFile(file);
                                 fileStoredInDataBaseInputDto.setPainting(paintingToBuildUp);// when is the database commit triggered following a setPainting command?
                                 FileStoredInDataBase fileStoredInDataBase = storageService.storeAttachedFile(fileStoredInDataBaseInputDto);
-                                //long fileId=fileStoredInDataBase.getFileId();
-                                //if (fileId==multipartFiles.size()){storageService.deleteFileStoredInDataBaseById(fileId);}// trick part 2: remove extra file
-                                // it took me hours ti find out that this trick to add the last file of the list and remove it
-                                // later is the way to associate the last multipart file to the painting
-                                // I do not now why it does not work without this trick, think about it later and fix it
+
 
                                 attachedFiles.add(fileStoredInDataBase);
                                 message3 = "Files successfully added to painting object: " + fileNames;
@@ -196,92 +186,102 @@ public class PaintingServiceImpl implements PaintingService {
 
 
     @Override
-    public void updatePainting(PaintingInputDto dto, Painting painting) {
-        //System.out.print("dto"+dto);
-        Painting updatedPainting= new Painting();
-        //Optional<User> user = userService.getUser(dto.username);
-        Optional<User> optionalUser = userService.getUser(dto.username);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            String password = user.getPassword();
-            String email = user.getEmail();
-            User userFromCustomUser = new User();
-            userFromCustomUser.setUsername(dto.username);
-            userFromCustomUser.setPassword(password);
-            userFromCustomUser.setEmail(email);
-            updatedPainting.setUser(userFromCustomUser);
-            updatedPainting.setPaintingId(dto.paintingId);
-            updatedPainting.setTitle(dto.title);
-            updatedPainting.setArtist(dto.artist);
-            updatedPainting.setDescription(dto.description);
-            updatedPainting.setImage(dto.image);
-            updatedPainting.setDateTimePosted(dto.dateTimePosted);
-            updatedPainting.setLastUpdate(dto.dateTimePosted);
-            updatedPainting.setAnswers(dto.answers);
-            updatedPainting.setQuestions(dto.questions);
+    public void updatePainting(PaintingInputDto dto) {
 
-            paintingRepository.save(updatedPainting);
+        Optional<Painting> currentPainting = paintingRepository.findById(dto.paintingId);
+
+        if (currentPainting.isPresent()) {
+            Painting painting = currentPainting.get();
+            Optional<User> optionalUser = userService.getUser(dto.username);
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                String password = user.getPassword();
+                String email = user.getEmail();
+                User userFromCustomUser = new User();
+                userFromCustomUser.setUsername(dto.username);
+                userFromCustomUser.setPassword(password);
+                userFromCustomUser.setEmail(email);
+                painting.setUser(userFromCustomUser);
+                painting.setPaintingId(dto.paintingId);
+                painting.setTitle(dto.title);
+                painting.setArtist(dto.artist);
+                painting.setDescription(dto.description);
+                painting.setImage(dto.image);
+                painting.setDateTimePosted(dto.dateTimePosted);
+                painting.setLastUpdate(dto.dateTimePosted);
+                painting.setAnswers(dto.answers);
+                painting.setQuestions(dto.questions);
+
+                paintingRepository.save(painting);
+
+                if (dto.files != null) {
+                    List<String> fileNames = new ArrayList<>();
+                    Arrays.asList(dto.files).stream().forEach(file -> {
+                        String message = "";
+                        try {
+                            //storageService.store(file);
+                            //storageService.storePaintingFile(file, painting);
+                            FileStoredInDataBaseInputDto fileStoredInDataBaseInputDto = new FileStoredInDataBaseInputDto();
+                            fileStoredInDataBaseInputDto.setFile(file);
+                            fileStoredInDataBaseInputDto.setPainting(painting);
+                            FileStoredInDataBase fileStoredInDataBase = storageService.storeAttachedFile(fileStoredInDataBaseInputDto);
 
 
-            List<String> fileNames = new ArrayList<>();
-            if (dto.files!=null){
-                Arrays.asList(dto.files).stream().forEach(file -> {
-                    String message = "";
-                    try {
-                        FileStoredInDataBaseInputDto fileStoredInDataBaseInputDto = new FileStoredInDataBaseInputDto();
-                        fileStoredInDataBaseInputDto.setFile(file);
-                        fileStoredInDataBaseInputDto.setPainting(updatedPainting);
-                        FileStoredInDataBase fileStoredInDataBase=storageService.storeAttachedFile(fileStoredInDataBaseInputDto);
+                            fileNames.add(file.getOriginalFilename());
+                            message = "Uploaded the files successfully: " + fileNames;
+                        } catch (Exception e) {
+                            message = "Fail to upload files!";
+                        }
+                    });
 
-                        fileNames.add(file.getOriginalFilename());
-                        message = "Uploaded the files successfully: " + fileNames;
-                    } catch (Exception e) {
-                        message = "Fail to upload files!";
+                    Set<FileStoredInDataBase> attachedFiles = new HashSet<>();
+                    List<FileStoredInDataBase> sortedFiles = storageService.getAllFilesByDescId();
+                    //FileStoredInDataBase[] sortedFilesArray= (FileStoredInDataBase[]) sortedPaintings.toArray();//cast array of objects into array of paintings
+                    for (int i = 0; i < fileNames.size(); i++) {
+                        FileStoredInDataBase mostRecentFile = sortedFiles.get(i);
+                        attachedFiles.add(mostRecentFile);
                     }
-                });
+                    painting.setFiles(attachedFiles);
 
-                Set<FileStoredInDataBase> attachedFiles = painting.getFiles();//new HashSet<>();
-                List<FileStoredInDataBase> sortedFiles = storageService.getAllFilesByDescId();
-                for (int i = 0; i < fileNames.size(); i++) {
-                    FileStoredInDataBase mostRecentFile = sortedFiles.get(i);
-                    attachedFiles.add(mostRecentFile);
                 }
 
-                painting.setFiles(attachedFiles);
 
-            }
+                if (dto.audioFiles != null) {
+                    List<String> fileNames = new ArrayList<>();
+                    Arrays.asList(dto.audioFiles).stream().forEach(file -> {
+                        String message = "";
+                        try {
+                            //storageService.store(file);
+                            //storageService.storePaintingFile(file, painting);
+                            MusicFileStoredInDataBaseInputDto fileStoredInDataBaseInputDto = new MusicFileStoredInDataBaseInputDto();
+                            fileStoredInDataBaseInputDto.setFile(file);
+                            fileStoredInDataBaseInputDto.setPainting(painting);
+                            MusicFileStoredInDataBase fileStoredInDataBase = musicStorageService.storeAttachedFile(fileStoredInDataBaseInputDto);
 
-            if (dto.audioFiles!=null ){
-                List<String> musicFileNames = new ArrayList<>();
-                Arrays.asList(dto.audioFiles).stream().forEach(file -> {
-                    String message = "";
-                    try {
-                        MusicFileStoredInDataBaseInputDto musicFileStoredInDataBaseInputDto = new MusicFileStoredInDataBaseInputDto();
-                        musicFileStoredInDataBaseInputDto.setFile(file);
-                        musicFileStoredInDataBaseInputDto.setPainting(updatedPainting);
-                        MusicFileStoredInDataBase musicFileStoredInDataBase = musicStorageService.storeAttachedFile(musicFileStoredInDataBaseInputDto);
 
-                        musicFileNames.add(file.getOriginalFilename());
-                        message = "Uploaded the files successfully: " + musicFileNames;
-                    } catch (Exception e) {
-                        message = "Fail to upload files!";
+                            fileNames.add(file.getOriginalFilename());
+                            message = "Uploaded the files successfully: " + fileNames;
+                        } catch (Exception e) {
+                            message = "Fail to upload files!";
+                        }
+                    });
+
+                    Set<MusicFileStoredInDataBase> attachedFiles = new HashSet<>();
+                    List<MusicFileStoredInDataBase> sortedFiles = musicStorageService.getAllFilesByDescId();
+                    //FileStoredInDataBase[] sortedFilesArray= (FileStoredInDataBase[]) sortedPaintings.toArray();//cast array of objects into array of answers
+                    for (int i = 0; i < fileNames.size(); i++) {
+                        MusicFileStoredInDataBase mostRecentFile = sortedFiles.get(i);
+                        attachedFiles.add(mostRecentFile);
                     }
-                });
-                Set<MusicFileStoredInDataBase> attachedMusicFiles = painting.getMusicFiles();//new HashSet<>();
-                List<MusicFileStoredInDataBase> sortedMusicFiles = musicStorageService.getAllFilesByDescId();
-                for (int i = 0; i < musicFileNames.size(); i++) {
-                    MusicFileStoredInDataBase mostRecentFile = sortedMusicFiles.get(i);
-                    attachedMusicFiles.add(mostRecentFile);
+                    painting.setMusicFiles(attachedFiles);
+
                 }
-                painting.setMusicFiles(attachedMusicFiles);
 
+            } else {
+                throw new RecordNotFoundException("User id does not exist");
             }
-            else{
-                painting.setMusicFiles(null);
-            }
-
         } else {
-            throw new RecordNotFoundException("User id does not exist");
+            throw new RecordNotFoundException("Painting does not exist");
         }
 
     }

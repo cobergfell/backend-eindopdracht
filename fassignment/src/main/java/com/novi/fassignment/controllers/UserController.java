@@ -59,8 +59,7 @@ public class UserController {
 
 
     @PostMapping(value = "signup")
-    public ResponseEntity<Object> signup(@RequestBody User user) {
-
+    public ResponseEntity<Object> signup(@RequestBody @Valid User user) {
 
         try {
             String newUsername = userService.createUser(user);
@@ -101,6 +100,7 @@ public class UserController {
 
     @PostMapping("signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+
 
         try {
             String username = loginRequest.getUsername();

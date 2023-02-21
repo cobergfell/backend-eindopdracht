@@ -18,7 +18,7 @@ public interface PaintingService {
     List<PaintingDto> getAllPaintingsByAscId();
     PaintingDto getPaintingById(Long id);
     Painting createPaintingWithoutAttachment(Painting painting);
-    void updatePainting(PaintingInputDto dto, Painting painting);
+    void updatePainting(PaintingInputDto dto);
     void createPainting(PaintingInputDto dto);
     void deletePaintingById(Long id);
     void deleteAllPaintings();

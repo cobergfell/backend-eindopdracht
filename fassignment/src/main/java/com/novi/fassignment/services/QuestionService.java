@@ -11,7 +11,7 @@ public interface QuestionService {
     QuestionDto getQuestionById(Long id);
     List<QuestionDto> getQuestionsByPaintingId(Long paintingId);
     Question createQuestionWithoutAttachment(Question question);
-    void updateQuestion(QuestionInputDto dto, Question question);
+    void updateQuestion(QuestionInputDto dto);
     void createQuestion(QuestionInputDto dto);
     void deleteQuestionById(Long id);
     void deleteAllQuestions();

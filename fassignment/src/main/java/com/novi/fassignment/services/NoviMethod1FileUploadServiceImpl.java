@@ -134,37 +134,6 @@ public class NoviMethod1FileUploadServiceImpl implements NoviMethod1FileUploadSe
         }
     }
 
-    //This are alternative method to store (to compare with above method) and to retrieve files
-    // https://dev.to/nilmadhabmondal/let-s-develop-file-upload-service-from-scratch-using-java-and-spring-boot-3mf1
-
-//    public String store(MultipartFile file) {
-//        try {
-//            if (file.isEmpty()) {
-//                throw new StorageException("Failed to store empty file.");
-//            }
-//
-//            String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-//            String uploadedFileName = UUID.randomUUID().toString() + "." + extension;
-//
-//            Path destinationFile = root.resolve(
-//                    Paths.get(uploadedFileName))
-//                    .normalize().toAbsolutePath();
-//
-//            try (InputStream inputStream = file.getInputStream()) {
-//                Files.copy(inputStream, destinationFile,
-//                        StandardCopyOption.REPLACE_EXISTING);
-//
-//                final String baseUrl =
-//                        ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-//
-//                return baseUrl+"/fileUpload/files/"+uploadedFileName;
-//                //return "bla";
-//            }
-//        }
-//        catch (IOException e) {
-//            throw new StorageException("Failed to store file.", e);
-//        }
-//    }
 
 
     @Override

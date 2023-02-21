@@ -2,11 +2,6 @@ package com.novi.fassignment.controllers;
 
 import com.novi.fassignment.controllers.dto.PaintingDto;
 import com.novi.fassignment.controllers.dto.PaintingInputDto;
-import com.novi.fassignment.exceptions.BadRequestException;
-import com.novi.fassignment.models.FileStoredInDataBase;
-import com.novi.fassignment.models.Painting;
-import com.novi.fassignment.models.User;
-import com.novi.fassignment.repositories.PaintingRepository;
 import com.novi.fassignment.services.FileStorageInDataBaseServiceImpl;
 import com.novi.fassignment.services.PaintingServiceImpl;
 import com.novi.fassignment.services.UserService;
@@ -16,9 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.imageio.ImageIO;
-import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -37,8 +29,6 @@ public class PaintingController {
     @Autowired
     private PaintingServiceImpl paintingService;
 
-    @Autowired
-    private PaintingRepository paintingRepository;
 
     @Autowired
     UserService userService;
@@ -55,7 +45,6 @@ public class PaintingController {
     @GetMapping("paintings/{id}")
     public ResponseEntity<PaintingDto> getPainting(@PathVariable("id") Long paintingId)
     {    PaintingDto paintingDto = paintingService.getPaintingById(paintingId);
-        //return ResponseEntity.ok(paintingDto);
         return new ResponseEntity<PaintingDto>(paintingDto, HttpStatus.OK);
     }
 
@@ -69,7 +58,7 @@ public class PaintingController {
 
 
     @PostMapping("paintings")
-    public ResponseEntity<Object> sendPainting(
+    public ResponseEntity<Object> initiateDiscussionAboutOnePainting(
             @RequestParam(value="username",required=false) String username,
             @RequestParam(value="title",required=false)  String title,
             @RequestParam(value="artist",required=false) String artist,
@@ -96,7 +85,6 @@ public class PaintingController {
 
             paintingService.createPainting(inputDto);
             message = "Painting submitted!";
-            //return ResponseEntity.status(HttpStatus.CREATED).build();
             return new ResponseEntity<Object>(inputDto, HttpStatus.CREATED);
 
         } catch (Exception exception) {
@@ -114,70 +102,37 @@ public class PaintingController {
                                                           @RequestParam(value="artist",required=false) String artist,
                                                           @RequestParam(value="description",required=false)  String description,
                                                           @RequestParam(value="image",required=false)  MultipartFile image,
-                                                          @RequestParam(value="files",required=false) MultipartFile[] multipartFiles,
+                                                          @RequestParam(value="files",required=false) MultipartFile[] files,
                                                           @RequestParam(value="audioFiles",required=false) MultipartFile[] audioFiles) {
         Boolean test = description.length()>1;
-        //if (description.equals("")){throw new BadRequestException("Description is empty"); }
         if (description.equals("")){return new ResponseEntity<>("Error: request was incomplete, description should be filled in",HttpStatus.BAD_REQUEST); }
 
 
-        Optional<Painting> currentPainting = paintingRepository.findById(paintingId);
+        try {
+            LocalDateTime localDateTimePosted = myLocalDateTimeParserTypeYearMonthDayHourMinSec(dateTimePosted);
+            LocalDateTime lastUpdate = LocalDateTime.now(ZoneId.of("GMT+00:01"));
+            ZonedDateTime zonedLastUpdate = lastUpdate.atZone(ZoneId.of("GMT+00:01"));
 
-        if (currentPainting.isPresent()) {
-            Painting paintingToUpdate = currentPainting.get();
+            PaintingInputDto inputDto = new PaintingInputDto();
+            inputDto.paintingId = paintingId;
+            inputDto.username = username;
+            inputDto.title = title;
+            inputDto.description = description;
+            inputDto.image = image.getBytes();
+            inputDto.dateTimePosted = localDateTimePosted;
+            inputDto.lastUpdate = lastUpdate;
 
-            try {
-                try {
+            inputDto.files = files;
+            inputDto.audioFiles = audioFiles;
 
-                    LocalDateTime localDateTimePosted =myLocalDateTimeParserTypeYearMonthDayHourMinSec(dateTimePosted);
-                    LocalDateTime lastUpdate = LocalDateTime.now(ZoneId.of("GMT+00:01"));
-                    ZonedDateTime zonedLastUpdate = lastUpdate.atZone(ZoneId.of("GMT+00:01"));
+            paintingService.updatePainting(inputDto);
+            return new ResponseEntity<Object>(inputDto, HttpStatus.CREATED);
 
-                    if (username != null){
-                        Optional<User> user = userService.getUser(username);
-                        String password = user.get().getPassword();
-                        String email = user.get().getEmail();
-                        User userFromCustomUser = new User();
-                        userFromCustomUser.setUsername(username);
-                        userFromCustomUser.setPassword(password);
-                        userFromCustomUser.setEmail(email);
-                        paintingToUpdate.setUser(userFromCustomUser);
-                    }
-
-                    PaintingInputDto inputDto= new PaintingInputDto();
-                    inputDto.paintingId=paintingId;
-                    inputDto.username=username;
-                    inputDto.dateTimePosted=localDateTimePosted;
-                    inputDto.lastUpdate=lastUpdate;
-                    inputDto.title=title;
-                    inputDto.artist=artist;
-                    inputDto.description=description;
-                    if (image != null){inputDto.image=image.getBytes();}
-                    else{inputDto.image=paintingToUpdate.getImage();}
-                    if (multipartFiles != null){inputDto.files=multipartFiles;}
-                    else{inputDto.files=null;}
-                    if (audioFiles != null){inputDto.audioFiles=audioFiles;}
-                    else{inputDto.audioFiles=null;}
-                    inputDto.questions=paintingToUpdate.getQuestions();
-                    inputDto.answers=paintingToUpdate.getAnswers();
-
-                    paintingService.updatePainting(inputDto, paintingToUpdate);
-
-                    return new ResponseEntity<Object>(inputDto, HttpStatus.CREATED);
-
-                } catch (Exception exception) {
-                    return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
-                }
-
-
-            } catch (Exception exception) {
-                return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
-            }
-
-
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception exception) {
+            return new ResponseEntity<Object>("Answer could not be submitted/uploaded!", HttpStatus.BAD_REQUEST);
         }
+
+
     }
 
 
@@ -200,7 +155,6 @@ public class PaintingController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
 }

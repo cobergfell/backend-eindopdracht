@@ -1,5 +1,6 @@
 package com.novi.fassignment.models;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.CreationTimestamp;
@@ -16,9 +17,17 @@ public class User {
 
     @Id
     @NotNull
+    @NotEmpty
     @Column(nullable = false, unique = true)
     private String username;
 
+    @NotNull
+    @NotEmpty
+    @Column
+    private String email;
+
+    @NotNull
+    @NotEmpty
     @Column(nullable = false, length = 255)
     private String password;
 
@@ -28,8 +37,7 @@ public class User {
     @Column
     private String apikey;
 
-    @Column
-    private String email;
+
 
     @CreationTimestamp
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+00:00")

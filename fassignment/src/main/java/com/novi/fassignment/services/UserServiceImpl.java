@@ -3,10 +3,7 @@ package com.novi.fassignment.services;
 import com.novi.fassignment.controllers.dto.AnswerDto;
 import com.novi.fassignment.controllers.dto.PaintingDto;
 import com.novi.fassignment.controllers.dto.QuestionDto;
-import com.novi.fassignment.exceptions.EmailAlreadyExistException;
-import com.novi.fassignment.exceptions.RecordNotFoundException;
-import com.novi.fassignment.exceptions.UserAlreadyExistException;
-import com.novi.fassignment.exceptions.UsernameNotFoundException;
+import com.novi.fassignment.exceptions.*;
 import com.novi.fassignment.models.Answer;
 import com.novi.fassignment.models.Authority;
 import com.novi.fassignment.models.FileStoredInDataBase;
@@ -14,6 +11,8 @@ import com.novi.fassignment.models.User;
 import com.novi.fassignment.repositories.UserRepository;
 import com.novi.fassignment.utils.RandomStringGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,6 +57,21 @@ public class UserServiceImpl implements com.novi.fassignment.services.UserServic
 
     @Override
     public String createUser(User user) {
+
+
+        if(user.getUsername().equals("")) {
+            throw new UsernameNotValidException(user.getUsername());
+        }
+
+        if(user.getEmail().equals("")) {
+            throw new EmailNotValidException(user.getEmail());
+        }
+
+        if(user.getPassword().equals("")) {
+            throw new PasswordNotValidException(user.getPassword());
+        }
+
+
         if(userRepository.existsById(user.getUsername())) {
             throw new UserAlreadyExistException(user.getUsername());
           }

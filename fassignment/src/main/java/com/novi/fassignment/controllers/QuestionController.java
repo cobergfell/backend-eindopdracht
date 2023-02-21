@@ -1,6 +1,7 @@
 package com.novi.fassignment.controllers;
 
 import com.novi.fassignment.controllers.dto.*;
+import com.novi.fassignment.exceptions.RecordNotFoundException;
 import com.novi.fassignment.models.*;
 import com.novi.fassignment.repositories.QuestionRepository;
 import com.novi.fassignment.services.*;
@@ -27,8 +28,6 @@ public class QuestionController {
     @Autowired
     private QuestionServiceImpl questionService;
 
-    @Autowired
-    private QuestionRepository questionRepository;
 
     @Autowired
     UserService userService;
@@ -104,56 +103,30 @@ public class QuestionController {
                                                           @RequestParam(value="image",required=false)  MultipartFile image,
                                                           @RequestParam(value="files",required=false) MultipartFile[] files,
                                                           @RequestParam(value="musicFiles",required=false) MultipartFile[] musicFiles) {
-        Optional<Question> currentQuestion = questionRepository.findById(questionId);
+        //
+        try {
+            LocalDateTime localDateTimePosted = myLocalDateTimeParserTypeYearMonthDayHourMinSec(dateTimePosted);
+            LocalDateTime lastUpdate = LocalDateTime.now(ZoneId.of("GMT+00:01"));
+            ZonedDateTime zonedLastUpdate = lastUpdate.atZone(ZoneId.of("GMT+00:01"));
 
-        if (currentQuestion.isPresent()) {
-            Question questionToUpdate = currentQuestion.get();
-            try {
-                String message = "";
-                try {
-                    LocalDateTime localDateTimePosted =myLocalDateTimeParserTypeYearMonthDayHourMinSec(dateTimePosted);
-                    LocalDateTime lastUpdate = LocalDateTime.now(ZoneId.of("GMT+00:01"));
-                    //ZonedDateTime zonedLastUpdate = lastUpdate.atZone(ZoneId.of("GMT+00:01"));
+            QuestionInputDto inputDto= new QuestionInputDto();
+            inputDto.questionId=questionId;
+            inputDto.username = username;
+            inputDto.title = title;
+            inputDto.content = content;
+            inputDto.image = image.getBytes();
+            inputDto.dateTimePosted = localDateTimePosted;
+            inputDto.lastUpdate = lastUpdate;
+            inputDto.files = files;
+            inputDto.musicFiles = musicFiles;
 
-                    if (username != null){
-                        Optional<User> user = userService.getUser(username);
-                        String password = user.get().getPassword();
-                        String email = user.get().getEmail();
-                        User userFromCustomUser = new User();
-                        userFromCustomUser.setUsername(username);
-                        userFromCustomUser.setPassword(password);
-                        userFromCustomUser.setEmail(email);
-                        questionToUpdate.setUser(userFromCustomUser);
-                    }
+            questionService.updateQuestion(inputDto);
+            return new ResponseEntity<Object>(inputDto, HttpStatus.CREATED);
 
-                    QuestionInputDto inputDto= new QuestionInputDto();
-                    inputDto.questionId=questionId;
-                    inputDto.username=username;
-                    inputDto.dateTimePosted=localDateTimePosted;
-                    inputDto.lastUpdate=lastUpdate;
-                    inputDto.title=title;
-                    inputDto.content=content;
-                    inputDto.image=image.getBytes();
-                    inputDto.files=files;
-                    inputDto.musicFiles=musicFiles;
-
-
-                    questionService.updateQuestion(inputDto, questionToUpdate);
-                    return new ResponseEntity<Object>(inputDto, HttpStatus.CREATED);
-
-                } catch (Exception exception) {
-                    return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
-                }
-
-
-            } catch (Exception exception) {
-                return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
-            }
-
-
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception exception) {
+            return new ResponseEntity<Object>("Answer could not be submitted/uploaded!", HttpStatus.BAD_REQUEST);
         }
+
     }
 
     @DeleteMapping("questions/{id}")
