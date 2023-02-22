@@ -104,7 +104,7 @@ public class PaintingController {
                                                           @RequestParam(value="image",required=false)  MultipartFile image,
                                                           @RequestParam(value="files",required=false) MultipartFile[] files,
                                                           @RequestParam(value="audioFiles",required=false) MultipartFile[] audioFiles) {
-        Boolean test = description.length()>1;
+
         if (description.equals("")){return new ResponseEntity<>("Error: request was incomplete, description should be filled in",HttpStatus.BAD_REQUEST); }
 
 
@@ -117,8 +117,10 @@ public class PaintingController {
             inputDto.paintingId = paintingId;
             inputDto.username = username;
             inputDto.title = title;
+            inputDto.artist = artist;
             inputDto.description = description;
-            inputDto.image = image.getBytes();
+            if (image != null){inputDto.image=image.getBytes();}
+            else {inputDto.image=null;}
             inputDto.dateTimePosted = localDateTimePosted;
             inputDto.lastUpdate = lastUpdate;
 
@@ -129,7 +131,7 @@ public class PaintingController {
             return new ResponseEntity<Object>(inputDto, HttpStatus.CREATED);
 
         } catch (Exception exception) {
-            return new ResponseEntity<Object>("Answer could not be submitted/uploaded!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Object>("Project could not be updated!", HttpStatus.BAD_REQUEST);
         }
 
 

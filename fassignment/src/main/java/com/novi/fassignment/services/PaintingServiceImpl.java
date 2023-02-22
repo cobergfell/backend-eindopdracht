@@ -192,6 +192,7 @@ public class PaintingServiceImpl implements PaintingService {
 
         if (currentPainting.isPresent()) {
             Painting painting = currentPainting.get();
+
             Optional<User> optionalUser = userService.getUser(dto.username);
             if (optionalUser.isPresent()) {
                 User user = optionalUser.get();
@@ -202,25 +203,23 @@ public class PaintingServiceImpl implements PaintingService {
                 userFromCustomUser.setPassword(password);
                 userFromCustomUser.setEmail(email);
                 painting.setUser(userFromCustomUser);
-                painting.setPaintingId(dto.paintingId);
+                //painting.setPaintingId(dto.paintingId);
                 painting.setTitle(dto.title);
                 painting.setArtist(dto.artist);
                 painting.setDescription(dto.description);
-                painting.setImage(dto.image);
+                if (dto.image != null){painting.setImage(dto.image);}
                 painting.setDateTimePosted(dto.dateTimePosted);
-                painting.setLastUpdate(dto.dateTimePosted);
-                painting.setAnswers(dto.answers);
-                painting.setQuestions(dto.questions);
+                painting.setLastUpdate(dto.lastUpdate);
+
 
                 paintingRepository.save(painting);
+
 
                 if (dto.files != null) {
                     List<String> fileNames = new ArrayList<>();
                     Arrays.asList(dto.files).stream().forEach(file -> {
                         String message = "";
                         try {
-                            //storageService.store(file);
-                            //storageService.storePaintingFile(file, painting);
                             FileStoredInDataBaseInputDto fileStoredInDataBaseInputDto = new FileStoredInDataBaseInputDto();
                             fileStoredInDataBaseInputDto.setFile(file);
                             fileStoredInDataBaseInputDto.setPainting(painting);
@@ -251,8 +250,6 @@ public class PaintingServiceImpl implements PaintingService {
                     Arrays.asList(dto.audioFiles).stream().forEach(file -> {
                         String message = "";
                         try {
-                            //storageService.store(file);
-                            //storageService.storePaintingFile(file, painting);
                             MusicFileStoredInDataBaseInputDto fileStoredInDataBaseInputDto = new MusicFileStoredInDataBaseInputDto();
                             fileStoredInDataBaseInputDto.setFile(file);
                             fileStoredInDataBaseInputDto.setPainting(painting);

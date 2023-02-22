@@ -114,7 +114,7 @@ public class QuestionController {
             inputDto.username = username;
             inputDto.title = title;
             inputDto.content = content;
-            inputDto.image = image.getBytes();
+            if (image != null){inputDto.image=image.getBytes();}
             inputDto.dateTimePosted = localDateTimePosted;
             inputDto.lastUpdate = lastUpdate;
             inputDto.files = files;
