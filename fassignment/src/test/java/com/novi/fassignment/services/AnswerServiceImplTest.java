@@ -2,13 +2,16 @@ package com.novi.fassignment.services;
 
 import com.novi.fassignment.controllers.dto.AnswerDto;
 import com.novi.fassignment.controllers.dto.UserDto;
+import com.novi.fassignment.exceptions.RecordNotFoundException;
 import com.novi.fassignment.models.Answer;
+import com.novi.fassignment.models.Question;
 import com.novi.fassignment.models.User;
 import com.novi.fassignment.repositories.AnswerRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -17,6 +20,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AnswerServiceImplTest {
@@ -75,30 +82,27 @@ class AnswerServiceImplTest {
     void searchingUnknownIdShouldReturnErrorMessage() {
         long id = 1L;
         Mockito.when(answerRepositoryMock.findById(id)).thenReturn(Optional.empty());
-        try {
-            answerService.getAnswerById(id);
-        } catch (Exception e) {
-            Assertions.assertEquals("Answer id does not exist", e.getMessage());
-        }
+        //when
+        final Executable executable = () -> answerService.getAnswerById(id);
+        //assert
+        assertThrows(RecordNotFoundException.class, executable);
     }
+
 
 
     @Test
-    void whenSavedFromRepositoryThenFindsById() {
-        Answer newAnswer = new Answer();
-        newAnswer.setAnswerId(1L);
-        answerRepositoryMock.save(newAnswer);
-        Assertions.assertNotNull(answerRepositoryMock.findById(newAnswer.getAnswerId()));
+    public void canCreateAnswer() {
+        long id = 1L;
+        Answer testAnswer = new Answer();
+        when(answerRepositoryMock.save(testAnswer)).thenAnswer(invocation -> {
+            Answer answer = invocation.getArgument(0);
+            answer.setAnswerId(id);
+            return answer;
+        });
+        Answer created = answerService.createAnswerWithoutAttachment(testAnswer);
+        assertEquals(id, created.getAnswerId());
     }
 
-
-    @Test
-    void whenSavedFromServiceThenFindsById() {
-        Answer newAnswer = new Answer();
-        newAnswer.setAnswerId(1L);
-        answerService.createAnswerWithoutAttachment(newAnswer);
-        Assertions.assertNotNull(answerRepositoryMock.findById(newAnswer.getAnswerId()));
-    }
 
 
 }

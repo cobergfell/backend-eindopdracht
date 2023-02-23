@@ -3,6 +3,8 @@ package com.novi.fassignment.services;
 import com.novi.fassignment.controllers.dto.QuestionDto;
 import com.novi.fassignment.controllers.dto.QuestionDto;
 import com.novi.fassignment.controllers.dto.UserDto;
+import com.novi.fassignment.exceptions.RecordNotFoundException;
+import com.novi.fassignment.models.Painting;
 import com.novi.fassignment.models.Question;
 import com.novi.fassignment.models.Question;
 import com.novi.fassignment.models.User;
@@ -12,6 +14,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -20,6 +23,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class QuestionServiceImplTest {
@@ -66,7 +73,7 @@ class QuestionServiceImplTest {
         var dto = new QuestionDto();
         dto=QuestionDto.fromQuestionToDto(question);
 
-        Mockito.when(questionRepositoryMock.findById(1L))
+        when(questionRepositoryMock.findById(1L))
                 .thenReturn(Optional.of(question));
 
         QuestionDto actual = questionService.getQuestionById(question.getQuestionId());
@@ -77,30 +84,45 @@ class QuestionServiceImplTest {
     @Test
     void searchingUnknownIdShouldReturnErrorMessage() {
         long id = 1L;
-        Mockito.when(questionRepositoryMock.findById(id)).thenReturn(Optional.empty());
-        try {
-            questionService.getQuestionById(id);
-        } catch (Exception e) {
-            Assertions.assertEquals("id does not exist", e.getMessage());
-        }
+        when(questionRepositoryMock.findById(id)).thenReturn(Optional.empty());
+        //when
+        final Executable executable = () -> questionService.getQuestionById(id);
+        //assert
+        assertThrows(RecordNotFoundException.class, executable);
     }
 
-
-    @Test
-    void whenSavedFromRepositoryThenFindsById() {
-        Question newQuestion = new Question();
-        newQuestion.setQuestionId(1L);
-        questionRepositoryMock.save(newQuestion);
-        Assertions.assertNotNull(questionRepositoryMock.findById(newQuestion.getQuestionId()));
-    }
 
 
     @Test
     void whenSavedFromServiceThenFindsById() {
+        long id = 1L;
+        String myTitle = "myTitle";
         Question newQuestion = new Question();
-        newQuestion.setQuestionId(1L);
+        newQuestion.setQuestionId(id);
+        newQuestion.setTitle(myTitle);
+
+
+        //when
         questionService.createQuestionWithoutAttachment(newQuestion);
-        Assertions.assertNotNull(questionRepositoryMock.findById(newQuestion.getQuestionId()));
+
+        //then
+        String expected = myTitle;
+        String actual = questionService.getQuestionById(id).getTitle();
+        assertEquals(expected, actual);
+
+    }
+
+    @Test
+    public void canCreateQuestion() {
+        long id = 1L;
+        Question testQuestion = new Question();
+        when(questionRepositoryMock.save(testQuestion)).thenAnswer(invocation -> {
+            Question question = invocation.getArgument(0);
+            question.setQuestionId(id);
+            return question;
+        });
+        Question created = questionService.createQuestionWithoutAttachment(testQuestion);
+        assertEquals(id, created.getQuestionId());
     }
 
 

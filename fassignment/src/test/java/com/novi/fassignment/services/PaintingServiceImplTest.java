@@ -2,6 +2,7 @@ package com.novi.fassignment.services;
 
 import com.novi.fassignment.controllers.dto.PaintingDto;
 import com.novi.fassignment.controllers.dto.UserDto;
+import com.novi.fassignment.exceptions.RecordNotFoundException;
 import com.novi.fassignment.models.Painting;
 import com.novi.fassignment.models.User;
 import com.novi.fassignment.repositories.PaintingRepository;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -19,6 +21,10 @@ import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PaintingServiceImplTest {
@@ -121,13 +127,11 @@ class PaintingServiceImplTest {
     void searchingUnknownIdShouldReturnErrorMessage() {
         long id = 1L;
         Mockito.when(paintingRepositoryMock.findById(id)).thenReturn(Optional.empty());
-        try {
-            paintingService.getPaintingById(id);
-        } catch (Exception e) {
-            Assertions.assertEquals("Painting id does not exist", e.getMessage());
-        }
+        //when
+        final Executable executable = () -> paintingService.getPaintingById(id);
+        //assert
+        assertThrows(RecordNotFoundException.class, executable);
     }
-
 
     @Test
     void whenSavedFromRepositoryThenFindsById() {
@@ -138,12 +142,19 @@ class PaintingServiceImplTest {
     }
 
 
+
     @Test
-    void whenSavedFromServiceThenFindsById() {
-        Painting newPainting = new Painting();
-        newPainting.setPaintingId(1L);
-        paintingService.createPaintingWithoutAttachment(newPainting);
-        Assertions.assertNotNull(paintingRepositoryMock.findById(newPainting.getPaintingId()));
+    public void canCreatePainting() {
+        long id = 1L;
+        Painting testPainting = new Painting();
+        when(paintingRepositoryMock.save(testPainting)).thenAnswer(invocation -> {
+            Painting painting = invocation.getArgument(0);
+            painting.setPaintingId(id);
+            return painting;
+        });
+        Painting created = paintingService.createPaintingWithoutAttachment(testPainting);
+        assertEquals(id, created.getPaintingId());
     }
+
 
 }
